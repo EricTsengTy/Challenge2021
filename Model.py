@@ -76,7 +76,7 @@ class GameEngine:
         '''
         self.clock = pg.time.Clock()
         self.state_machine.push(Const.STATE_MENU)
-        self.players = [Player(0), Player(1)]
+        self.players = [Player(i) for i in range(Const.PLAYER_NUMBER)]
 
     def notify(self, event: BaseEvent):
         '''
@@ -92,10 +92,14 @@ class GameEngine:
                 self.update_menu()
             elif cur_state == Const.STATE_PLAY:
                 self.update_objects()
-
                 self.timer -= 1
                 if self.timer == 0:
                     self.ev_manager.post(EventTimesUp())
+                
+                # player fall
+                for i in range(len(self.players)):
+                    self.players[i].fall()
+
             elif cur_state == Const.STATE_ENDGAME:
                 self.update_endgame()
 
@@ -110,8 +114,9 @@ class GameEngine:
             self.running = False
 
         elif isinstance(event, EventPlayerMove):
-            self.players[event.player_id].move_direction(event.direction)
-
+            # player move left / move right / jump
+            self.players[event.player_id].move(event.direction)
+            
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
 
@@ -153,17 +158,33 @@ class GameEngine:
 class Player:
     def __init__(self, player_id):
         self.player_id = player_id
-        self.position = Const.PLAYER_INIT_POSITION[player_id] # is a pg.Vector2
-        self.speed = Const.SPEED_ATTACK if player_id == 1 else Const.SPEED_DEFENSE
-
-    def move_direction(self, direction: str):
+        self.position = Const.PLAYER_INIT_POSITION[player_id] # a pg.Vector2
+        self.horizontal_speed = Const.PLAYER_SPEED
+        self.vertical_speed = 0 # negative is up, positive is down
+    def move(self, direction: str):
         '''
         Move the player along the direction by its speed.
         Will automatically clip the position so no need to worry out-of-bound moving.
         '''
-        # Modify position of player
-        self.position += self.speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
+        # Modify position and velocity of player
+        if direction=='jump':
+            self.vertical_speed = -Const.PLAYER_JUMP_SPEED
+        else:
+            self.position += self.horizontal_speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
+        
+        self.clip_position()
 
-        # clipping
+    def fall(self):
+        if self.position.y>=400 and self.vertical_speed>0:
+            # hit the ground
+            self.position.y=400
+            self.vertical_speed=0
+        else:
+            # keep falling
+            self.position.y += self.vertical_speed/Const.FPS
+            self.vertical_speed += Const.PLAYER_GRAVITY/Const.FPS
+        self.clip_position()
+
+    def clip_position(self):
         self.position.x = max(0, min(Const.ARENA_SIZE[0], self.position.x))
         self.position.y = max(0, min(Const.ARENA_SIZE[1], self.position.y))

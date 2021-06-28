@@ -4,9 +4,12 @@ import pygame as pg
 FPS = 60 # frame per second
 GAME_LENGTH = 30 * FPS
 PLAYER_INIT_POSITION = [pg.Vector2(200, 400), pg.Vector2(600, 400)]
-PLAYER_RADIUS = 75
-SPEED_ATTACK = 100
-SPEED_DEFENSE = 70
+PLAYER_NUMBER=2
+PLAYER_RADIUS = 40
+PLAYER_SPEED = 100
+PLAYER_JUMP_SPEED = 100
+PLAYER_GRAVITY = 100
+
 DIRECTION_TO_VEC2 = {
     'up': pg.Vector2(0, -1),
     'left': pg.Vector2(-1, 0),
