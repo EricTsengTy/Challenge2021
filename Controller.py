@@ -56,12 +56,14 @@ class Controller:
                 self.ev_manager.post(EventStateChange(Const.STATE_PLAY))
 
     def ctrl_play(self, key_down_events):
+        # handle movement using key pressed state
         keys = pg.key.get_pressed()
         for k, v in Const.PLAYER_MOVE_KEYS.items():
             if keys[k]:
                 self.ev_manager.post(EventPlayerMove(*v))
         
         for event_pg in key_down_events:
+            # handle attack using keydown events
             if event_pg.type == pg.KEYDOWN:
                 key = event_pg.key
                 if key in Const.PLAYER_ATTACK_KEYS:
