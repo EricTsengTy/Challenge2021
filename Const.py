@@ -32,13 +32,31 @@ PLAYER_COLOR = [pg.Color('green'), pg.Color('magenta')]
 
 
 # controller
-PLAYER_KEYS = {
-    pg.K_UP: (1, 'up'),
+PLAYER_MOVE_KEYS = {
+    pg.K_UP: (1, 'jump'),
     pg.K_LEFT: (1, 'left'),
-    pg.K_DOWN: (1, 'down'),
     pg.K_RIGHT: (1, 'right'),
-    pg.K_w: (0, 'up'),
+    pg.K_w: (0, 'jump'),
     pg.K_a: (0, 'left'),
-    pg.K_s: (0, 'down'),
     pg.K_d: (0, 'right'),
+    pg.K_t: (2, 'jump'),
+    pg.K_f: (2, 'left'),
+    pg.K_h: (2, 'right'),
+    pg.K_i: (3, 'jump'),
+    pg.K_j: (3, 'left'),  
+    pg.K_l: (3, 'right')
+}
+
+PLAYER_ATTACK_KEYS = {
+    pg.K_s: (0, 'attack'),
+    pg.K_DOWN: (1, 'attack'),
+    pg.K_g: (2, 'attack'),
+    pg.K_k: (3, 'attack')
+}
+
+PLAYER_SPECIAL_ATTACK_KEYS = {
+    pg.K_q: (0, 'special_attack'),
+    pg.K_RSHIFT: (1, 'special_attack'),
+    pg.K_r: (2, 'special_attack'),
+    pg.K_u: (3, 'special_attack')
 }
