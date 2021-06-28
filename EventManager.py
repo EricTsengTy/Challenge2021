@@ -82,3 +82,21 @@ class EventPlayerMove(BaseEvent):
 
     def __str__(self):
         return f'{self.name} => player_id {self.player_id} move {self.direction}'
+
+class EventPlayerAttack (BaseEvent):
+    name = 'PlayerAttack event'
+
+    def __init__(self, player_id):
+        self.player_id = player_id
+
+    def __str__(self):
+        return f'{self.name} => player_id {self.player_id} attack'
+
+class EventPlayerSpecialAttack (BaseEvent):
+    name = 'PlayerSpecialAttack event'
+
+    def __init__(self, player_id):
+        self.player_id = player_id
+
+    def __str__(self):
+        return f'{self.name} => player_id {self.player_id} special attack'
