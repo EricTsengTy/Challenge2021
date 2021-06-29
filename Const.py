@@ -17,6 +17,9 @@ DIRECTION_TO_VEC2 = {
     'right': pg.Vector2(1, 0),
 }
 
+BLOCK_POSITION = [
+    [pg.Vector2(0, 400), pg.Vector2(800, 410)]
+]
 
 # State machine constants
 STATE_POP = 0 # for convenience, not really a state which we can be in

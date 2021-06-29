@@ -3,7 +3,7 @@ import pygame as pg
 import Const
 from EventManager.EventManager import *
 from Model.GameObject.player import Player
-
+from Model.GameObject.block import block
 class StateMachine(object):
     '''
     Manages a stack based state machine.
@@ -75,7 +75,7 @@ class GameEngine:
         self.clock = pg.time.Clock()
         self.state_machine.push(Const.STATE_MENU)
         self.players = [Player(i) for i in range(Const.PLAYER_NUMBER)]
-
+        self.blocks = [block(i[0], i[1]) for i in Const.BLOCK_POSITION]
     def notify(self, event: BaseEvent):
         '''
         Called by EventManager when a event occurs.
