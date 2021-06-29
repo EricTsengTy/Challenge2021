@@ -72,8 +72,9 @@ class GraphicalView:
 
         # draw players
         for player in self.model.players:
-            center = list(map(int, player.position))
-            pg.draw.circle(self.screen, Const.PLAYER_COLOR[player.player_id], center, Const.PLAYER_RADIUS)
+            pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],
+                         (player.position.x,player.position.y,
+                         Const.PLYAER_WIDTH,Const.PLYAER_HEIGHT))
 
         pg.display.flip()
 
