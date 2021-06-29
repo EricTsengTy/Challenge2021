@@ -1,5 +1,5 @@
 import pygame as pg
-class block:
-    def __init__(self, leftup, rightdown):
-        self.leftup = leftup
-        self.rightdown = rightdown
+
+class Block(pg.Rect):
+    def __init__(self, left, top, width, height):
+        pg.Rect.__init__(self, (left, top, width, height)) 

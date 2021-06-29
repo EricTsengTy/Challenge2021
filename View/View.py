@@ -75,10 +75,7 @@ class GraphicalView:
             pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player)
         
         for block in self.model.blocks:
-            pg.draw.rect(self.screen, Const.BLOCK_COLOR,
-                        (block.leftup.x, block.leftup.y,
-                        block.rightdown.x - block.leftup.x,
-                        block.rightdown.y - block.leftup.y))
+            pg.draw.rect(self.screen, Const.BLOCK_COLOR, block)
 
         pg.display.flip()
 

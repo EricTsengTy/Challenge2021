@@ -19,8 +19,7 @@ DIRECTION_TO_VEC2 = {
 }
 
 BLOCK_POSITION = [
-    [pg.Vector2(0, 400), pg.Vector2(800, 410)],
-    [pg.Vector2(100, 200), pg.Vector2(200, 210)]
+    (0, 500, 800, 10)
 ]
 
 # State machine constants
