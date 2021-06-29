@@ -90,15 +90,12 @@ class GameEngine:
             cur_state = self.state_machine.peek()
             if cur_state == Const.STATE_MENU:
                 self.update_menu()
+
             elif cur_state == Const.STATE_PLAY:
                 self.update_objects()
                 self.timer -= 1
                 if self.timer == 0:
                     self.ev_manager.post(EventTimesUp())
-                
-                # player fall
-                for i in range(len(self.players)):
-                    self.players[i].move_every_tick()
 
             elif cur_state == Const.STATE_ENDGAME:
                 self.update_endgame()
@@ -132,7 +129,18 @@ class GameEngine:
         Update the objects not controlled by user.
         For example: obstacles, items, special effects
         '''
-        pass
+        # player fall
+        for player in self.players:
+            player.move_every_tick()
+        
+        # player touch the ground (landing)
+        for player in self.players:
+            colided=player.collidelist(self.blocks)
+            if player.vertical_speed>0 and colided!=-1:
+                colided=self.blocks[colided]
+                player.bottom=colided.top
+                player.vertical_speed=0
+
 
     def update_endgame(self):
         '''

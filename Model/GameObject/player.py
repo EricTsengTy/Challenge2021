@@ -19,32 +19,13 @@ class Player(pygame.Rect):
             self.vertical_speed = -Const.PLAYER_JUMP_SPEED
         else:
             self.center += self.horizontal_speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
-        
         self.clip_position()
 
     def move_every_tick(self):
-        if self.centery>=400 and self.vertical_speed>0:
-            # hit the ground
-            self.centery=400
-            self.vertical_speed=0
-        else:
-            # keep falling
-            self.centery += self.vertical_speed/Const.FPS
-            self.vertical_speed += Const.PLAYER_GRAVITY/Const.FPS
+        # keep falling
+        self.centery += self.vertical_speed/Const.FPS
+        self.vertical_speed += Const.PLAYER_GRAVITY/Const.FPS
         self.clip_position()
-
-    def touch_block(self):
-        '''
-        handle the situation for touching the block
-        '''
-        player_y_next = self.position.y + self.vertical_speed/Const.FPS
-        for block in Const.BLOCK_POSITION:
-            if block[0].x - Const.PLYAER_WIDTH <= self.position.x <= block[1].x:
-                if self.position.y <= block[0].y <= player_y_next:
-                    self.position.y = block[0].y
-                    self.vertical_speed = 0
-                    return True
-        return False
 
     def clip_position(self):
         self.centerx = max(0, min(Const.ARENA_SIZE[0], self.centerx))
