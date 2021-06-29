@@ -96,7 +96,7 @@ class GameEngine:
                 
                 # player fall
                 for i in range(len(self.players)):
-                    self.players[i].fall()
+                    self.players[i].move_every_tick()
 
             elif cur_state == Const.STATE_ENDGAME:
                 self.update_endgame()

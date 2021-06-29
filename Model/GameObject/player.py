@@ -19,7 +19,7 @@ class Player:
         
         self.clip_position()
 
-    def fall(self):
+    def move_every_tick(self):
         if self.position.y>=400 and self.vertical_speed>0:
             # hit the ground
             self.position.y=400
