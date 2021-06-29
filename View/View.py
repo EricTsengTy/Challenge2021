@@ -69,12 +69,18 @@ class GraphicalView:
     def render_play(self):
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
-
+        
         # draw players
         for player in self.model.players:
             pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],
                          (player.position.x,player.position.y,
                          Const.PLYAER_WIDTH,Const.PLYAER_HEIGHT))
+        
+        for block in self.model.blocks:
+            pg.draw.rect(self.screen, Const.BLOCK_COLOR,
+                        (block.leftup.x, block.leftup.y,
+                        block.rightdown.x - block .leftup.x,
+                        block.rightdown.y - block.leftup.y))
 
         pg.display.flip()
 

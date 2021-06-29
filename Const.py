@@ -36,7 +36,7 @@ WINDOW_SIZE = (800, 800)
 ARENA_SIZE = (800, 800)
 BACKGROUND_COLOR = pg.Color('black')
 PLAYER_COLOR = [pg.Color('green'), pg.Color('magenta'), pg.Color('cyan'), pg.Color('white')]
-
+BLOCK_COLOR = pg.Color('white')
 
 # controller
 PLAYER_MOVE_KEYS = {
