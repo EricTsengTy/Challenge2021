@@ -72,9 +72,7 @@ class GraphicalView:
         
         # draw players
         for player in self.model.players:
-            pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],
-                         (player.position.x,player.position.y-Const.PLYAER_HEIGHT,
-                         Const.PLYAER_WIDTH,Const.PLYAER_HEIGHT))
+            pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player)
         
         for block in self.model.blocks:
             pg.draw.rect(self.screen, Const.BLOCK_COLOR,
