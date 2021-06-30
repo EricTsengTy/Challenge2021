@@ -4,6 +4,7 @@ import Const
 from EventManager.EventManager import *
 from Model.GameObject.player import Player
 from Model.GameObject.block import Block
+from Model.GameObject.item import *
 
 class StateMachine(object):
     '''
@@ -77,6 +78,7 @@ class GameEngine:
         self.state_machine.push(Const.STATE_MENU)
         self.players = [Player(i) for i in range(Const.PLAYER_NUMBER)]
         self.blocks = [Block(i[0], i[1], i[2], i[3]) for i in Const.BLOCK_POSITION]
+        self.items = []
 
     def notify(self, event: BaseEvent):
         '''
@@ -140,7 +142,28 @@ class GameEngine:
                 colided=self.blocks[colided]
                 player.bottom=colided.top
                 player.vertical_speed=0
+        
+        # player tuoch the item
+        for item in self.items:
+            player = item.touch(self.players)
+            if player != None:
+                player.touch_item(item.item_id)
+                if item.item_id == Const.FOLDER_UNUSED_ID:
+                    item.item_id = Const.FOLDER_USED_ID
+                    item.timer = Const.FPS
+                if item.item_id != Const.FOLDER_USED_ID:
+                    self.items.remove(item)
+            if item.item_id == Const.FOLDER_USED_ID:
+                item.timer -= 1
+                if item.timer < 0:
+                    self.items.remove(item)
 
+        # generate the items
+        if len(self.items) < 5:
+            if random.random() < 0.8:
+                self.items.append(Item(random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
+                                    random.randint(0, Const.ARENA_SIZE[1] - Const.ITEM_HEIGHT),
+                                    Const.FOLDER_UNUSED_ID))
 
     def update_endgame(self):
         '''
