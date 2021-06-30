@@ -1,11 +1,15 @@
-import pygame
+import pygame as pg
 import Const 
-class Player(pygame.Rect):
+from pygame.math import Vector2
+class Player(pg.Rect):
     def __init__(self, player_id):
-        pygame.Rect.__init__(self,(Const.PLAYER_INIT_POSITION[player_id].x,
+        pg.Rect.__init__(self,(Const.PLAYER_INIT_POSITION[player_id].x,
                                    Const.PLAYER_INIT_POSITION[player_id].y,
                                    Const.PLYAER_WIDTH,Const.PLYAER_HEIGHT))
         self.player_id = player_id
+        self.max_jump = 2
+        self.jump_count = 0
+        self.position = Vector2(self.center)
         self.horizontal_speed = Const.PLAYER_SPEED
         self.vertical_speed = 0 # negative is up, positive is down
         self.item_id = 0 #the item_id of the item player touch, 0 for nothing
@@ -17,16 +21,21 @@ class Player(pygame.Rect):
         '''
         # Modify position and velocity of player
         if direction=='jump':
-            self.vertical_speed = -Const.PLAYER_JUMP_SPEED
+            # player can jump only if he is falling
+            if self.vertical_speed>=0 and self.jump_count < self.max_jump:
+                self.jump_count += 1
+                self.vertical_speed = -Const.PLAYER_JUMP_SPEED
         else:
-            self.center += self.horizontal_speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
+            self.position += self.horizontal_speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
         self.clip_position()
+        self.center=self.position
 
     def move_every_tick(self):
         # keep falling
-        self.centery += self.vertical_speed/Const.FPS
+        self.position.y += self.vertical_speed/Const.FPS
         self.vertical_speed += Const.PLAYER_GRAVITY/Const.FPS
         self.clip_position()
+        self.center=self.position
 
     def clip_position(self):
         self.centerx = max(0, min(Const.ARENA_SIZE[0], self.centerx))
@@ -49,4 +58,3 @@ class Player(pygame.Rect):
             pass
         elif item_id == Const.CHARGE_ID:
             pass
-

@@ -40,8 +40,8 @@ DIRECTION_TO_VEC2 = {
 
 BLOCK_POSITION = [
     (  0, 500, 800, 10),
-    (  0, 400, 200, 10),
-    (150, 200, 200, 10),
+    (  0, 370, 200, 10),
+    (150, 430, 200, 10),
 ]
 
 # State machine constants
