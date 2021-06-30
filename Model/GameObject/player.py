@@ -17,6 +17,7 @@ class Player(pg.Rect):
         self.common_attack_range = self.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
         self.can_common_attack = True
         self.would_be_common_attacked = True
+        self.item_type = 0 #the item_type of the item player touch, 0 for nothing
 
     def move(self, direction: str):
         '''
@@ -47,22 +48,22 @@ class Player(pg.Rect):
         self.centerx = max(0, min(Const.ARENA_SIZE[0], self.centerx))
         self.centery = max(0, min(Const.ARENA_SIZE[1], self.centery))
 
-    def touch_item(self, item_id):
-        if item_id in range(Const.FAN_ID, Const.DDOS_ID + 1):
-            self.item_id = item_id
-        elif item_id == Const.EXE_ID:
+    def touch_item(self, item_type):
+        if item_type in range(Const.FAN_TYPE, Const.DDOS_TYPE + 1):
+            self.keep_item_type = item_type
+        elif item_type == Const.EXE_TYPE:
             pass
-        elif item_id == Const.USB_ID:
+        elif item_type == Const.USB_TYPE:
             pass
-        elif item_id == Const.FIREWARM_ID:
+        elif item_type == Const.FIREWARM_TYPE:
             pass
-        elif item_id == Const.GRAPHIC_CARD_ID:
+        elif item_type == Const.GRAPHIC_CARD_TYPE:
             pass
-        elif item_id == Const.FORMAT_ID:
+        elif item_type == Const.FORMAT_TYPE:
             pass
-        elif item_id == Const.FOLDER_UNUSED_ID:
+        elif item_type == Const.FOLDER_UNUSED_TYPE:
             pass
-        elif item_id == Const.CHARGE_ID:
+        elif item_type == Const.CHARGE_TYPE:
             pass
 
     def be_common_attacked(self):

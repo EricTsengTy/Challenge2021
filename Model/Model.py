@@ -163,15 +163,22 @@ class GameEngine:
             player_touched = item.collidelist(self.players)
             player_touched = self.players[player_touched] if player_touched!=-1 else None
             if player_touched != None:
-                player.touch_item(item.item_id)
-                item.timer = -1
+                player.touch_item(item.item_type)
+                item.activate()
 
         for item in self.items:
             item.tick()
 
+        #remove item
         removed_item=[]
         for item in self.items:
             if item.is_dead():
+                if item.item_type == Const.FOLDER_UNUSED_TYPE:
+                    new_item = Item(item.left,
+                                    item.top,
+                                    Const.FOLDER_USED_TYPE)
+                    new_item.activate()
+                    self.items.append(new_item)
                 removed_item.append(item)
         for item in removed_item:
             self.items.remove(item)
@@ -180,8 +187,8 @@ class GameEngine:
         while len(self.items) < 5:
             if random.random() < 0.8:
                 self.items.append(Item(random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                    random.randint(0, Const.ARENA_SIZE[1] - Const.ITEM_HEIGHT),
-                                    Const.FOLDER_UNUSED_ID))
+                                    random.randint(300, 400),
+                                    Const.FOLDER_UNUSED_TYPE))
 
     def update_endgame(self):
         '''
