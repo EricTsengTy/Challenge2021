@@ -6,6 +6,8 @@ class Player(pygame.Rect):
                                    Const.PLAYER_INIT_POSITION[player_id].y,
                                    Const.PLYAER_WIDTH,Const.PLYAER_HEIGHT))
         self.player_id = player_id
+        self.max_jump = 2
+        self.jump_count = 0
         self.horizontal_speed = Const.PLAYER_SPEED
         self.vertical_speed = 0 # negative is up, positive is down
 
@@ -16,10 +18,14 @@ class Player(pygame.Rect):
         '''
         # Modify position and velocity of player
         if direction=='jump':
-            self.vertical_speed = -Const.PLAYER_JUMP_SPEED
+            # player can jump only if he is falling
+            if self.vertical_speed>=0 and self.jump_count < self.max_jump:
+                self.jump_count += 1
+                self.vertical_speed = -Const.PLAYER_JUMP_SPEED
         else:
             self.center += self.horizontal_speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
         self.clip_position()
+        
 
     def move_every_tick(self):
         # keep falling

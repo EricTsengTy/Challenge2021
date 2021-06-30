@@ -137,9 +137,10 @@ class GameEngine:
         for player in self.players:
             colided=player.collidelist(self.blocks)
             if player.vertical_speed>0 and colided!=-1:
-                colided=self.blocks[colided]
-                player.bottom=colided.top
-                player.vertical_speed=0
+                colided = self.blocks[colided]
+                player.bottom = colided.top
+                player.vertical_speed = 0
+                player.jump_count = 0
 
 
     def update_endgame(self):
