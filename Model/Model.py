@@ -147,23 +147,26 @@ class GameEngine:
                 player.jump_count = 0
                 player.position=Vector2(player.center)
         
-        # player tuoch the item
+        # player touch the item
         for item in self.items:
-            player = item.touch(self.players)
-            if player != None:
+            player_touched = item.collidelist(self.players)
+            player_touched = self.players[player_touched] if player_touched!=-1 else None
+            if player_touched != None:
                 player.touch_item(item.item_id)
-                if item.item_id == Const.FOLDER_UNUSED_ID:
-                    item.item_id = Const.FOLDER_USED_ID
-                    item.timer = Const.FPS
-                if item.item_id != Const.FOLDER_USED_ID:
-                    self.items.remove(item)
-            if item.item_id == Const.FOLDER_USED_ID:
-                item.timer -= 1
-                if item.timer < 0:
-                    self.items.remove(item)
+                item.timer = -1
 
+        for item in self.items:
+            item.tick()
+
+        removed_item=[]
+        for item in self.items:
+            if item.is_dead():
+                removed_item.append(item)
+        for item in removed_item:
+            self.items.remove(item)
+            
         # generate the items
-        if len(self.items) < 5:
+        while len(self.items) < 5:
             if random.random() < 0.8:
                 self.items.append(Item(random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
                                     random.randint(0, Const.ARENA_SIZE[1] - Const.ITEM_HEIGHT),

@@ -6,9 +6,11 @@ class Item(pg.Rect):
         pg.Rect.__init__(self, (left, top, Const.ITEM_WIDTH, Const.ITEM_HEIGHT))
         self.item_id = item_id
         self.timer = 0 
+        self.timer_activated = False
 
-    def touch(self, players):
-        for player in players:
-            if self.colliderect(player):
-                return player
-        return None
+    def tick(self):
+        if self.timer_activated:
+            self.timer -= 1
+            
+    def is_dead(self):
+        return self.timer<0
