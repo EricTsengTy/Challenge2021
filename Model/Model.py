@@ -117,6 +117,17 @@ class GameEngine:
         elif isinstance(event, EventPlayerMove):
             # player move left / move right / jump
             self.players[event.player_id].move(event.direction)
+
+        elif isinstance(event, EventPlayerAttack):
+            # player do common attack
+            attacker = event.player_id[0]
+            if self.players[attacker].can_common_attack:
+                attack_range = self.players[attacker].common_attack_range
+                for i in range(Const.PLAYER_NUMBER):
+                    if i == attacker:
+                        continue
+                    if attack_range.colliderect(self.players[i]):
+                        self.players[i].be_common_attacked()
             
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)

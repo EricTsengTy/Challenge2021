@@ -10,6 +10,9 @@ PLYAER_HEIGHT = 40
 PLAYER_SPEED = 100
 PLAYER_JUMP_SPEED = 100
 PLAYER_GRAVITY = 150
+PLAYER_FULL_BLOOD = 1000
+PLAYER_COMMON_ATTACK_SIZE = 20 #additional size around player
+PLAYER_COMMON_ATTACK_DAMAGE = 10
 
 ITEM_WIDTH = 30
 ITEM_HEIGHT = 30
@@ -58,6 +61,7 @@ WINDOW_SIZE = (800, 800)
 ARENA_SIZE = (800, 800)
 BACKGROUND_COLOR = pg.Color('black')
 PLAYER_COLOR = [pg.Color('green'), pg.Color('magenta'), pg.Color('cyan'), pg.Color('white')]
+ATTACK_RANGE_COLOR = [pg.Color('lightgreen'), pg.Color('orchid1'), pg.Color('lightcyan'), pg.Color('whitesmoke')]
 BLOCK_COLOR = pg.Color('white')
 
 # controller

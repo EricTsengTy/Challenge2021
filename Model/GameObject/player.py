@@ -13,7 +13,11 @@ class Player(pg.Rect):
         self.horizontal_speed = Const.PLAYER_SPEED
         self.vertical_speed = 0 # negative is up, positive is down
         self.item_id = 0 #the item_id of the item player touch, 0 for nothing
-    
+        self.blood = Const.PLAYER_FULL_BLOOD
+        self.common_attack_range = self.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
+        self.can_common_attack = True
+        self.would_be_common_attacked = True
+
     def move(self, direction: str):
         '''
         Move the player along the direction by its speed.
@@ -28,7 +32,8 @@ class Player(pg.Rect):
         else:
             self.position += self.horizontal_speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
         self.clip_position()
-        self.center=self.position
+        self.center = self.position
+        self.common_attack_range.center = self.center
 
     def move_every_tick(self):
         # keep falling
@@ -36,6 +41,7 @@ class Player(pg.Rect):
         self.vertical_speed += Const.PLAYER_GRAVITY/Const.FPS
         self.clip_position()
         self.center=self.position
+        self.common_attack_range.center = self.center
 
     def clip_position(self):
         self.centerx = max(0, min(Const.ARENA_SIZE[0], self.centerx))
@@ -58,3 +64,8 @@ class Player(pg.Rect):
             pass
         elif item_id == Const.CHARGE_ID:
             pass
+
+    def be_common_attacked(self):
+        if self.would_be_common_attacked:
+            self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
+

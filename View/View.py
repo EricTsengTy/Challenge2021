@@ -72,6 +72,7 @@ class GraphicalView:
         
         # draw players
         for player in self.model.players:
+            pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
             pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player)
         
         for block in self.model.blocks:
