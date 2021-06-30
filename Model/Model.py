@@ -1,6 +1,8 @@
 import random
 import pygame as pg
+from pygame.sprite import collide_mask
 import Const
+from pygame.math import Vector2
 from EventManager.EventManager import *
 from Model.GameObject.player import Player
 from Model.GameObject.block import Block
@@ -135,13 +137,13 @@ class GameEngine:
         
         # player touch the ground (landing)
         for player in self.players:
-            colided=player.collidelist(self.blocks)
-            if player.vertical_speed>0 and colided!=-1:
-                colided = self.blocks[colided]
-                player.bottom = colided.top
+            collided = player.collidelist(self.blocks)
+            collided = self.blocks[collided] if collided!=-1 else None
+            if player.vertical_speed>0 and collided!=None and collided.bottom>player.bottom>collided.top:
+                player.bottom = collided.top
                 player.vertical_speed = 0
                 player.jump_count = 0
-
+                player.position=Vector2(player.center)
 
     def update_endgame(self):
         '''
