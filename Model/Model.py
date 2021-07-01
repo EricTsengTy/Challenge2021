@@ -126,7 +126,7 @@ class GameEngine:
                 for i in range(Const.PLAYER_NUMBER):
                     if i == attacker:
                         continue
-                    if attack_range.colliderect(self.players[i]):
+                    if self.players[i].can_be_common_attacked() and attack_range.colliderect(self.players[i]):
                         self.players[i].be_common_attacked()
             
         elif isinstance(event, EventTimesUp):
@@ -165,6 +165,13 @@ class GameEngine:
             if player_touched != None:
                 player.touch_item(item.item_type)
                 item.activate()
+
+        # player is invisible
+        for player in self.players:
+            if player.is_invisible:
+                player.invisible_time -= 1
+                if player.invisible_time == 0:
+                    player.is_invisible = False
 
         for item in self.items:
             item.tick()
