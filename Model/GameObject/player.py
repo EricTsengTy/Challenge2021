@@ -33,20 +33,18 @@ class Player(pg.Rect):
         else:
             self.position += self.horizontal_speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
         self.clip_position()
-        self.center = self.position
-        self.common_attack_range.center = self.center
+        self.sync(last_modify='position')
 
     def move_every_tick(self):
         # keep falling
         self.position.y += self.vertical_speed/Const.FPS
         self.vertical_speed += Const.PLAYER_GRAVITY/Const.FPS
         self.clip_position()
-        self.center=self.position
-        self.common_attack_range.center = self.center
+        self.sync(last_modify='position')
 
     def clip_position(self):
-        self.centerx = max(0, min(Const.ARENA_SIZE[0], self.centerx))
-        self.centery = max(0, min(Const.ARENA_SIZE[1], self.centery))
+        self.position.x = max(0, min(Const.ARENA_SIZE[0], self.position.x))
+        self.position.y = max(0, min(Const.ARENA_SIZE[1], self.position.y))
 
     def touch_item(self, item_type):
         if item_type in range(Const.FAN_TYPE, Const.DDOS_TYPE + 1):
@@ -69,4 +67,12 @@ class Player(pg.Rect):
     def be_common_attacked(self):
         if self.would_be_common_attacked:
             self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
+
+    def sync(self, last_modify:str):
+        if last_modify=='rect':
+            self.position=Vector2(self.center)
+            self.common_attack_range.center=self.center
+        elif last_modify=='position':
+            self.center=self.position
+            self.common_attack_range.center=self.center
 

@@ -156,8 +156,7 @@ class GameEngine:
                 player.bottom = collided.top
                 player.vertical_speed = 0
                 player.jump_count = 0
-                player.position=Vector2(player.center)
-                player.common_attack_range.center=player.center
+                player.sync(last_modify='rect')
         
         # player touch the item
         for item in self.items:
