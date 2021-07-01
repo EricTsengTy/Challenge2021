@@ -16,7 +16,11 @@ class Player(pg.Rect):
         self.blood = Const.PLAYER_FULL_BLOOD
         self.common_attack_range = self.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
         self.can_common_attack = True
+        self.can_special_attack = True
         self.would_be_common_attacked = True
+        self.would_be_special_attacked = True
+        self.is_invisible = False
+        self.invisible_time = 0
         self.item_type = 0 #the item_type of the item player touch, 0 for nothing
 
     def move(self, direction: str):
@@ -63,10 +67,19 @@ class Player(pg.Rect):
             pass
         elif item_type == Const.CHARGE_TYPE:
             pass
-
+        
+    def can_be_common_attacked(self):
+        return (not self.is_invisible) and self.would_be_common_attacked
+    
+    def can_be_special_attacked(self):
+        return (not self.is_invisible) and self.would_be_special_attacked
+        
     def be_common_attacked(self):
-        if self.would_be_common_attacked:
-            self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
+        self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
+
+    def invisible(self, time):
+        self.is_invisible = True
+        self.invisible_time = time * Const.FPS
 
     def sync(self, last_modify:str):
         if last_modify=='rect':

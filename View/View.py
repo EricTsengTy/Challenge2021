@@ -72,8 +72,11 @@ class GraphicalView:
         
         # draw players
         for player in self.model.players:
-            pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
-            pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player)
+            if player.is_invisible:
+                pg.draw.rect(self.screen, Const.INVISIBLE_COLOR,player)
+            else:
+                pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
+                pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player)
         
         for block in self.model.blocks:
             pg.draw.rect(self.screen, Const.BLOCK_COLOR, block)
