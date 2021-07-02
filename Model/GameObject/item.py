@@ -14,7 +14,7 @@ class Item(pg.Rect):
 
     def activate(self):
         self.timer_activated = True
-        self.time = 60 if self.item_type == Const.FOLDER_UNUSED_TYPE else -1
+        self.time = 60 if self.item_type == Const.FOLDER_USED_TYPE else -1
 
     def is_dead(self):
         return self.timer<0
