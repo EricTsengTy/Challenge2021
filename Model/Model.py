@@ -146,16 +146,13 @@ class GameEngine:
         '''
         for player in self.players:
             player.tick()
-            
+        for item in self.items:
+            item.tick()
         
-        # # player touch the item
-        # for item in self.items:
-        #     player_touched = item.collidelist(self.players)
-        #     player_touched = self.players[player_touched] if player_touched!=-1 else None
-        #     if player_touched != None:
-        #         player.touch_item(item.item_type)
-        #         item.activate()
-
+        for player in self.players:
+            player.check_touch_item()
+        
+        
         # # player is invisible
         # for player in self.players:
         #     if player.is_invisible:
@@ -163,29 +160,21 @@ class GameEngine:
         #         if player.invisible_time == 0:
         #             player.is_invisible = False
 
-        # for item in self.items:
-        #     item.tick()
+        #remove item
+        for item in list(self.items): # iterating the copy of original list
+            if item.is_dead():
+                if item.item_type == 'FOLDER_UNUSED':
+                    new_item = Item(item.left, item.top, 'FOLDER_USED')
+                    new_item.activate()
+                    self.items.append(new_item)
+                self.items.remove(item)
 
-        # #remove item
-        # removed_item=[]
-        # for item in self.items:
-        #     if item.is_dead():
-        #         if item.item_type == Const.FOLDER_UNUSED_TYPE:
-        #             new_item = Item(item.left,
-        #                             item.top,
-        #                             Const.FOLDER_USED_TYPE)
-        #             new_item.activate()
-        #             self.items.append(new_item)
-        #         removed_item.append(item)
-        # for item in removed_item:
-        #     self.items.remove(item)
-            
-        # # generate the items
-        # while len(self.items) < 5:
-        #     if random.random() < 0.8:
-        #         self.items.append(Item(random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-        #                             random.randint(300, 400),
-        #                             Const.FOLDER_UNUSED_TYPE))
+        # generate the items
+        while len(self.items) < 5:
+            if random.random() < 0.8:
+                self.items.append(Item(self,
+                                       random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
+                                       random.randint(300, 400),'FOLDER_USED'))
 
     def update_endgame(self):
         '''

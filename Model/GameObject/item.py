@@ -1,9 +1,10 @@
 import pygame as pg
 import Const
+from Model.GameObject.basic_game_object import Basic_Game_Object
 
-class Item(pg.Rect):
-    def __init__(self, left, top, item_type):
-        pg.Rect.__init__(self, (left, top, Const.ITEM_WIDTH, Const.ITEM_HEIGHT))
+class Item(Basic_Game_Object):
+    def __init__(self, model, left, top, item_type):
+        super().__init__(model, left, top, Const.ITEM_WIDTH, Const.ITEM_HEIGHT)
         self.item_type = item_type
         self.timer = 0 
         self.timer_activated = False

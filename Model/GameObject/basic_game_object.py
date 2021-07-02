@@ -29,8 +29,8 @@ class Basic_Game_Object:
                 self.jump_count = 0
         self.clip_position()
 
-    def tick(self):
-        if(self.obey_gravity):
+    def basic_tick(self):
+        if self.obey_gravity:
             self.fall_every_tick()
 
     @property

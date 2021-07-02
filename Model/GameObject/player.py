@@ -40,6 +40,15 @@ class Player(Basic_Game_Object):
             self.position += Const.PLAYER_SHIFT_SPEED / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
         self.clip_position()
 
+    def tick(self):
+        self.basic_tick()
+
+    def check_touch_item(self):
+        for item in self.model.items:
+            if self.rect.colliderect(item.rect):
+                self.touch_item(item.item_type)
+                item.activate()
+
     def touch_item(self, item_type):
         if item_type in range(Const.FAN_TYPE, Const.DDOS_TYPE + 1):
             self.keep_item_type = item_type

@@ -81,8 +81,8 @@ class GraphicalView:
         for ground in self.model.grounds:
             pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)
         
-        # for item in self.model.items:
-        #     pg.draw.rect(self.screen, Const.ITEM_COLOR, item)
+        for item in self.model.items:
+            pg.draw.rect(self.screen, Const.ITEM_COLOR, item.rect)
 
         pg.display.flip()
 
