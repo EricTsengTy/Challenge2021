@@ -1,7 +1,7 @@
 import pygame as pg
 
-from EventManager import *
-from Model import GameEngine
+from EventManager.EventManager import *
+from Model.Model import GameEngine
 import Const
 
 
@@ -56,10 +56,22 @@ class Controller:
                 self.ev_manager.post(EventStateChange(Const.STATE_PLAY))
 
     def ctrl_play(self, key_down_events):
+        # handle movement using key pressed state
         keys = pg.key.get_pressed()
-        for k, v in Const.PLAYER_KEYS.items():
+        for k, v in Const.PLAYER_MOVE_KEYS.items():
             if keys[k]:
                 self.ev_manager.post(EventPlayerMove(*v))
+        
+        for event_pg in key_down_events:
+            # handle attack using keydown events
+            if event_pg.type == pg.KEYDOWN:
+                key = event_pg.key
+                if key in Const.PLAYER_ATTACK_KEYS:
+                    player_id = Const.PLAYER_ATTACK_KEYS[key]
+                    self.ev_manager.post(EventPlayerAttack(player_id))
+                if key in Const.PLAYER_SPECIAL_ATTACK_KEYS:
+                    player_id = Const.PLAYER_SPECIAL_ATTACK_KEYS[key]
+                    self.ev_manager.post(EventPlayerSpecialAttack(player_id))
 
     def ctrl_stop(self, key_down_events):
         pass

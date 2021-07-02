@@ -1,7 +1,7 @@
 import pygame as pg
 
-from EventManager import *
-from Model import GameEngine
+from EventManager.EventManager import *
+from Model.Model import GameEngine
 import Const
 
 
@@ -69,12 +69,28 @@ class GraphicalView:
     def render_play(self):
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
-
+        
         # draw players
         for player in self.model.players:
-            center = list(map(int, player.position))
-            pg.draw.circle(self.screen, Const.PLAYER_COLOR[player.player_id], center, Const.PLAYER_RADIUS)
-
+            if player.is_invisible:
+                pg.draw.rect(self.screen, Const.INVISIBLE_COLOR,player)
+            else:
+                pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
+                pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player)
+        
+        for block in self.model.blocks:
+            pg.draw.rect(self.screen, Const.BLOCK_COLOR, block)
+        
+        for item in self.model.items:
+            pg.draw.rect(self.screen, Const.ITEM_COLOR, item)
+        
+        for entity in self.model.entities:
+            if entity.entity_type == Const.ARROW_TYPE:
+                pg.draw.circle(self.screen, Const.ARROW_COLOR, entity.position, Const.ARROW_RADIUS)
+            elif entity.entity_type == Const.COFFEE_TYPE:
+                pg.draw.rect(self.screen, Const.COFFEE_COLOR, entity)
+            elif entity.entity_type == Const.BUG_TYPE:
+                pg.draw.rect(self.screen, Const.BUG_COLOR, entity)
         pg.display.flip()
 
     def render_stop(self):
