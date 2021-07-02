@@ -61,7 +61,7 @@ class ddos:
         
     def tick(self, entities):
         if self.timer == 0:
-            direction = pg.Vector2(0, -1)
+            direction = pg.Vector2(0, 1)
             for _ in range(5):
                 entities.append(arrow(self.player_id, self.position - Const.DDOS_RANGE * direction, direction, Const.DDOS_DAMAGE))
                 direction.rotate_ip(72)

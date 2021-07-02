@@ -37,6 +37,7 @@ CHARGE_TYPE = 14
 ARROW_TYPE = 15
 ARROW_SPEED = 120
 ARROW_RADIUS = 5
+
 DOS_ACTIVE_LIMIT = 10
 DOS_DAMAGE = 3
 DOS_TIMER = 20
@@ -45,6 +46,18 @@ DDOS_ACTIVE_LIMIT = 4
 DDOS_RANGE = 80
 DDOS_DAMAGE = 2
 DDOS_TIMER = 20
+
+COFFEE_WIDTH = 20
+COFFEE_HEIGHT = 20
+COFFEE_SPEED = {"right": pg.Vector2(100, -150), "left": pg.Vector2(-100, -150)}
+COFFEE_ACCELERATE = 150
+COFFEE_DAMAGE = 30
+
+BUG_WIDTH = 20
+BUG_HEIGHT = 20
+BUG_SPEED = {"right": pg.Vector2(100, -150), "left": pg.Vector2(-100, -150)}
+BUG_ACCELERATE = 150
+BUG_DAMAGE = 30
 
 DIRECTION_TO_VEC2 = {
     'up': pg.Vector2(0, -1),
@@ -77,7 +90,10 @@ ATTACK_RANGE_COLOR = [pg.Color('lightgreen'), pg.Color('orchid1'), pg.Color('lig
 INVISIBLE_COLOR = pg.Color('gray')
 BLOCK_COLOR = pg.Color('white')
 ITEM_COLOR = pg.Color("purple")
-ENTITY_COLOR = pg.Color("red")
+ARROW_COLOR = pg.Color("red")
+COFFEE_COLOR = pg.Color("brown")
+BUG_COLOR = pg.Color("DarkOliveGreen")
+
 # controller
 PLAYER_MOVE_KEYS = {
     pg.K_w: (0, 'jump'),

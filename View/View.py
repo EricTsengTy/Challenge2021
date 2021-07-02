@@ -86,8 +86,11 @@ class GraphicalView:
         
         for entity in self.model.entities:
             if entity.entity_type == Const.ARROW_TYPE:
-                pg.draw.circle(self.screen, Const.ENTITY_COLOR, entity.position, Const.ARROW_RADIUS)
-
+                pg.draw.circle(self.screen, Const.ARROW_COLOR, entity.position, Const.ARROW_RADIUS)
+            elif entity.entity_type == Const.COFFEE_TYPE:
+                pg.draw.rect(self.screen, Const.COFFEE_COLOR, entity)
+            elif entity.entity_type == Const.BUG_TYPE:
+                pg.draw.rect(self.screen, Const.BUG_COLOR, entity)
         pg.display.flip()
 
     def render_stop(self):

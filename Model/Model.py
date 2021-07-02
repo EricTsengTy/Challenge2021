@@ -8,6 +8,7 @@ from Model.GameObject.player import Player
 from Model.GameObject.block import Block
 from Model.GameObject.item import *
 from Model.GameObject.arrow import *
+from Model.GameObject.throw import *
 
 class StateMachine(object):
     '''
@@ -133,7 +134,11 @@ class GameEngine:
 
         elif isinstance(event, EventPlayerSpecialAttack):
             attacker = self.players[event.player_id[0]]
-            if attacker.keep_item_type == Const.DOS_TYPE:
+            if attacker.keep_item_type == Const.COFFEE_TYPE:
+                self.entities.append(coffee(attacker.player_id, attacker.position, "left"))
+            elif attacker.keep_item_type == Const.BUG_TYPE:
+                self.entities.append(bug(attacker.player_id, attacker.position, "left"))
+            elif attacker.keep_item_type == Const.DOS_TYPE:
                 be_attacked = [_ for _ in self.players]
                 be_attacked.remove(attacker)
                 be_attacked = random.choice(be_attacked)
@@ -212,7 +217,7 @@ class GameEngine:
             if random.random() < 0.8:
                 self.items.append(Item(random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
                                     random.randint(350, 400),
-                                    Const.DDOS_TYPE))
+                                    Const.BUG_TYPE))
 
         #entity move every tick
         for entity in self.entities:
