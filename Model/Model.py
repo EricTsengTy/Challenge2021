@@ -138,6 +138,12 @@ class GameEngine:
                 be_attacked.remove(attacker)
                 be_attacked = random.choice(be_attacked)
                 self.entities.append(dos(attacker.player_id, attacker.position, be_attacked.position - attacker.position)) 
+            elif attacker.keep_item_type == Const.DDOS_TYPE:
+                be_attacked = [_ for _ in self.players]
+                be_attacked.remove(attacker)
+                be_attacked = random.choice(be_attacked)
+                self.entities.append(ddos(attacker.player_id, be_attacked.position)) 
+                
             attacker.keep_item_type = 0
 
         elif isinstance(event, EventTimesUp):
@@ -205,8 +211,8 @@ class GameEngine:
         while len(self.items) < 5:
             if random.random() < 0.8:
                 self.items.append(Item(random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                    random.randint(300, 400),
-                                    Const.DOS_TYPE))
+                                    random.randint(350, 400),
+                                    Const.DDOS_TYPE))
 
         #entity move every tick
         for entity in self.entities:

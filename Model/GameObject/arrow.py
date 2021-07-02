@@ -29,7 +29,7 @@ class dos:
     def __init__(self, player_id, position, direction):
         self.entity_type = None
         self.player_id = player_id
-        self.position = position
+        self.position = pg.Vector2(position)
         self.direction = direction.normalize()
         self.timer = 0
         self.active_num = 0
@@ -41,6 +41,33 @@ class dos:
             self.active_num += 1        
             self.timer = Const.DOS_TIMER
             if self.active_num >= Const.DOS_ACTIVE_LIMIT:
+                self.dead = True
+        self.timer -= 1 
+
+    def touch(self, players):
+        return False
+
+    def is_dead(self):
+        return self.dead
+
+class ddos:
+    def __init__(self, player_id, position):
+        self.entity_type = None
+        self.player_id = player_id
+        self.position = pg.Vector2(position)
+        self.timer = 0
+        self.active_num = 0
+        self.dead = False
+        
+    def tick(self, entities):
+        if self.timer == 0:
+            direction = pg.Vector2(0, -1)
+            for _ in range(5):
+                entities.append(arrow(self.player_id, self.position - Const.DDOS_RANGE * direction, direction, Const.DDOS_DAMAGE))
+                direction.rotate_ip(72)
+            self.active_num += 1        
+            self.timer = Const.DDOS_TIMER
+            if self.active_num >= Const.DDOS_ACTIVE_LIMIT:
                 self.dead = True
         self.timer -= 1 
 
