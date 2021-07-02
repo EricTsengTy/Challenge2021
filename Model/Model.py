@@ -120,6 +120,7 @@ class GameEngine:
 
         elif isinstance(event, EventPlayerAttack):
             # player do common attack
+
             attacker = event.player_id[0]
             if self.players[attacker].can_common_attack:
                 attack_range = self.players[attacker].common_attack_range
@@ -127,6 +128,7 @@ class GameEngine:
                     if i == attacker:
                         continue
                     if self.players[i].can_be_common_attacked() and attack_range.colliderect(self.players[i]):
+                        print(i,attacker)
                         self.players[i].be_common_attacked()
             
         elif isinstance(event, EventTimesUp):
@@ -151,30 +153,13 @@ class GameEngine:
         
         for player in self.players:
             player.check_touch_item()
-        
-        
-        # # player is invisible
-        # for player in self.players:
-        #     if player.is_invisible:
-        #         player.invisible_time -= 1
-        #         if player.invisible_time == 0:
-        #             player.is_invisible = False
-
-        #remove item
-        for item in list(self.items): # iterating the copy of original list
-            if item.is_dead():
-                if item.item_type == 'FOLDER_UNUSED':
-                    new_item = Item(item.left, item.top, 'FOLDER_USED')
-                    new_item.activate()
-                    self.items.append(new_item)
-                self.items.remove(item)
 
         # generate the items
         while len(self.items) < 5:
             if random.random() < 0.8:
                 self.items.append(Item(self,
                                        random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                       random.randint(300, 400),'FOLDER_USED'))
+                                       random.randint(300, 400),'FOLDER_UNUSED'))
 
     def update_endgame(self):
         '''

@@ -19,20 +19,19 @@ ITEM_HEIGHT = 30
 ITEM_COLOR = pg.Color("purple")
 
 #item type
-FAN_TYPE = 1
-LIGHTNING_TYPE = 2
-COFFEE_TYPE = 3
-BUG_TYPE = 4
-DOS_TYPE = 5
-DDOS_TYPE = 6
-EXE_TYPE = 7
-USB_TYPE = 8
-FIREWARM_TYPE = 9
-GRAPHIC_CARD_TYPE = 10
-FORMAT_TYPE = 11
-FOLDER_UNUSED_TYPE = 12
-FOLDER_USED_TYPE = 13
-CHARGE_TYPE = 14
+ITEM_TYPE_LIST=['FAN',
+                'LIGHTNING',
+                'COFFEE',
+                'BUG',
+                'DOS',
+                'DDOS',
+                'EXE' ,
+                'USB',
+                'FIREWARM',
+                'GRAPHIC_CARD',
+                'FORMAT',
+                'FOLDER_UNUSED',
+                'CHARGE' ]
 
 DIRECTION_TO_VEC2 = {
     'up': pg.Vector2(0, -1),

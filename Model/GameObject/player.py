@@ -1,7 +1,9 @@
 import pygame as pg
+from pygame.mixer import fadeout
 import Const 
 from pygame.math import Vector2
 from Model.GameObject.basic_game_object import Basic_Game_Object
+from Model.GameObject.item import Item
 class Player(Basic_Game_Object):
     def __init__(self, model, player_id):
         super().__init__(model,
@@ -42,29 +44,35 @@ class Player(Basic_Game_Object):
 
     def tick(self):
         self.basic_tick()
-
+        self.invisible_time -= 1
+        if self.invisible_time<=0:
+            self.is_invisible = False
+            self.invisible_time = 0
+            
     def check_touch_item(self):
-        for item in self.model.items:
+        for item in list(self.model.items):
             if self.rect.colliderect(item.rect):
+                print(item.item_type)
                 self.touch_item(item.item_type)
-                item.activate()
+                self.model.items.remove(item)
 
     def touch_item(self, item_type):
-        if item_type in range(Const.FAN_TYPE, Const.DDOS_TYPE + 1):
+        if item_type in Const.ITEM_TYPE_LIST[0:6]:
             self.keep_item_type = item_type
-        elif item_type == Const.EXE_TYPE:
+        elif item_type == 'EXE':
             pass
-        elif item_type == Const.USB_TYPE:
+        elif item_type == 'USB':
             pass
-        elif item_type == Const.FIREWARM_TYPE:
+        elif item_type == 'FIREWARM':
             pass
-        elif item_type == Const.GRAPHIC_CARD_TYPE:
+        elif item_type == 'GRAPHIC_CARD':
             pass
-        elif item_type == Const.FORMAT_TYPE:
+        elif item_type == 'FORMAT':
             pass
-        elif item_type == Const.FOLDER_UNUSED_TYPE:
-            pass
-        elif item_type == Const.CHARGE_TYPE:
+        elif item_type == 'FOLDER_UNUSED':
+            self.invisible(3)
+            
+        elif item_type == 'CHARGE':
             pass
         
     def can_be_common_attacked(self):

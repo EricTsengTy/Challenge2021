@@ -32,6 +32,9 @@ class Basic_Game_Object:
     def basic_tick(self):
         if self.obey_gravity:
             self.fall_every_tick()
+    
+    def tick(self):
+        self.basic_tick()
 
     @property
     def left(self):
