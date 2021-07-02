@@ -17,7 +17,7 @@ class arrow:
             self.dead = True
     
     def touch(self, player):
-        return self.player_id != player.player_id and player.collidepoint(self.position.x, self.position.y)
+        return self.player_id != player.player_id and player.would_be_special_attacked() and player.collidepoint(self.position.x, self.position.y)
 
     def activate(self):
         self.dead = True

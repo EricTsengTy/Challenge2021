@@ -72,7 +72,7 @@ class GraphicalView:
         
         # draw players
         for player in self.model.players:
-            if player.is_invisible:
+            if player.be_invisible.in_the_state:
                 pg.draw.rect(self.screen, Const.INVISIBLE_COLOR,player)
             else:
                 pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)

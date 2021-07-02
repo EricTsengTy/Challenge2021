@@ -13,6 +13,7 @@ PLAYER_GRAVITY = 150
 PLAYER_FULL_BLOOD = 1000
 PLAYER_COMMON_ATTACK_SIZE = 20 #additional size around player
 PLAYER_COMMON_ATTACK_DAMAGE = 10
+PLAYER_REVIVE_PROTECTION = 0.5 #protection time after revive in second
 
 ITEM_WIDTH = 30
 ITEM_HEIGHT = 30
@@ -58,6 +59,11 @@ BUG_HEIGHT = 20
 BUG_SPEED = {"right": pg.Vector2(100, -150), "left": pg.Vector2(-100, -150)}
 BUG_ACCELERATE = 150
 BUG_DAMAGE = 30
+
+#item effect
+DAMAGE_MULTIPLE = 2 # multiple of common attack damage affected by USB
+SPEED_MULTIPLE = 0.5 # multiple of speed affected by DOS and DDOS
+ENERGY_MULTIPLE = 2 # multiple of accumulate energy speed affected by video card
 
 DIRECTION_TO_VEC2 = {
     'up': pg.Vector2(0, -1),
