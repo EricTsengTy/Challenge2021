@@ -83,6 +83,10 @@ class GraphicalView:
         
         for item in self.model.items:
             pg.draw.rect(self.screen, Const.ITEM_COLOR, item)
+        
+        for entity in self.model.entities:
+            if entity.entity_type == Const.ARROW_TYPE:
+                pg.draw.circle(self.screen, Const.ENTITY_COLOR, entity.position, Const.ARROW_RADIUS)
 
         pg.display.flip()
 

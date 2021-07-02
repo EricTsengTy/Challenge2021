@@ -7,6 +7,7 @@ from EventManager.EventManager import *
 from Model.GameObject.player import Player
 from Model.GameObject.block import Block
 from Model.GameObject.item import *
+from Model.GameObject.arrow import *
 
 class StateMachine(object):
     '''
@@ -81,6 +82,7 @@ class GameEngine:
         self.players = [Player(i) for i in range(Const.PLAYER_NUMBER)]
         self.blocks = [Block(i[0], i[1], i[2], i[3]) for i in Const.BLOCK_POSITION]
         self.items = []
+        self.entities = []
 
     def notify(self, event: BaseEvent):
         '''
@@ -128,7 +130,16 @@ class GameEngine:
                         continue
                     if self.players[i].can_be_common_attacked() and attack_range.colliderect(self.players[i]):
                         self.players[i].be_common_attacked()
-            
+
+        elif isinstance(event, EventPlayerSpecialAttack):
+            attacker = self.players[event.player_id[0]]
+            if attacker.keep_item_type == Const.DOS_TYPE:
+                be_attacked = [_ for _ in self.players]
+                be_attacked.remove(attacker)
+                be_attacked = random.choice(be_attacked)
+                self.entities.append(dos(attacker.player_id, attacker.position, be_attacked.position - attacker.position)) 
+            attacker.keep_item_type = 0
+
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
 
@@ -158,20 +169,20 @@ class GameEngine:
                 player.jump_count = 0
                 player.sync(last_modify='rect')
         
-        # player touch the item
-        for item in self.items:
-            player_touched = item.collidelist(self.players)
-            player_touched = self.players[player_touched] if player_touched!=-1 else None
-            if player_touched != None:
-                player.touch_item(item.item_type)
-                item.activate()
-
         # player is invisible
         for player in self.players:
             if player.is_invisible:
                 player.invisible_time -= 1
                 if player.invisible_time == 0:
                     player.is_invisible = False
+
+        # player touch the item
+        for item in self.items:
+            player_touched = item.collidelist(self.players)
+            player_touched = self.players[player_touched] if player_touched!=-1 else None
+            if player_touched != None:
+                player_touched.touch_item(item.item_type)
+                item.activate()
 
         for item in self.items:
             item.tick()
@@ -195,7 +206,25 @@ class GameEngine:
             if random.random() < 0.8:
                 self.items.append(Item(random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
                                     random.randint(300, 400),
-                                    Const.FOLDER_UNUSED_TYPE))
+                                    Const.DOS_TYPE))
+
+        #entity move every tick
+        for entity in self.entities:
+            entity.tick(self.entities)
+
+        #player touch entity
+        for player in self.players:
+            for entiy in self.entities:
+                if entiy.touch(player):
+                    entiy.activate()
+
+        #remove entity
+        remove_entity = []
+        for entity in self.entities:
+            if entity.is_dead():
+                remove_entity.append(entity)
+        for entity in remove_entity:
+            self.entities.remove(entity)
 
     def update_endgame(self):
         '''

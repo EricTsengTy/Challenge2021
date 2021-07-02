@@ -12,7 +12,6 @@ class Player(pg.Rect):
         self.position = Vector2(self.center)
         self.horizontal_speed = Const.PLAYER_SPEED
         self.vertical_speed = 0 # negative is up, positive is down
-        self.item_id = 0 #the item_id of the item player touch, 0 for nothing
         self.blood = Const.PLAYER_FULL_BLOOD
         self.common_attack_range = self.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
         self.can_common_attack = True
@@ -22,6 +21,7 @@ class Player(pg.Rect):
         self.is_invisible = False
         self.invisible_time = 0
         self.item_type = 0 #the item_type of the item player touch, 0 for nothing
+        self.keep_item_type = 0 #the item_type of the item player touch, 0 for nothing
 
     def move(self, direction: str):
         '''
@@ -88,4 +88,3 @@ class Player(pg.Rect):
         elif last_modify=='position':
             self.center=self.position
             self.common_attack_range.center=self.center
-

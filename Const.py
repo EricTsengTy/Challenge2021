@@ -16,7 +16,6 @@ PLAYER_COMMON_ATTACK_DAMAGE = 10
 
 ITEM_WIDTH = 30
 ITEM_HEIGHT = 30
-ITEM_COLOR = pg.Color("purple")
 
 #item type
 FAN_TYPE = 1
@@ -33,6 +32,16 @@ FORMAT_TYPE = 11
 FOLDER_UNUSED_TYPE = 12
 FOLDER_USED_TYPE = 13
 CHARGE_TYPE = 14
+
+#entity
+ARROW_TYPE = 15
+ARROW_SPEED = 120
+ARROW_RADIUS = 5
+DOS_ACTIVE_LIMIT = 10
+DOS_DAMAGE = 3
+DOS_TIMER = 20
+DDOS_ACTIVE_LIMIT = 4
+DDOS_DAMAGE = 2
 
 DIRECTION_TO_VEC2 = {
     'up': pg.Vector2(0, -1),
@@ -64,7 +73,8 @@ PLAYER_COLOR = [pg.Color('green'), pg.Color('magenta'), pg.Color('cyan'), pg.Col
 ATTACK_RANGE_COLOR = [pg.Color('lightgreen'), pg.Color('orchid1'), pg.Color('lightcyan'), pg.Color('whitesmoke')]
 INVISIBLE_COLOR = pg.Color('gray')
 BLOCK_COLOR = pg.Color('white')
-
+ITEM_COLOR = pg.Color("purple")
+ENTITY_COLOR = pg.Color("red")
 # controller
 PLAYER_MOVE_KEYS = {
     pg.K_w: (0, 'jump'),
