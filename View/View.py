@@ -73,16 +73,16 @@ class GraphicalView:
         # draw players
         for player in self.model.players:
             if player.is_invisible:
-                pg.draw.rect(self.screen, Const.INVISIBLE_COLOR,player)
+                pg.draw.rect(self.screen, Const.INVISIBLE_COLOR,player.rect)
             else:
                 pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
-                pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player)
+                pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player.rect)
         
-        for block in self.model.blocks:
-            pg.draw.rect(self.screen, Const.BLOCK_COLOR, block)
+        for ground in self.model.grounds:
+            pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)
         
-        for item in self.model.items:
-            pg.draw.rect(self.screen, Const.ITEM_COLOR, item)
+        # for item in self.model.items:
+        #     pg.draw.rect(self.screen, Const.ITEM_COLOR, item)
 
         pg.display.flip()
 

@@ -5,7 +5,7 @@ import Const
 from pygame.math import Vector2
 from EventManager.EventManager import *
 from Model.GameObject.player import Player
-from Model.GameObject.block import Block
+from Model.GameObject.ground import Ground
 from Model.GameObject.item import *
 
 class StateMachine(object):
@@ -78,8 +78,8 @@ class GameEngine:
         '''
         self.clock = pg.time.Clock()
         self.state_machine.push(Const.STATE_MENU)
-        self.players = [Player(i) for i in range(Const.PLAYER_NUMBER)]
-        self.blocks = [Block(i[0], i[1], i[2], i[3]) for i in Const.BLOCK_POSITION]
+        self.players = [Player(self, i) for i in range(Const.PLAYER_NUMBER)]
+        self.grounds = [Ground(self, i[0], i[1], i[2], i[3]) for i in Const.GROUND_POSITION]
         self.items = []
 
     def notify(self, event: BaseEvent):
@@ -144,58 +144,48 @@ class GameEngine:
         Update the objects not controlled by user.
         For example: obstacles, items, special effects
         '''
-        # player fall
         for player in self.players:
-            player.move_every_tick()
-        
-        # player touch the ground (landing)
-        for player in self.players:
-            collided = player.collidelist(self.blocks)
-            collided = self.blocks[collided] if collided!=-1 else None
-            if player.vertical_speed>0 and collided!=None and collided.bottom>player.bottom>collided.top:
-                player.bottom = collided.top
-                player.vertical_speed = 0
-                player.jump_count = 0
-                player.sync(last_modify='rect')
-        
-        # player touch the item
-        for item in self.items:
-            player_touched = item.collidelist(self.players)
-            player_touched = self.players[player_touched] if player_touched!=-1 else None
-            if player_touched != None:
-                player.touch_item(item.item_type)
-                item.activate()
-
-        # player is invisible
-        for player in self.players:
-            if player.is_invisible:
-                player.invisible_time -= 1
-                if player.invisible_time == 0:
-                    player.is_invisible = False
-
-        for item in self.items:
-            item.tick()
-
-        #remove item
-        removed_item=[]
-        for item in self.items:
-            if item.is_dead():
-                if item.item_type == Const.FOLDER_UNUSED_TYPE:
-                    new_item = Item(item.left,
-                                    item.top,
-                                    Const.FOLDER_USED_TYPE)
-                    new_item.activate()
-                    self.items.append(new_item)
-                removed_item.append(item)
-        for item in removed_item:
-            self.items.remove(item)
+            player.tick()
             
-        # generate the items
-        while len(self.items) < 5:
-            if random.random() < 0.8:
-                self.items.append(Item(random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                    random.randint(300, 400),
-                                    Const.FOLDER_UNUSED_TYPE))
+        
+        # # player touch the item
+        # for item in self.items:
+        #     player_touched = item.collidelist(self.players)
+        #     player_touched = self.players[player_touched] if player_touched!=-1 else None
+        #     if player_touched != None:
+        #         player.touch_item(item.item_type)
+        #         item.activate()
+
+        # # player is invisible
+        # for player in self.players:
+        #     if player.is_invisible:
+        #         player.invisible_time -= 1
+        #         if player.invisible_time == 0:
+        #             player.is_invisible = False
+
+        # for item in self.items:
+        #     item.tick()
+
+        # #remove item
+        # removed_item=[]
+        # for item in self.items:
+        #     if item.is_dead():
+        #         if item.item_type == Const.FOLDER_UNUSED_TYPE:
+        #             new_item = Item(item.left,
+        #                             item.top,
+        #                             Const.FOLDER_USED_TYPE)
+        #             new_item.activate()
+        #             self.items.append(new_item)
+        #         removed_item.append(item)
+        # for item in removed_item:
+        #     self.items.remove(item)
+            
+        # # generate the items
+        # while len(self.items) < 5:
+        #     if random.random() < 0.8:
+        #         self.items.append(Item(random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
+        #                             random.randint(300, 400),
+        #                             Const.FOLDER_UNUSED_TYPE))
 
     def update_endgame(self):
         '''

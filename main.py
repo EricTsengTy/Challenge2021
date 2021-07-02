@@ -1,10 +1,12 @@
 import pygame as pg
+from pygame.math import Vector2
+from copy import copy
 
 from EventManager.EventManager import EventManager
 from Model.Model import GameEngine
 from Controller.Controller import Controller
 from View.View import GraphicalView
-
+from Model.GameObject.basic_game_object import Basic_Game_Object
 def main():
     # Initialization
     pg.init()
