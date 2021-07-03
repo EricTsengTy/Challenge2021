@@ -3,6 +3,7 @@ import pygame as pg
 # model
 FPS = 60 # frame per second
 GAME_LENGTH = 30 * FPS
+
 PLAYER_INIT_POSITION = [pg.Vector2(200, 400), pg.Vector2(300, 400), pg.Vector2(400, 400), pg.Vector2(500, 400)]
 PLAYER_NUMBER = 4
 PLYAER_WIDTH = 40
@@ -13,26 +14,6 @@ PLAYER_GRAVITY = 150
 PLAYER_FULL_BLOOD = 1000
 PLAYER_COMMON_ATTACK_SIZE = 20 #additional size around player
 PLAYER_COMMON_ATTACK_DAMAGE = 10
-
-ITEM_WIDTH = 30
-ITEM_HEIGHT = 30
-ITEM_COLOR = pg.Color("purple")
-
-#item type
-ITEM_TYPE_LIST=['FAN',
-                'LIGHTNING',
-                'COFFEE',
-                'BUG',
-                'DOS',
-                'DDOS',
-                'EXE' ,
-                'USB',
-                'FIREWARM',
-                'GRAPHIC_CARD',
-                'FORMAT',
-                'FOLDER_UNUSED',
-                'CHARGE' ]
-
 DIRECTION_TO_VEC2 = {
     'up': pg.Vector2(0, -1),
     'left': pg.Vector2(-1, 0),
@@ -46,13 +27,31 @@ GROUND_POSITION = [
     (150, 430, 200, 10),
 ]
 
+ITEM_WIDTH = 30
+ITEM_HEIGHT = 30
+ITEM_TYPE_LIST=['FAN',
+                'LIGHTNING',
+                'COFFEE',
+                'BUG',
+                'DOS',
+                'DDOS',
+                'EXE' ,
+                'USB',
+                'FIREWARM',
+                'GRAPHIC_CARD',
+                'FORMAT',
+                'FOLDER_UNUSED',
+                'CHARGE']
+
+
 # special attack
-ARROW_COLOR = pg.Color("red")
+ARROW_SPEED = 120
 ARROW_RADIUS = 5
-ARROW_SPEED = 50
 
 DOS_ACTIVE_LIMIT = 10
-DOS_DAMAGE  = 10
+DOS_DAMAGE = 3
+DOS_TIMER = 20
+
 
 # State machine constants
 STATE_POP = 0 # for convenience, not really a state which we can be in
@@ -60,7 +59,6 @@ STATE_MENU = 1
 STATE_PLAY = 2
 STATE_STOP = 3 # not implemented yet
 STATE_ENDGAME = 4
-
 
 # view
 WINDOW_CAPTION = 'Challenge 2020 Homework'
@@ -71,6 +69,9 @@ PLAYER_COLOR = [pg.Color('green'), pg.Color('magenta'), pg.Color('cyan'), pg.Col
 ATTACK_RANGE_COLOR = [pg.Color('lightgreen'), pg.Color('orchid1'), pg.Color('lightcyan'), pg.Color('whitesmoke')]
 INVISIBLE_COLOR = pg.Color('gray')
 BLOCK_COLOR = pg.Color('white')
+ITEM_COLOR = pg.Color("purple")
+ARROW_COLOR = pg.Color("red")
+
 
 # controller
 PLAYER_MOVE_KEYS = {
