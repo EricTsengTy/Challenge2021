@@ -6,3 +6,10 @@ class Item(Basic_Game_Object):
     def __init__(self, model, left, top, item_type):
         super().__init__(model, left, top, Const.ITEM_WIDTH, Const.ITEM_HEIGHT)
         self.item_type = item_type
+
+    def tick(self):
+        for player in self.model.players:
+            if player.rect.colliderect(self.rect):
+                print(self.item_type)
+                player.touch_item(self.item_type)
+                self.kill()

@@ -53,13 +53,6 @@ class Player(Basic_Game_Object):
         if self.invisible_time<=0:
             self.is_invisible = False
             self.invisible_time = 0
-            
-    def check_touch_item(self):
-        for item in list(self.model.items):
-            if self.rect.colliderect(item.rect):
-                print(item.item_type)
-                self.touch_item(item.item_type)
-                self.model.items.remove(item)
 
     def touch_item(self, item_type):
         if item_type in Const.ITEM_TYPE_LIST[0:6]:

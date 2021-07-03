@@ -170,12 +170,6 @@ class GameEngine:
                 continue
             attack.tick()
 
-        for player in self.players: 
-            if player.killed():
-                self.players.remove(player)
-                continue
-            player.check_touch_item()
-
         # generate the items
         while len(self.items) < 5:
             if random.random() < 0.8:
