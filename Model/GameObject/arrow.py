@@ -49,7 +49,7 @@ class dos:
 
     def is_dead(self):
         return self.dead
-
+        
 class ddos:
     def __init__(self, player_id, position):
         self.entity_type = None
