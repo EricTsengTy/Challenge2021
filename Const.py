@@ -55,6 +55,7 @@ DOS_TIMER = 20
 DDOS_ACTIVE_LIMIT = 10
 DDOS_DAMAGE = 3
 DDOS_TIMER = 20
+DDOS_RADIUS = 100
 
 # State machine constants
 STATE_POP = 0 # for convenience, not really a state which we can be in
