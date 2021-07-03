@@ -92,6 +92,8 @@ class GameEngine:
             self.initialize()
 
         elif isinstance(event, EventEveryTick):
+            for i in range(4):
+                print(self.players[i].blood)
             # Peek the state of the game and do corresponding work
             cur_state = self.state_machine.peek()
             if cur_state == Const.STATE_MENU:
@@ -158,7 +160,6 @@ class GameEngine:
             item.tick()
         for attack in self.attacks:
             attack.tick()
-
 
         for player in self.players: 
             player.check_touch_item()

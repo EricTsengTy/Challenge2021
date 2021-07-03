@@ -85,6 +85,10 @@ class Player(Basic_Game_Object):
             self.model.attacks.append(Dos(self.model, self, self.model.players[(self.player_id+1)%4]))
         self.keep_item_type = ''
 
+    def be_special_attacked(self, attack):
+        if attack.name == 'Arrow':
+            self.blood-=attack.damage
+    
     def can_be_common_attacked(self):
         return (not self.is_invisible) and self.would_be_common_attacked
     
