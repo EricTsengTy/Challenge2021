@@ -26,7 +26,7 @@ class Player(Basic_Game_Object):
         self.landing = True
         self.obey_gravity = True
         self.keep_item_type = ''
-
+        self.can_leave_screen = False
 
     @property
     def common_attack_range(self):

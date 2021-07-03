@@ -8,6 +8,7 @@ class Basic_Game_Object:
         self.model = model
         self.__rect = pg.Rect(left, top, width, height)
         self.__position = Vector2(self.__rect.topleft)
+        self.can_leave_screen = True
         self.speed = Vector2(0.0,0.0)
         self.obey_gravity = False
         self.gravity = 0
@@ -32,11 +33,16 @@ class Basic_Game_Object:
                 self.bottom = collided.top
                 self.speed.y = 0
                 self.jump_count = 0
-        self.clip_position()
-    
+
+        if not self.can_leave_screen:
+            self.clip_position()
+
+        if self.can_leave_screen and (not((0<=self.x<=Const.ARENA_SIZE[0]) and (0<=self.y<=Const.ARENA_SIZE[1]))):
+            self.kill()
+
     def tick(self):
         self.basic_tick()
-    
+
     def kill(self):
         self.__death = True
 
