@@ -1,9 +1,12 @@
 import pygame as pg
+from pygame.display import mode_ok
 from pygame.mixer import fadeout
 import Const 
 from pygame.math import Vector2
 from Model.GameObject.basic_game_object import Basic_Game_Object
 from Model.GameObject.item import Item
+from Model.GameObject.special_attack import *
+
 class Player(Basic_Game_Object):
     def __init__(self, model, player_id):
         super().__init__(model,
@@ -13,7 +16,6 @@ class Player(Basic_Game_Object):
         self.player_id = player_id
         self.max_jump = 2
         self.jump_count = 0
-        self.item_id = 0 #the item_id of the item player touch, 0 for nothing
         self.blood = Const.PLAYER_FULL_BLOOD
         self.can_common_attack = True
         self.can_special_attack = True
@@ -23,6 +25,9 @@ class Player(Basic_Game_Object):
         self.invisible_time = 0
         self.landing = True
         self.obey_gravity = True
+        self.keep_item_type = ''
+
+
     @property
     def common_attack_range(self):
         return self.rect.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
@@ -74,7 +79,12 @@ class Player(Basic_Game_Object):
             
         elif item_type == 'CHARGE':
             pass
-        
+
+    def special_attack(self):
+        if(self.keep_item_type == 'DOS'):
+            self.model.attacks.append(Dos(self.model, self, self.model.players[(self.player_id+1)%4]))
+        self.keep_item_type = ''
+
     def can_be_common_attacked(self):
         return (not self.is_invisible) and self.would_be_common_attacked
     

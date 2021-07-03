@@ -46,6 +46,14 @@ GROUND_POSITION = [
     (150, 430, 200, 10),
 ]
 
+# special attack
+ARROW_COLOR = pg.Color("red")
+ARROW_RADIUS = 5
+ARROW_SPEED = 50
+
+DOS_ACTIVE_LIMIT = 10
+DOS_DAMAGE  = 10
+
 # State machine constants
 STATE_POP = 0 # for convenience, not really a state which we can be in
 STATE_MENU = 1

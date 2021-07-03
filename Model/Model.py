@@ -8,6 +8,7 @@ from Model.GameObject.player import Player
 from Model.GameObject.ground import Ground
 from Model.GameObject.item import *
 
+
 class StateMachine(object):
     '''
     Manages a stack based state machine.
@@ -81,6 +82,7 @@ class GameEngine:
         self.players = [Player(self, i) for i in range(Const.PLAYER_NUMBER)]
         self.grounds = [Ground(self, i[0], i[1], i[2], i[3]) for i in Const.GROUND_POSITION]
         self.items = []
+        self.attacks = []
 
     def notify(self, event: BaseEvent):
         '''
@@ -120,7 +122,6 @@ class GameEngine:
 
         elif isinstance(event, EventPlayerAttack):
             # player do common attack
-
             attacker = event.player_id[0]
             if self.players[attacker].can_common_attack:
                 attack_range = self.players[attacker].common_attack_range
@@ -130,7 +131,12 @@ class GameEngine:
                     if self.players[i].can_be_common_attacked() and attack_range.colliderect(self.players[i]):
                         print(i,attacker)
                         self.players[i].be_common_attacked()
-            
+    
+        elif isinstance(event, EventPlayerSpecialAttack):
+            attacker = self.players[event.player_id[0]]
+            attacker.special_attack()
+
+
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
 
@@ -150,8 +156,11 @@ class GameEngine:
             player.tick()
         for item in self.items:
             item.tick()
-        
-        for player in self.players:
+        for attack in self.attacks:
+            attack.tick()
+
+
+        for player in self.players: 
             player.check_touch_item()
 
         # generate the items
@@ -159,7 +168,7 @@ class GameEngine:
             if random.random() < 0.8:
                 self.items.append(Item(self,
                                        random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                       random.randint(300, 400),'FOLDER_UNUSED'))
+                                       random.randint(300, 400),'DOS'))
 
     def update_endgame(self):
         '''

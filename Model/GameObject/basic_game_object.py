@@ -17,9 +17,13 @@ class Basic_Game_Object:
         self.x = max(0, min(Const.ARENA_SIZE[0], self.x))
         self.y = max(0, min(Const.ARENA_SIZE[1], self.y))
 
-    def fall_every_tick(self):
-        self.speed.y += Const.PLAYER_GRAVITY/Const.FPS
-        self.y += self.speed.y/Const.FPS
+    def basic_tick(self):
+        
+        if self.obey_gravity:
+            self.speed.y += Const.PLAYER_GRAVITY/Const.FPS
+        
+        self.position += self.speed / Const.FPS
+
         if self.landing:
             collided = self.rect.collidelist([ground.rect for ground in self.model.grounds])
             collided = self.model.grounds[collided] if collided!=-1 else None
@@ -28,10 +32,11 @@ class Basic_Game_Object:
                 self.speed.y = 0
                 self.jump_count = 0
         self.clip_position()
+    
+    def tick(self):
+        self.basic_tick()
+        
 
-    def basic_tick(self):
-        if self.obey_gravity:
-            self.fall_every_tick()
     
     def tick(self):
         self.basic_tick()
@@ -70,7 +75,7 @@ class Basic_Game_Object:
 
     @property
     def center(self):
-        return self.__rect.center
+        return Vector2(self.__rect.center)
     @center.setter
     def center(self, value):
         self.__rect.center = value
