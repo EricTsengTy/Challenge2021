@@ -87,7 +87,7 @@ STATE_ENDGAME = 4
 
 
 # view
-WINDOW_CAPTION = 'Challenge 2020 Homework'
+WINDOW_CAPTION = 'Challenge 2021'
 WINDOW_SIZE = (800, 800)
 ARENA_SIZE = (800, 800)
 BACKGROUND_COLOR = pg.Color('black')

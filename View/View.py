@@ -3,6 +3,7 @@ import pygame as pg
 from EventManager.EventManager import *
 from Model.Model import GameEngine
 import Const
+from View.utils import Text
 
 
 class GraphicalView:
@@ -30,7 +31,10 @@ class GraphicalView:
         '''
         This method is called when a new game is instantiated.
         '''
-        pass
+        pg.init()
+        pg.font.init()
+        pg.display.set_caption(Const.WINDOW_CAPTION)
+        
 
     def notify(self, event):
         '''
@@ -59,10 +63,15 @@ class GraphicalView:
         self.screen.fill(Const.BACKGROUND_COLOR)
 
         # draw text
+
+        '''
         font = pg.font.Font(None, 36)
         text_surface = font.render("Press [space] to start ...", 1, pg.Color('gray88'))
         text_center = (Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2)
         self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
+        '''
+        menu_text = Text("Press [space] to start ...", 36, pg.Color('gray88'))
+        menu_text.blit(self.screen, center=(Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2))
 
         pg.display.flip()
 
@@ -77,9 +86,12 @@ class GraphicalView:
             else:
                 pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
                 pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player)
-        
+        '''
         for block in self.model.blocks:
             pg.draw.rect(self.screen, Const.BLOCK_COLOR, block)
+        '''
+        for block in Const.BLOCK_POSITION:
+            pg.draw.rect(self.screen, Const.BLOCK_COLOR, pg.Rect(*block))
         
         for item in self.model.items:
             pg.draw.rect(self.screen, Const.ITEM_COLOR, item)
