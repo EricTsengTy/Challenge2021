@@ -24,6 +24,8 @@ class Dos(Basic_Game_Object):
         self.timer -= 1
         if self.rounds<=0:
             self.kill()
+
+
 class Ddos(Basic_Game_Object):
     def __init__(self, model, attacker, target):
         super().__init__(model, target.center.x, target.center.y, 1, 1)

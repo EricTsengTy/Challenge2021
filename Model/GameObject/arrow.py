@@ -11,7 +11,6 @@ class Arrow(Basic_Game_Object):
 		self.attacker_id = attacker_id
 		self.speed = direction.normalize() * Const.ARROW_SPEED
 		self.damage = damage
-		self.dead = False
 
 	def tick(self):
 		self.basic_tick()
