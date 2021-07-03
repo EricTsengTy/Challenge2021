@@ -17,6 +17,7 @@ PLAYER_COMMON_ATTACK_DAMAGE = 10
 ITEM_WIDTH = 30
 ITEM_HEIGHT = 30
 ITEM_COLOR = pg.Color("purple")
+ENTITY_COLOR = pg.Color("red")
 
 #item type
 ITEM_TYPE_LIST=['FAN',
@@ -32,6 +33,18 @@ ITEM_TYPE_LIST=['FAN',
                 'FORMAT',
                 'FOLDER_UNUSED',
                 'CHARGE' ]
+
+#entity
+ARROW_TYPE = 15
+ARROW_SPEED = 120
+ARROW_RADIUS = 5
+DOS_ACTIVE_LIMIT = 10
+DOS_DAMAGE = 3
+DOS_TIMER = 20
+DDOS_ACTIVE_LIMIT = 4
+DDOS_DAMAGE = 2
+DDOS_RANGE = 80
+DDOS_TIMER = 20
 
 DIRECTION_TO_VEC2 = {
     'up': pg.Vector2(0, -1),

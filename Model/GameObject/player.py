@@ -13,7 +13,6 @@ class Player(Basic_Game_Object):
         self.player_id = player_id
         self.max_jump = 2
         self.jump_count = 0
-        self.item_id = 0 #the item_id of the item player touch, 0 for nothing
         self.blood = Const.PLAYER_FULL_BLOOD
         self.can_common_attack = True
         self.can_special_attack = True
@@ -23,6 +22,8 @@ class Player(Basic_Game_Object):
         self.invisible_time = 0
         self.landing = True
         self.obey_gravity = True
+        self.keep_item_type = 0 #the item_type of the item player touch, 0 for nothing
+
     @property
     def common_attack_range(self):
         return self.rect.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
@@ -52,7 +53,6 @@ class Player(Basic_Game_Object):
     def check_touch_item(self):
         for item in list(self.model.items):
             if self.rect.colliderect(item.rect):
-                print(item.item_type)
                 self.touch_item(item.item_type)
                 self.model.items.remove(item)
 
