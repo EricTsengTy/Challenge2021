@@ -76,6 +76,8 @@ class Player(Basic_Game_Object):
     def special_attack(self):
         if(self.keep_item_type == 'DOS'):
             self.model.attacks.append(Dos(self.model, self, self.model.players[(self.player_id+1)%4]))
+        elif(self.keep_item_type == 'DDOS'):
+            self.model.attacks.append(Ddos(self.model, self, self.model.players[(self.player_id+1)%4]))
         self.keep_item_type = ''
 
     def be_special_attacked(self, attack):

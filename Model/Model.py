@@ -176,6 +176,10 @@ class GameEngine:
                 self.items.append(Item(self,
                                        random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
                                        random.randint(300, 400),'DOS'))
+            else:
+                self.items.append(Item(self,
+                                       random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
+                                       random.randint(300, 400),'DDOS'))
 
     def update_endgame(self):
         '''
