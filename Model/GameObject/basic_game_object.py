@@ -12,6 +12,7 @@ class Basic_Game_Object:
         self.obey_gravity = False
         self.gravity = 0
         self.landing = False
+        self.__death = False
 
     def clip_position(self):
         self.x = max(0, min(Const.ARENA_SIZE[0], self.x))
@@ -35,11 +36,12 @@ class Basic_Game_Object:
     
     def tick(self):
         self.basic_tick()
-        
-
     
-    def tick(self):
-        self.basic_tick()
+    def kill(self):
+        self.__death = True
+
+    def killed(self):
+        return self.__death
 
     @property
     def left(self):
@@ -112,5 +114,6 @@ class Basic_Game_Object:
     def rect(self, value):
         self.__rect = value
         self.__position = Vector2(self.__rect.topleft)
+
 
 

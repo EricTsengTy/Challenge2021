@@ -18,6 +18,9 @@ class Dos(Basic_Game_Object):
         self.basic_tick()
         if self.timer<=0:
             self.timer = 60
+            self.rounds -=1
             self.model.attacks.append(Arrow(self.model, self.attacker.player_id, 
                                             self.position, self.direction, Const.DOS_DAMAGE))
         self.timer -= 1
+        if self.rounds<=0:
+            self.kill()

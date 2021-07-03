@@ -155,13 +155,25 @@ class GameEngine:
         For example: obstacles, items, special effects
         '''
         for player in self.players:
+            if player.killed():
+                self.players.remove(player)
+                continue
             player.tick()
         for item in self.items:
+            if item.killed():
+                self.items.remove(item)
+                continue
             item.tick()
         for attack in self.attacks:
+            if attack.killed():
+                self.attacks.remove(attack)
+                continue
             attack.tick()
 
         for player in self.players: 
+            if player.killed():
+                self.players.remove(player)
+                continue
             player.check_touch_item()
 
         # generate the items

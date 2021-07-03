@@ -19,3 +19,4 @@ class Arrow(Basic_Game_Object):
 			if self.attacker_id != player.player_id\
 				and player.rect.collidepoint(self.center.x, self.center.y):
 				player.be_special_attacked(self)
+				self.kill()
