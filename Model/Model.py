@@ -7,7 +7,6 @@ from EventManager.EventManager import *
 from Model.GameObject.player import Player
 from Model.GameObject.ground import Ground
 from Model.GameObject.item import *
-from Model.GameObject.arrow import *
 
 class StateMachine(object):
     '''
@@ -82,7 +81,6 @@ class GameEngine:
         self.players = [Player(self, i) for i in range(Const.PLAYER_NUMBER)]
         self.grounds = [Ground(self, i[0], i[1], i[2], i[3]) for i in Const.GROUND_POSITION]
         self.items = []
-        self.entities = []
 
     def notify(self, event: BaseEvent):
         '''
@@ -130,23 +128,9 @@ class GameEngine:
                     if i == attacker:
                         continue
                     if self.players[i].can_be_common_attacked() and attack_range.colliderect(self.players[i]):
+                        print(i,attacker)
                         self.players[i].be_common_attacked()
-        
-        elif isinstance(event, EventPlayerSpecialAttack):
-            attacker = self.players[event.player_id[0]]
-            if attacker.keep_item_type == 'DOS':
-                be_attacked = [_ for _ in self.players]
-                be_attacked.remove(attacker)
-                be_attacked = random.choice(be_attacked)
-                self.entities.append(dos(attacker.player_id, attacker.position, be_attacked.position - attacker.position)) 
-            elif attacker.keep_item_type == 'DDOS':
-                be_attacked = [_ for _ in self.players]
-                be_attacked.remove(attacker)
-                be_attacked = random.choice(be_attacked)
-                self.entities.append(ddos(attacker.player_id, be_attacked.position)) 
-            attacker.keep_item_type = 0
-        
-
+            
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
 
@@ -175,25 +159,7 @@ class GameEngine:
             if random.random() < 0.8:
                 self.items.append(Item(self,
                                        random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                       random.randint(350, 400),'DDOS'))
-
-        #entity move every tick
-        for entity in self.entities:
-            entity.tick(self.entities)
-
-        #player touch entity
-        for player in self.players:
-            for entiy in self.entities:
-                if entiy.touch(player):
-                    entiy.activate()
-
-        #remove entity
-        remove_entity = []
-        for entity in self.entities:
-            if entity.is_dead():
-                remove_entity.append(entity)
-        for entity in remove_entity:
-            self.entities.remove(entity)
+                                       random.randint(300, 400),'FOLDER_UNUSED'))
 
     def update_endgame(self):
         '''
