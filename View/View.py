@@ -87,7 +87,10 @@ class GraphicalView:
         for attack in self.model.attacks:
             if attack.name == 'Arrow':
                 pg.draw.circle(self.screen, Const.ARROW_COLOR, attack.position, Const.ARROW_RADIUS)
-
+            elif attack.name == 'Bug':
+                pg.draw.circle(self.screen, Const.COFFEE_COLOR, attack.position, Const.ARROW_RADIUS)
+            elif attack.name == 'Coffee':
+                pg.draw.circle(self.screen, Const.BUG_COLOR, attack.position, Const.ARROW_RADIUS)
         pg.display.flip()
 
     def render_stop(self):

@@ -31,8 +31,8 @@ ITEM_WIDTH = 30
 ITEM_HEIGHT = 30
 ITEM_TYPE_LIST=['FAN',
                 'LIGHTNING',
-                'COFFEE',
-                'BUG',
+                'THROW_COFFEE',
+                'THROW_BUG',
                 'DOS',
                 'DDOS',
                 'EXE' ,
@@ -57,6 +57,16 @@ DDOS_DAMAGE = 3
 DDOS_TIMER = 20
 DDOS_RADIUS = 100
 
+COFFEE_WIDTH = 20
+COFFEE_HEIGHT = 20
+COFFEE_DAMAGE = 30
+COFFEE_GRAVITY = 150
+
+BUG_WIDTH = 20
+BUG_HEIGHT = 20
+BUG_DAMAGE = 30
+BUG_GRAVITY = 150
+
 # State machine constants
 STATE_POP = 0 # for convenience, not really a state which we can be in
 STATE_MENU = 1
@@ -75,7 +85,8 @@ INVISIBLE_COLOR = pg.Color('gray')
 BLOCK_COLOR = pg.Color('white')
 ITEM_COLOR = pg.Color("purple")
 ARROW_COLOR = pg.Color("red")
-
+COFFEE_COLOR = pg.Color("brown")
+BUG_COLOR = pg.Color("DarkOliveGreen")
 
 # controller
 PLAYER_MOVE_KEYS = {

@@ -172,14 +172,10 @@ class GameEngine:
 
         # generate the items
         while len(self.items) < 5:
-            if random.random() < 0.8:
-                self.items.append(Item(self,
-                                       random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                       random.randint(300, 400),'DOS'))
-            else:
-                self.items.append(Item(self,
-                                       random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                       random.randint(300, 400),'DDOS'))
+            testing_item_type = 'THROW_BUG'
+            self.items.append(Item(self,
+                                    random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
+                                    random.randint(300, 400),testing_item_type))
 
     def update_endgame(self):
         '''

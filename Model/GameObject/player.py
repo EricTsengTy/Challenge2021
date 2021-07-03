@@ -78,10 +78,18 @@ class Player(Basic_Game_Object):
             self.model.attacks.append(Dos(self.model, self, self.model.players[(self.player_id+1)%4]))
         elif(self.keep_item_type == 'DDOS'):
             self.model.attacks.append(Ddos(self.model, self, self.model.players[(self.player_id+1)%4]))
+        elif(self.keep_item_type == 'THROW_COFFEE'):
+            self.model.attacks.append(Throw_Coffee(self.model, self, self.model.players[(self.player_id+1)%4]))
+        elif(self.keep_item_type == 'THROW_BUG'):
+            self.model.attacks.append(Throw_Bug(self.model, self, self.model.players[(self.player_id+1)%4]))
         self.keep_item_type = ''
 
     def be_special_attacked(self, attack):
         if attack.name == 'Arrow':
+            self.blood-=attack.damage
+        if attack.name == 'Bug':
+            self.blood-=attack.damage
+        if attack.name == 'Coffee':
             self.blood-=attack.damage
     
     def can_be_common_attacked(self):
