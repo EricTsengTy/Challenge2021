@@ -112,9 +112,9 @@ class Player(Basic_Game_Object):
 
     def can_common_attack(self):
         if self.state['in_folder'] == 0:
-            return False
-        else:
             return True
+        else:
+            return False
 
     def can_be_special_attacked(self):
         if self.state['be_special_attacked'] == 0:
@@ -134,4 +134,8 @@ class Player(Basic_Game_Object):
         else:
             return False
 
-
+    def infected(self):
+        if self.state['infected'] == 0:
+            return False
+        else:
+            return True
