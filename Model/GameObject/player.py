@@ -6,6 +6,7 @@ from pygame.math import Vector2
 from Model.GameObject.basic_game_object import Basic_Game_Object
 from Model.GameObject.item import Item
 from Model.GameObject.special_attack import *
+import Model.GameObject.state as State
 
 class Player(Basic_Game_Object):
     def __init__(self, model, player_id):
@@ -17,12 +18,7 @@ class Player(Basic_Game_Object):
         self.max_jump = 2
         self.jump_count = 0
         self.blood = Const.PLAYER_FULL_BLOOD
-        self.can_common_attack = True
-        self.can_special_attack = True
-        self.would_be_common_attacked = True
-        self.would_be_special_attacked = True
-        self.is_invisible = False
-        self.invisible_time = 0
+        self.state = State.init()
         self.landing = True
         self.obey_gravity = True
         self.keep_item_type = ''
@@ -50,11 +46,12 @@ class Player(Basic_Game_Object):
         self.clip_position()
 
     def tick(self):
+        for key,value in self.state.items():
+            if key == 'in_folder' and value == 1:
+                State.invisible(self.state)
+            value = max(value - 1, 0)
         self.basic_tick()
-        self.invisible_time -= 1
-        if self.invisible_time<=0:
-            self.is_invisible = False
-            self.invisible_time = 0
+          
 
     def touch_item(self, item_type):
         if item_type in Const.ITEM_TYPE_LIST[0:6]:
@@ -62,16 +59,20 @@ class Player(Basic_Game_Object):
         elif item_type == 'EXE':
             pass
         elif item_type == 'USB':
-            pass
-        elif item_type == 'FIREWARM':
-            pass
+            State.infect(self.state)
+            print(self.state)
+        elif item_type == 'FIREWALL':
+            State.firewall(self.state)
+            print(self.state)
         elif item_type == 'GRAPHIC_CARD':
-            pass
+            State.graphiccard(self.state)
+            print(self.state)
         elif item_type == 'FORMAT':
-            pass
+            State.normal(self.state)
+            print(self.state)
         elif item_type == 'FOLDER_UNUSED':
-            self.invisible(3)
-            
+            State.folder(self.state)
+            print(self.state)
         elif item_type == 'CHARGE':
             pass
 
@@ -89,22 +90,48 @@ class Player(Basic_Game_Object):
     def be_special_attacked(self, attack):
         if attack.name == 'Arrow':
             self.blood-=attack.damage
+            State.slow_down(self.state)
+            print(self.state)
         if attack.name == 'Bug':
             self.blood-=attack.damage
+            State.broken(self.state)
+            print(self.state)
         if attack.name == 'Coffee':
             self.blood-=attack.damage
-    
-    def can_be_common_attacked(self):
-        return (not self.is_invisible) and self.would_be_common_attacked
-    
-    def can_be_special_attacked(self):
-        return (not self.is_invisible) and self.would_be_special_attacked
+            State.broken(self.state)
+            print(self.state)
         
     def be_common_attacked(self):
         self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
 
-    def invisible(self, time):
-        self.is_invisible = True
-        self.invisible_time = time * Const.FPS
+    def can_be_common_attacked(self):
+        if self.state['be_common_attacked'] == 0:
+            return True
+        else:
+            return False
+
+    def can_common_attack(self):
+        if self.state['in_folder'] == 0:
+            return False
+        else:
+            return True
+
+    def can_be_special_attacked(self):
+        if self.state['be_special_attacked'] == 0:
+            return True
+        else:
+            return False
+
+    def is_invisible(self):
+        if self.state['invisible'] == 0:
+            return False
+        else:
+            return True
+
+    def can_special_attack(self):
+        if self.state['special_attack'] == 0:
+            return True
+        else:
+            return False
 
 

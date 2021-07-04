@@ -92,8 +92,6 @@ class GameEngine:
             self.initialize()
 
         elif isinstance(event, EventEveryTick):
-            for i in range(4):
-                print(self.players[i].blood)
             # Peek the state of the game and do corresponding work
             cur_state = self.state_machine.peek()
             if cur_state == Const.STATE_MENU:
@@ -124,19 +122,22 @@ class GameEngine:
 
         elif isinstance(event, EventPlayerAttack):
             # player do common attack
-            attacker = event.player_id[0]
-            if self.players[attacker].can_common_attack:
-                attack_range = self.players[attacker].common_attack_range
-                for i in range(Const.PLAYER_NUMBER):
-                    if i == attacker:
-                        continue
-                    if self.players[i].can_be_common_attacked() and attack_range.colliderect(self.players[i]):
-                        print(i,attacker)
-                        self.players[i].be_common_attacked()
+            attacker = self.players[event.player_id[0]]
+            if attacker.can_common_attack():
+                attack_range = attacker.common_attack_range
+                for player in self.players:
+                    if attacker_id != player.player_id and\
+                       player.can_be_common_attacked() and attack_range.colliderect(player):
+                        player.be_common_attacked()
+            else:
+                print("Can not common attack")
     
         elif isinstance(event, EventPlayerSpecialAttack):
             attacker = self.players[event.player_id[0]]
-            attacker.special_attack()
+            if attacker.can_special_attack():
+                attacker.special_attack()
+            else:
+                print("Can not special attack")
 
 
         elif isinstance(event, EventTimesUp):
@@ -168,7 +169,7 @@ class GameEngine:
 
         # generate the items
         while len(self.items) < 5:
-            testing_item_type = 'THROW_BUG'
+            testing_item_type = 'FIREWALL'
             self.items.append(Item(self,
                                     random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
                                     random.randint(300, 400),testing_item_type))
