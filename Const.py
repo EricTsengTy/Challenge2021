@@ -1,18 +1,20 @@
 import pygame as pg
+import os.path
 
 # model
 FPS = 60 # frame per second
 GAME_LENGTH = 30 * FPS
 PLAYER_INIT_POSITION = [pg.Vector2(200, 400), pg.Vector2(300, 400), pg.Vector2(400, 400), pg.Vector2(500, 400)]
 PLAYER_NUMBER = 4
-PLYAER_WIDTH = 40
-PLYAER_HEIGHT = 40
+PLAYER_WIDTH = 60
+PLAYER_HEIGHT = 80
 PLAYER_SPEED = 100
 PLAYER_JUMP_SPEED = 100
 PLAYER_GRAVITY = 150
 PLAYER_FULL_BLOOD = 1000
 PLAYER_COMMON_ATTACK_SIZE = 20 #additional size around player
 PLAYER_COMMON_ATTACK_DAMAGE = 10
+PLAYER_REVIVE_PROTECTION = 0.5 #protection time after revive in second
 
 ITEM_WIDTH = 30
 ITEM_HEIGHT = 30
@@ -59,6 +61,11 @@ BUG_SPEED = {"right": pg.Vector2(100, -150), "left": pg.Vector2(-100, -150)}
 BUG_ACCELERATE = 150
 BUG_DAMAGE = 30
 
+#item effect
+DAMAGE_MULTIPLE = 2 # multiple of common attack damage affected by USB
+SPEED_MULTIPLE = 0.5 # multiple of speed affected by DOS and DDOS
+ENERGY_MULTIPLE = 2 # multiple of accumulate energy speed affected by video card
+
 DIRECTION_TO_VEC2 = {
     'up': pg.Vector2(0, -1),
     'left': pg.Vector2(-1, 0),
@@ -67,7 +74,7 @@ DIRECTION_TO_VEC2 = {
 }
 
 BLOCK_POSITION = [
-    (  0, 500, 800, 10),
+    (  0, 500, 800, 10), #(left, top, width, height)
     (  0, 370, 200, 10),
     (150, 430, 200, 10),
 ]
@@ -79,9 +86,19 @@ STATE_PLAY = 2
 STATE_STOP = 3 # not implemented yet
 STATE_ENDGAME = 4
 
+# Path
+IMAGE_PATH = os.path.join('View', 'assets')
 
+# Images
+PLAYER_PICS = [
+    'player1_0.png', 'player1_1.png',
+    'player2_0.png', 'player2_1.png',
+    'player3_0.png', 'player3_1.png',
+    'player4_0.png', 'player4_1.png',
+    ]
+PICS_PER_PLAYER = 2
 # view
-WINDOW_CAPTION = 'Challenge 2020 Homework'
+WINDOW_CAPTION = 'Challenge 2021'
 WINDOW_SIZE = (800, 800)
 ARENA_SIZE = (800, 800)
 BACKGROUND_COLOR = pg.Color('black')
@@ -93,6 +110,7 @@ ITEM_COLOR = pg.Color("purple")
 ARROW_COLOR = pg.Color("red")
 COFFEE_COLOR = pg.Color("brown")
 BUG_COLOR = pg.Color("DarkOliveGreen")
+HP_BAR_COLOR = [pg.Color('white'), pg.Color('green')]
 
 # controller
 PLAYER_MOVE_KEYS = {

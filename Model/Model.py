@@ -119,37 +119,39 @@ class GameEngine:
 
         elif isinstance(event, EventPlayerMove):
             # player move left / move right / jump
-            self.players[event.player_id].move(event.direction)
+            if self.players[event.player_id].can_move():
+                self.players[event.player_id].move(event.direction)
 
         elif isinstance(event, EventPlayerAttack):
             # player do common attack
             attacker = event.player_id[0]
-            if self.players[attacker].can_common_attack:
+            if self.players[attacker].can_common_attack():
                 attack_range = self.players[attacker].common_attack_range
                 for i in range(Const.PLAYER_NUMBER):
                     if i == attacker:
                         continue
-                    if self.players[i].can_be_common_attacked() and attack_range.colliderect(self.players[i]):
-                        self.players[i].be_common_attacked()
+                    if self.players[i].would_be_common_attacked() and attack_range.colliderect(self.players[i]):
+                        self.players[i].be_common_attacked(Const.PLAYER_COMMON_ATTACK_DAMAGE * self.players[i].multiple_of_damage())
 
         elif isinstance(event, EventPlayerSpecialAttack):
             attacker = self.players[event.player_id[0]]
-            if attacker.keep_item_type == Const.COFFEE_TYPE:
-                self.entities.append(coffee(attacker.player_id, attacker.position, "left"))
-            elif attacker.keep_item_type == Const.BUG_TYPE:
-                self.entities.append(bug(attacker.player_id, attacker.position, "left"))
-            elif attacker.keep_item_type == Const.DOS_TYPE:
-                be_attacked = [_ for _ in self.players]
-                be_attacked.remove(attacker)
-                be_attacked = random.choice(be_attacked)
-                self.entities.append(dos(attacker.player_id, attacker.position, be_attacked.position - attacker.position)) 
-            elif attacker.keep_item_type == Const.DDOS_TYPE:
-                be_attacked = [_ for _ in self.players]
-                be_attacked.remove(attacker)
-                be_attacked = random.choice(be_attacked)
-                self.entities.append(ddos(attacker.player_id, be_attacked.position)) 
-                
-            attacker.keep_item_type = 0
+            if attacker.can_special_attack():
+                if attacker.keep_item_type == Const.COFFEE_TYPE:
+                    self.entities.append(coffee(attacker.player_id, attacker.position, "left"))
+                elif attacker.keep_item_type == Const.BUG_TYPE:
+                    self.entities.append(bug(attacker.player_id, attacker.position, "left"))
+                elif attacker.keep_item_type == Const.DOS_TYPE:
+                    be_attacked = [_ for _ in self.players]
+                    be_attacked.remove(attacker)
+                    be_attacked = random.choice(be_attacked)
+                    self.entities.append(dos(attacker.player_id, attacker.position, be_attacked.position - attacker.position)) 
+                elif attacker.keep_item_type == Const.DDOS_TYPE:
+                    be_attacked = [_ for _ in self.players]
+                    be_attacked.remove(attacker)
+                    be_attacked = random.choice(be_attacked)
+                    self.entities.append(ddos(attacker.player_id, be_attacked.position)) 
+                    
+                attacker.keep_item_type = 0
 
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
@@ -180,12 +182,9 @@ class GameEngine:
                 player.jump_count = 0
                 player.sync(last_modify='rect')
         
-        # player is invisible
+        # player state
         for player in self.players:
-            if player.is_invisible:
-                player.invisible_time -= 1
-                if player.invisible_time == 0:
-                    player.is_invisible = False
+            player.states_tick()
 
         # player touch the item
         for item in self.items:
@@ -225,9 +224,9 @@ class GameEngine:
 
         #player touch entity
         for player in self.players:
-            for entiy in self.entities:
-                if entiy.touch(player):
-                    entiy.activate()
+            for entity in self.entities:
+                if entity.touch(player):
+                    entity.activate()
 
         #remove entity
         remove_entity = []

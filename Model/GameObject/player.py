@@ -1,11 +1,14 @@
 import pygame as pg
 import Const 
 from pygame.math import Vector2
-class Player(pg.Rect):
+from Model.GameObject.state import *
+    
+class Player(pg.Rect,StatesList):
     def __init__(self, player_id):
         pg.Rect.__init__(self,(Const.PLAYER_INIT_POSITION[player_id].x,
                                    Const.PLAYER_INIT_POSITION[player_id].y,
-                                   Const.PLYAER_WIDTH,Const.PLYAER_HEIGHT))
+                                   Const.PLAYER_WIDTH,Const.PLAYER_HEIGHT))
+        StatesList.__init__(self)
         self.player_id = player_id
         self.max_jump = 2
         self.jump_count = 0
@@ -14,14 +17,12 @@ class Player(pg.Rect):
         self.vertical_speed = 0 # negative is up, positive is down
         self.blood = Const.PLAYER_FULL_BLOOD
         self.common_attack_range = self.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
-        self.can_common_attack = True
-        self.can_special_attack = True
-        self.would_be_common_attacked = True
-        self.would_be_special_attacked = True
-        self.is_invisible = False
-        self.invisible_time = 0
         self.item_type = 0 #the item_type of the item player touch, 0 for nothing
         self.keep_item_type = 0 #the item_type of the item player touch, 0 for nothing
+        self.never_die = True
+
+        # View
+        self.direction = 'right'
 
     def move(self, direction: str):
         '''
@@ -35,9 +36,12 @@ class Player(pg.Rect):
                 self.jump_count += 1
                 self.vertical_speed = -Const.PLAYER_JUMP_SPEED
         else:
-            self.position += self.horizontal_speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
+            self.position += self.horizontal_speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction] * self.multiple_of_speed()
         self.clip_position()
         self.sync(last_modify='position')
+
+        # View
+        self.direction = direction
 
     def move_every_tick(self):
         # keep falling
@@ -68,18 +72,21 @@ class Player(pg.Rect):
         elif item_type == Const.CHARGE_TYPE:
             pass
         
-    def can_be_common_attacked(self):
-        return (not self.is_invisible) and self.would_be_common_attacked
-    
-    def can_be_special_attacked(self):
-        return (not self.is_invisible) and self.would_be_special_attacked
+    def died(self):
+        self.never_die = False
+        self.states_clean()
+        self.be_invisible.into(Const.PLAYER_REVIVE_PROTECTION)
+        # copied from __init__
+        self.horizontal_speed = Const.PLAYER_SPEED
+        self.vertical_speed = 0
+        self.blood = Const.PLAYER_FULL_BLOOD
+        self.item_type = 0
+        self.keep_item_type = 0
         
-    def be_common_attacked(self):
-        self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
-
-    def invisible(self, time):
-        self.is_invisible = True
-        self.invisible_time = time * Const.FPS
+    def be_common_attacked(self, damage):
+        self.blood -= damage
+        if self.blood <= 0:
+            self.died()
 
     def sync(self, last_modify:str):
         if last_modify=='rect':
@@ -88,3 +95,4 @@ class Player(pg.Rect):
         elif last_modify=='position':
             self.center=self.position
             self.common_attack_range.center=self.center
+

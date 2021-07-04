@@ -13,7 +13,7 @@ class throw(pg.Rect):
             self.dead = True
 
     def touch(self, player):
-        return self.player_id != player.player_id and self.colliderect(player)
+        return self.player_id != player.player_id and player.would_be_special_attacked() and self.colliderect(player)
     
     def activate(self):
         self.dead = True
