@@ -17,7 +17,8 @@ class Basic_Attack_Object(Basic_Game_Object):
         self.basic_tick()
         for player in self.model.players:
             if self.attacker_id != player.player_id\
-                and player.rect.colliderect(self.rect):
+                and player.can_be_special_attacked()\
+                and player.rect.collidepoint(self.center.x, self.center.y):
                 player.be_special_attacked(self)
                 self.kill()
 
