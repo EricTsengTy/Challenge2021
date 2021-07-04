@@ -100,3 +100,21 @@ class EventPlayerSpecialAttack (BaseEvent):
 
     def __str__(self):
         return f'{self.name} => player_id {self.player_id} special attack'
+
+class EventStop(BaseEvent):
+    name = 'GameStop event'
+    '''
+    game stop and model stage change to STATE_STOP
+    '''
+
+class EventContinue(BaseEvent):
+    name = 'GameContinue event'
+    '''
+    game continue and model stage change to STATE_PLAY
+    '''
+
+class EventRestart(BaseEvent):
+    name = 'GameContinue event'
+    '''
+    game restart and model stage change to STATE_MENU
+    '''

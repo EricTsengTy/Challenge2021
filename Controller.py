@@ -72,9 +72,19 @@ class Controller:
                 if key in Const.PLAYER_SPECIAL_ATTACK_KEYS:
                     player_id = Const.PLAYER_SPECIAL_ATTACK_KEYS[key]
                     self.ev_manager.post(EventPlayerSpecialAttack(player_id))
+                # detect stop
+                if event_pg.key == Const.GAME_STOP_KEY:
+                    self.ev_manager.post(EventStop())
+
 
     def ctrl_stop(self, key_down_events):
-        pass
+        # detect start/stop events
+        for event_pg in key_down_events:
+            if event_pg.key == Const.GAME_CONTINUE_KEY:
+                self.ev_manager.post(EventContinue())
 
     def ctrl_endgame(self, key_down_events):
-        pass
+        # detect restart event
+        for event_pg in key_down_events:
+            if event_pg.key == Const.GAME_RESTART_KEY:
+                self.ev_manager.post(EventRestart())
