@@ -1,4 +1,5 @@
 import pygame as pg
+import random
 from pygame.display import mode_ok
 from pygame.mixer import fadeout
 import Const 
@@ -77,9 +78,12 @@ class Player(Basic_Game_Object):
 
     def special_attack(self):
         if(self.keep_item_type == 'DOS'):
-            self.model.attacks.append(Dos(self.model, self, self.model.players[(self.player_id+1)%4]))
+            player_id = [_ for _ in range(Const.PLAYER_NUMBER)]
+            player_id.remove(self.player_id)
+            player_id = random.choice(player_id)
+            self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
         elif(self.keep_item_type == 'DDOS'):
-            self.model.attacks.append(Ddos(self.model, self, self.model.players[(self.player_id+1)%4]))
+            self.model.attacks.append(Ddos(self.model, self, self.model.players[self.__random_target()]))
         elif(self.keep_item_type == 'THROW_COFFEE'):
             self.model.attacks.append(Throw_Coffee(self.model, self, self.model.players[(self.player_id+1)%4]))
         elif(self.keep_item_type == 'THROW_BUG'):
@@ -107,4 +111,7 @@ class Player(Basic_Game_Object):
         self.is_invisible = True
         self.invisible_time = time * Const.FPS
 
-
+    def __random_target(self):
+        player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
+        player_id_list.remove(self.player_id)
+        return random.choice(player_id_list)
