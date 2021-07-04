@@ -12,7 +12,7 @@ class Player(Basic_Game_Object):
         super().__init__(model,
                          Const.PLAYER_INIT_POSITION[player_id].x,
                          Const.PLAYER_INIT_POSITION[player_id].y,
-                         Const.PLYAER_WIDTH,Const.PLYAER_HEIGHT)
+                         Const.PLAYER_WIDTH,Const.PLAYER_HEIGHT)
         self.player_id = player_id
         self.max_jump = 2
         self.jump_count = 0
@@ -82,6 +82,12 @@ class Player(Basic_Game_Object):
             self.model.attacks.append(Throw_Coffee(self.model, self, self.model.players[(self.player_id+1)%4]))
         elif(self.keep_item_type == 'THROW_BUG'):
             self.model.attacks.append(Throw_Bug(self.model, self, self.model.players[(self.player_id+1)%4]))
+        elif(self.keep_item_type == ''):
+            self.model.attacks.append(Cast_Fireball(self.model, self))
+        elif(self.keep_item_type == 'FAN'):
+            self.model.attacks.append(Cast_Tornado(self.model, self))
+        elif(self.keep_item_type == 'LIGHTNING'):
+            self.model.attacks.append(Cast_Lightning(self.model, self))
         self.keep_item_type = ''
 
     def be_special_attacked(self, attack):

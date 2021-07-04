@@ -2,6 +2,7 @@ import pygame as pg
 from pygame import transform
 import Const
 from pygame.math import Vector2
+from math import sqrt
 from Model.GameObject.basic_game_object import Basic_Game_Object
 
 class Basic_Attack_Object(Basic_Game_Object):
@@ -28,7 +29,7 @@ class Basic_Attack_Object_No_Vanish(Basic_Game_Object):
         self.speed = direction.normalize() * speed
         self.damage = damage
         self.immune = [False for _ in range(Const.PLAYER_NUMBER)]
-        self.immune[caster.player_id] = True
+        self.immune[attacker_id] = True
 
     def check_col(self, recta):
         # should be override
@@ -36,13 +37,13 @@ class Basic_Attack_Object_No_Vanish(Basic_Game_Object):
 
     def basic_tick(self):
         self.position += self.speed / Const.FPS # since this ignores terrains
-        if self.x > Const.ARENA_SIZE or self.x < 0: 
+        if self.x > Const.ARENA_SIZE[0] or self.x < 0: 
             self.kill()
 
     def tick(self):
         self.basic_tick()
         for player in self.model.players:
-            if not self.immune[player.player_id] and check_col(player):
+            if not self.immune[player.player_id] and self.check_col(player):
                 player.be_special_attacked(self)
                 self.immune[player.player_id] = True
 
@@ -103,7 +104,7 @@ class Tornado(Basic_Attack_Object_No_Vanish):
     def __init__(self, model, attacker_id, position, direction, damage):
         super().__init__(model, attacker_id, position, direction, damage, 'Tornado', Const.TORNADO_WIDTH, Const.TORNADO_HEIGHT)
 
-    def check_col(self):
+    def check_col(self, player):
         return player.rect.colliderect(self.rect)
 
 class Lightning(Basic_Attack_Object_No_Vanish):
@@ -115,7 +116,7 @@ class Lightning(Basic_Attack_Object_No_Vanish):
         self.dir = (pg.Vector2(1, 0), pg.Vector2(sqrt(2)/2, sqrt(2)/2), pg.Vector2(0, 1), pg.Vector2(sqrt(2)/2, -sqrt(2)/2))
 
     def draw_lines(self, d):
-        return (self.pos + self.directions[d] * self.range, self.pos - self.directions[d] * self.range)
+        return (self.rect.center + self.dir[d] * self.range, self.rect.center - self.dir[d] * self.range)
 
     def basic_tick(self):
         self.timer -= 1
@@ -123,9 +124,9 @@ class Lightning(Basic_Attack_Object_No_Vanish):
         if self.timer == 0:
             self.kill()
 
-    def check_col(self, recta):
+    def check_col(self, player):
         for j in range(4):
-            if recta.clipline(draw_lines[j]): return True
+            if player.rect.clipline(self.draw_lines(j)): return True
         return False
 
 class Dos(Basic_Game_Object):
@@ -188,23 +189,23 @@ class Throw_Coffee(Basic_Game_Object):
         self.kill()
 
 class Cast_Fireball(Basic_Game_Object):
-    def __init__(self, model, attacker, target):
+    def __init__(self, model, attacker):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = "Cast_Fireball"
-        self.model.attacks.append(Fireball(model, attacker_id, self.position, Vector2(1,0), Const.FIREBALL_DAMAGE))
+        self.model.attacks.append(Fireball(model, attacker.player_id, self.position, Vector2(1,0), Const.FIREBALL_DAMAGE))
         self.kill()
 
 class Cast_Tornado(Basic_Game_Object):
-    def __init__(self, model, attacker, target):
-        super().__init__(model, attacker.rect.x + Const.PLAYER_WIDTH, attacker.rect.y + Const.PLAYER_HEIGHT - Const.SPELL_TORNADO_HEIGHT, 1, 1)
+    def __init__(self, model, attacker):
+        super().__init__(model, attacker.rect.x + Const.PLAYER_WIDTH, attacker.rect.y + Const.PLAYER_HEIGHT - Const.TORNADO_HEIGHT, 1, 1)
         self.name = 'Cast_Tornado'
         self.model.attacks.append(Tornado(model,attacker.player_id, self.position, 
                                       Vector2(1,0), Const.TORNADO_DAMAGE))
         self.kill()
 
 class Cast_Lightning(Basic_Game_Object):
-    def __init__(self, model, attacker, target):
+    def __init__(self, model, attacker):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = "Cast_Lightning"
-        self.model.attacks.append(Lightning(model, attacker_id, self.position, Vector2(0,0), Const.LIGHTNING_DAMAGE))
+        self.model.attacks.append(Lightning(model, attacker.player_id, self.position, Vector2(1,0), Const.LIGHTNING_DAMAGE))
         self.kill()
