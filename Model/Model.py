@@ -126,7 +126,7 @@ class GameEngine:
         elif isinstance(event, EventPlayerAttack):
             # player do common attack
             attacker = self.players[event.player_id[0]]
-            if attacker.in_folder():
+            if not attacker.in_folder():
                 attack_range = attacker.common_attack_range
                 for player in self.players:
                     if attacker.player_id != player.player_id and\
