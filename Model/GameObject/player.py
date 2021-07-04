@@ -64,7 +64,7 @@ class Player(Basic_Game_Object):
             pass
         elif item_type == 'USB':
             pass
-        elif item_type == 'FIREWARM':
+        elif item_type == 'FIREWALL':
             pass
         elif item_type == 'GRAPHIC_CARD':
             pass

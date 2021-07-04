@@ -192,7 +192,7 @@ class Cast_Fireball(Basic_Game_Object):
     def __init__(self, model, attacker):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = "Cast_Fireball"
-        self.model.attacks.append(Fireball(model, attacker.player_id, self.position, Vector2(1,0), Const.FIREBALL_DAMAGE))
+        self.model.attacks.append(Fireball(model, attacker.player_id, self.position, attacker.face, Const.FIREBALL_DAMAGE))
         self.kill()
 
 class Cast_Tornado(Basic_Game_Object):
@@ -200,7 +200,7 @@ class Cast_Tornado(Basic_Game_Object):
         super().__init__(model, attacker.rect.x + Const.PLAYER_WIDTH, attacker.rect.y + Const.PLAYER_HEIGHT - Const.TORNADO_HEIGHT, 1, 1)
         self.name = 'Cast_Tornado'
         self.model.attacks.append(Tornado(model,attacker.player_id, self.position, 
-                                      Vector2(1,0), Const.TORNADO_DAMAGE))
+                                      attacker.face, Const.TORNADO_DAMAGE))
         self.kill()
 
 class Cast_Lightning(Basic_Game_Object):
