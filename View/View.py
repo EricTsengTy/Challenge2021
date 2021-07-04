@@ -72,7 +72,7 @@ class GraphicalView:
         
         # draw players
         for player in self.model.players:
-            if player.is_invisible:
+            if player.is_invisible():
                 pg.draw.rect(self.screen, Const.INVISIBLE_COLOR,player.rect)
             else:
                 pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
@@ -91,8 +91,6 @@ class GraphicalView:
                 pg.draw.circle(self.screen, Const.COFFEE_COLOR, attack.position, Const.ARROW_RADIUS)
             elif attack.name == 'Coffee':
                 pg.draw.circle(self.screen, Const.BUG_COLOR, attack.position, Const.ARROW_RADIUS)
-            else:
-                pg.draw.circle(self.screen, Const.ARROW_COLOR, attack.position, Const.ARROW_RADIUS)
 
         pg.display.flip()
 

@@ -5,12 +5,12 @@ from pygame.math import Vector2
 from math import sqrt
 from Model.GameObject.basic_game_object import Basic_Game_Object
 
-class Basic_Attack_Object(Basic_Game_Object):   
-    def __init__(self, model, attacker_id, position, direction, damage, name, width = 1, height = 1, speed = Const.ARROW_SPEED):
+class Basic_Attack_Object(Basic_Game_Object):
+    def __init__(self, model, attacker_id, position, width, height, speed, damage, name):
         super().__init__(model, position.x, position.y, width, height)
         self.name = name
         self.attacker_id = attacker_id
-        self.speed = direction.normalize() * speed
+        self.speed = speed
         self.damage = damage
         
     def tick(self):

@@ -10,6 +10,5 @@ class Item(Basic_Game_Object):
     def tick(self):
         for player in self.model.players:
             if player.rect.colliderect(self.rect):
-                print(self.item_type)
                 player.touch_item(self.item_type)
                 self.kill()

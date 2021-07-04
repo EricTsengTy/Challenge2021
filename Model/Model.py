@@ -7,6 +7,7 @@ from EventManager.EventManager import *
 from Model.GameObject.player import Player
 from Model.GameObject.ground import Ground
 from Model.GameObject.item import *
+import Model.GameObject.state as State
 
 
 class StateMachine(object):
@@ -118,23 +119,30 @@ class GameEngine:
 
         elif isinstance(event, EventPlayerMove):
             # player move left / move right / jump
+            if self.players[event.player_id].in_folder():
+                return
             self.players[event.player_id].move(event.direction)
 
         elif isinstance(event, EventPlayerAttack):
             # player do common attack
-            attacker = event.player_id[0]
-            if self.players[attacker].can_common_attack:
-                attack_range = self.players[attacker].common_attack_range
-                for i in range(Const.PLAYER_NUMBER):
-                    if i == attacker:
-                        continue
-                    if self.players[i].can_be_common_attacked() and attack_range.colliderect(self.players[i]):
-                        print(i,attacker)
-                        self.players[i].be_common_attacked()
+            attacker = self.players[event.player_id[0]]
+            if attacker.in_folder():
+                attack_range = attacker.common_attack_range
+                for player in self.players:
+                    if attacker.player_id != player.player_id and\
+                       player.can_be_common_attacked() and attack_range.colliderect(player):
+                        player.be_common_attacked()
+                        if attacker.infected():
+                            State.infect(player.state)
+            else:
+                print("Can not common attack")
     
         elif isinstance(event, EventPlayerSpecialAttack):
             attacker = self.players[event.player_id[0]]
-            attacker.special_attack()
+            if attacker.can_special_attack():
+                attacker.special_attack()
+            else:
+                print("Can not special attack")
 
 
         elif isinstance(event, EventTimesUp):
@@ -166,7 +174,7 @@ class GameEngine:
 
         # generate the items
         while len(self.items) < 5:
-            testing_item_type = 'LIGHTNING'
+            testing_item_type = 'DOS'
             self.items.append(Item(self,
                                     random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
                                     random.randint(300, 400),testing_item_type))
