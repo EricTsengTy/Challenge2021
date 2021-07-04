@@ -7,7 +7,7 @@ class Player(pg.Rect,StatesList):
     def __init__(self, player_id):
         pg.Rect.__init__(self,(Const.PLAYER_INIT_POSITION[player_id].x,
                                    Const.PLAYER_INIT_POSITION[player_id].y,
-                                   Const.PLYAER_WIDTH,Const.PLYAER_HEIGHT))
+                                   Const.PLAYER_WIDTH,Const.PLAYER_HEIGHT))
         StatesList.__init__(self)
         self.player_id = player_id
         self.max_jump = 2
