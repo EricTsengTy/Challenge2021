@@ -206,5 +206,5 @@ class Cast_Lightning(Basic_Game_Object):
     def __init__(self, model, attacker, target):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = "Cast_Lightning"
-        self.model.attacks.append(Lightning(model, attacker_id, self.position, Vector2(1,0), Const.FIREBALL_DAMAGE))
+        self.model.attacks.append(Lightning(model, attacker_id, self.position, Vector2(0,0), Const.LIGHTNING_DAMAGE))
         self.kill()
