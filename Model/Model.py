@@ -119,12 +119,14 @@ class GameEngine:
 
         elif isinstance(event, EventPlayerMove):
             # player move left / move right / jump
+            if self.players[event.player_id].in_folder():
+                return
             self.players[event.player_id].move(event.direction)
 
         elif isinstance(event, EventPlayerAttack):
             # player do common attack
             attacker = self.players[event.player_id[0]]
-            if attacker.can_common_attack():
+            if attacker.in_folder():
                 attack_range = attacker.common_attack_range
                 for player in self.players:
                     if attacker.player_id != player.player_id and\
