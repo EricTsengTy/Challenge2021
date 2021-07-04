@@ -27,6 +27,7 @@ class Player(Basic_Game_Object):
         self.obey_gravity = True
         self.keep_item_type = ''
         self.can_leave_screen = False
+        self.face = Const.DIRECTION_TO_VEC2['right']
 
     @property
     def common_attack_range(self):
@@ -45,6 +46,7 @@ class Player(Basic_Game_Object):
                 self.speed.y = -Const.PLAYER_JUMP_SPEED
         else:
             self.position += Const.PLAYER_SHIFT_SPEED / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
+            self.face = Const.DIRECTION_TO_VEC2[direction]
         self.clip_position()
 
     def tick(self):
