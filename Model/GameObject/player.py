@@ -21,6 +21,9 @@ class Player(pg.Rect,StatesList):
         self.keep_item_type = 0 #the item_type of the item player touch, 0 for nothing
         self.never_die = True
 
+        # View
+        self.direction = 'right'
+
     def move(self, direction: str):
         '''
         Move the player along the direction by its speed.
@@ -36,6 +39,9 @@ class Player(pg.Rect,StatesList):
             self.position += self.horizontal_speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction] * self.multiple_of_speed()
         self.clip_position()
         self.sync(last_modify='position')
+
+        # View
+        self.direction = direction
 
     def move_every_tick(self):
         # keep falling

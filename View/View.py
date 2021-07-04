@@ -3,6 +3,7 @@ import pygame as pg
 from EventManager.EventManager import *
 from Model.Model import GameEngine
 import Const
+import View.staticobjects
 from View.utils import Text
 
 
@@ -35,6 +36,8 @@ class GraphicalView:
         pg.font.init()
         pg.display.set_caption(Const.WINDOW_CAPTION)
         
+        # static objects
+        self.players = View.staticobjects.View_players(self.model)
 
     def notify(self, event):
         '''
@@ -75,21 +78,15 @@ class GraphicalView:
 
         pg.display.flip()
 
-    def render_play(self):
+    def render_play(self, target=None, update=True):
+        if target is None:
+            target = self.screen
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
         
         # draw players
-        for player in self.model.players:
-            if player.be_invisible.in_the_state:
-                pg.draw.rect(self.screen, Const.INVISIBLE_COLOR,player)
-            else:
-                pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
-                pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player)
-        '''
-        for block in self.model.blocks:
-            pg.draw.rect(self.screen, Const.BLOCK_COLOR, block)
-        '''
+        self.players.draw(target)
+
         for block in Const.BLOCK_POSITION:
             pg.draw.rect(self.screen, Const.BLOCK_COLOR, pg.Rect(*block))
         

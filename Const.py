@@ -1,12 +1,13 @@
 import pygame as pg
+import os.path
 
 # model
 FPS = 60 # frame per second
 GAME_LENGTH = 30 * FPS
 PLAYER_INIT_POSITION = [pg.Vector2(200, 400), pg.Vector2(300, 400), pg.Vector2(400, 400), pg.Vector2(500, 400)]
 PLAYER_NUMBER = 4
-PLYAER_WIDTH = 40
-PLYAER_HEIGHT = 40
+PLAYER_WIDTH = 60
+PLAYER_HEIGHT = 80
 PLAYER_SPEED = 100
 PLAYER_JUMP_SPEED = 100
 PLAYER_GRAVITY = 150
@@ -85,7 +86,17 @@ STATE_PLAY = 2
 STATE_STOP = 3 # not implemented yet
 STATE_ENDGAME = 4
 
+# Path
+IMAGE_PATH = os.path.join('View', 'assets')
 
+# Images
+PLAYER_PICS = [
+    'player1_0.png', 'player1_1.png',
+    'player2_0.png', 'player2_1.png',
+    'player3_0.png', 'player3_1.png',
+    'player4_0.png', 'player4_1.png',
+    ]
+PICS_PER_PLAYER = 2
 # view
 WINDOW_CAPTION = 'Challenge 2021'
 WINDOW_SIZE = (800, 800)
@@ -99,6 +110,7 @@ ITEM_COLOR = pg.Color("purple")
 ARROW_COLOR = pg.Color("red")
 COFFEE_COLOR = pg.Color("brown")
 BUG_COLOR = pg.Color("DarkOliveGreen")
+HP_BAR_COLOR = [pg.Color('white'), pg.Color('green')]
 
 # controller
 PLAYER_MOVE_KEYS = {
