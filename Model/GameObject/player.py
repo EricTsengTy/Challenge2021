@@ -49,7 +49,9 @@ class Player(Basic_Game_Object):
         for key,value in self.state.items():
             if key == 'in_folder' and value == 1:
                 State.invisible(self.state)
-            value = max(value - 1, 0)
+            self.state[key] = max(value-1, 0)
+        if self.in_folder():
+            return
         self.basic_tick()
           
 
@@ -60,19 +62,14 @@ class Player(Basic_Game_Object):
             pass
         elif item_type == 'USB':
             State.infect(self.state)
-            print(self.state)
         elif item_type == 'FIREWALL':
             State.firewall(self.state)
-            print(self.state)
         elif item_type == 'GRAPHIC_CARD':
             State.graphiccard(self.state)
-            print(self.state)
         elif item_type == 'FORMAT':
             State.normal(self.state)
-            print(self.state)
         elif item_type == 'FOLDER_UNUSED':
             State.folder(self.state)
-            print(self.state)
         elif item_type == 'CHARGE':
             pass
 
@@ -91,15 +88,12 @@ class Player(Basic_Game_Object):
         if attack.name == 'Arrow':
             self.blood-=attack.damage
             State.slow_down(self.state)
-            print(self.state)
         if attack.name == 'Bug':
             self.blood-=attack.damage
             State.broken(self.state)
-            print(self.state)
         if attack.name == 'Coffee':
             self.blood-=attack.damage
             State.broken(self.state)
-            print(self.state)
         
     def be_common_attacked(self):
         self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
