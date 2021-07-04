@@ -135,7 +135,7 @@ class GameEngine:
 
         elif isinstance(event, EventPlayerSpecialAttack):
             attacker = self.players[event.player_id[0]]
-            if self.players[attacker].can_special_attack():
+            if attacker.can_special_attack():
                 if attacker.keep_item_type == Const.COFFEE_TYPE:
                     self.entities.append(coffee(attacker.player_id, attacker.position, "left"))
                 elif attacker.keep_item_type == Const.BUG_TYPE:
