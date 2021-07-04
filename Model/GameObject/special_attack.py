@@ -198,7 +198,7 @@ class Cast_Tornado(Basic_Game_Object):
     def __init__(self, model, attacker, target):
         super().__init__(model, attacker.rect.x + Const.PLAYER_WIDTH, attacker.rect.y + Const.PLAYER_HEIGHT - Const.SPELL_TORNADO_HEIGHT, 1, 1)
         self.name = 'Throw_Coffee'
-        self.model.attacks.append(Coffee(model,attacker.player_id, self.position, 
+        self.model.attacks.append(Tornado(model,attacker.player_id, self.position, 
                                       Vector2(1,0), Const.TORNADO_DAMAGE))
         self.kill()
 
