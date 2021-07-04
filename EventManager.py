@@ -101,6 +101,9 @@ class EventPlayerSpecialAttack (BaseEvent):
     def __str__(self):
         return f'{self.name} => player_id {self.player_id} special attack'
 
+class EventToggleFullScreen(BaseEvent):
+    name = 'ToggleFullScreen event'
+
 class EventStop(BaseEvent):
     name = 'GameStop event'
     '''
