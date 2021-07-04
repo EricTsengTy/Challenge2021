@@ -61,11 +61,13 @@ COFFEE_WIDTH = 20
 COFFEE_HEIGHT = 20
 COFFEE_DAMAGE = 30
 COFFEE_GRAVITY = 150
+COFFEE_THROW_SPEED = 120
 
 BUG_WIDTH = 20
 BUG_HEIGHT = 20
 BUG_DAMAGE = 30
 BUG_GRAVITY = 150
+BUG_THROW_SPEED = 120
 
 # State machine constants
 STATE_POP = 0 # for convenience, not really a state which we can be in
