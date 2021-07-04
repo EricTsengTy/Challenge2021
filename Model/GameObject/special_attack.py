@@ -84,7 +84,7 @@ class Throw_Bug(Basic_Game_Object):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = 'Throw_Bug'
         self.model.attacks.append(Bug(model,attacker.player_id, self.position, 
-                                      Vector2(-1,-1), Const.BUG_DAMAGE))
+                                      attacker.face + (0,-1), Const.BUG_DAMAGE))
         self.kill()
 
 class Throw_Coffee(Basic_Game_Object):
@@ -92,5 +92,5 @@ class Throw_Coffee(Basic_Game_Object):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = 'Throw_Coffee'
         self.model.attacks.append(Coffee(model,attacker.player_id, self.position, 
-                                      Vector2(-1,-1), Const.COFFEE_DAMAGE))
+                                      attacker.face + (0,-1), Const.COFFEE_DAMAGE))
         self.kill()
