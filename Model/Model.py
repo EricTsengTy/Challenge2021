@@ -154,21 +154,17 @@ class GameEngine:
         Update the objects not controlled by user.
         For example: obstacles, items, special effects
         '''
-        for player in self.players:
-            if player.killed():
-                self.players.remove(player)
-                continue
-            player.tick()
-        for item in self.items:
-            if item.killed():
-                self.items.remove(item)
-                continue
-            item.tick()
-        for attack in self.attacks:
-            if attack.killed():
-                self.attacks.remove(attack)
-                continue
-            attack.tick()
+        for player in list(self.players):
+            if player.killed(): self.players.remove(player)
+            else: player.tick()
+        
+        for item in (self.items):
+            if item.killed(): self.items.remove(item)
+            else: item.tick()
+        
+        for attack in list(self.attacks):
+            if attack.killed(): self.attacks.remove(attack)
+            else: attack.tick()
 
         # generate the items
         while len(self.items) < 5:
