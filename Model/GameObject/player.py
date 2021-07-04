@@ -87,6 +87,7 @@ class Player(Basic_Game_Object):
         elif(self.keep_item_type == 'THROW_BUG'):
             self.model.attacks.append(Throw_Bug(self.model, self, self.model.players[(self.player_id+1)%4]))
         elif(self.keep_item_type == ''):
+            
             self.model.attacks.append(Cast_Fireball(self.model, self))
         elif(self.keep_item_type == 'FAN'):
             self.model.attacks.append(Cast_Tornado(self.model, self))
@@ -118,7 +119,6 @@ class Player(Basic_Game_Object):
         player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
         player_id_list.remove(self.player_id)
         return random.choice(player_id_list)
-        
     def can_be_special_attacked(self):
         if self.state['be_special_attacked'] == 0:
             return True
