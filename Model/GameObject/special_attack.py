@@ -64,16 +64,16 @@ class Coffee(Basic_Attack_Object):
         self.obey_gravity = True
         self.gravity = Const.COFFEE_GRAVITY
 
-class Fireball(Basic_Attack_Object_No_Vanish):
+class Fireball(Basic_Attack_Object):
     # this is a ball-shaped obj, hence only the position matters, it represents the center of fireball
-    def __init__(self, model, attacker_id, position, direction, damage):
-        super().__init__(model, attacker_id, position, direction, damage, 'Fireball', 0, 0, Const.FIREBALL_SPEED) 
+    def __init__(self, model, attacker_id, position, speed, damage):
+        super().__init__(model, attacker_id, position, 1, 1, speed, damage, 'Fireball')
         self.radius = Const.FIREBALL_RADIUS
 
-    def check_col(self, recta): # check if a rectangle collide with a ball (self)
-        rxl = recta.x
+    def collide_player(self, player): # check if a rectangle collide with a ball (self)
+        rxl = player.x
         rxr = rxl + Const.PLAYER_WIDTH
-        ryu = recta.y
+        ryu = player.y
         ryb = ryu + Const.PLAYER_HEIGHT
         tmpx = -1
         tmpy = -1
@@ -100,6 +100,14 @@ class Fireball(Basic_Attack_Object_No_Vanish):
         corx = rxl if tmpx == -1 else rxr
         cory = ryu if tmpy == -1 else rxl
         return (self.x - corx) ** 2 + (self.y - cory) ** 2 < self.radius ** 2
+    
+    def tick(self):
+        self.basic_tick()
+        for player in self.model.players:
+            if self.attacker_id != player.player_id\
+                and player.can_be_special_attacked()\
+                and self.collide_player(player):
+                player.be_special_attacked(self)
 
 class Tornado(Basic_Attack_Object_No_Vanish):
     def __init__(self, model, attacker_id, position, direction, damage):
@@ -193,7 +201,8 @@ class Cast_Fireball(Basic_Game_Object):
     def __init__(self, model, attacker):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = "Cast_Fireball"
-        self.model.attacks.append(Fireball(model, attacker.player_id, self.position, attacker.face, Const.FIREBALL_DAMAGE))
+        self.model.attacks.append(Fireball(model, attacker.player_id, self.position, 
+                                           attacker.face.normalize() * Const.FIREBALL_SPEED, Const.FIREBALL_DAMAGE))
         self.kill()
 
 class Cast_Tornado(Basic_Game_Object):
