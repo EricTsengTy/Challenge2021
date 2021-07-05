@@ -111,6 +111,15 @@ PLAYER_PICS = [
     'player4_0.png', 'player4_1.png',
     ]
 PICS_PER_PLAYER = 2
+
+SPECIAL_ATTACK_KEEP_PICS = [
+    'prop_bug.png', 'prop_coffee.png',
+    'prop_ddos.png', 'prop_dos.png',
+    'prop_fan.png', 'prop_lightning.png',
+    ]
+SPECIAL_ATTACK_KEEP_TO_NUM = {
+    'THROW_BUG': 0, 'THROW_COFFEE': 1, 'DDOS': 2, 'DOS': 3, 'FAN': 4, 'LIGHTNING': 5
+}
 # view
 WINDOW_CAPTION = 'Challenge 2021'
 WINDOW_SIZE = (800, 800)
@@ -127,7 +136,7 @@ BUG_COLOR = pg.Color("DarkOliveGreen")
 HP_BAR_COLOR = [pg.Color('white'), pg.Color('green')]
 ENERGY_BAR_COLOR = [pg.Color('white'), pg.Color('orange')]
 ITEM_BOX_COLOR = pg.Color('brown')
-
+ITEM_BOX_SIZE = 15
 # controller
 PLAYER_MOVE_KEYS = {
     pg.K_w: (0, 'jump'),
