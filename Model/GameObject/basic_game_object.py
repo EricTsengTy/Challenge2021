@@ -16,8 +16,8 @@ class Basic_Game_Object:
         self.__death = False
 
     def clip_position(self):
-        self.x = max(0, min(Const.ARENA_SIZE[0]-self.__rect.width, self.x))
-        self.y = max(0, min(Const.ARENA_SIZE[1]-self.__rect.height, self.y))
+        self.x = max(0, min(Const.ARENA_SIZE[0]-self.rect.width, self.x))
+        self.y = max(0, min(Const.ARENA_SIZE[1]-self.rect.height, self.y))
 
     def basic_tick(self):
         
