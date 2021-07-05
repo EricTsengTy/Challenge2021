@@ -8,7 +8,7 @@ def init():
                 'be_common_attacked':0,
                 'be_special_attacked':0,
                 'in_folder':0,
-                'infected':0,
+                'infection':0,
                 'slow_move_speed':0,
                 'fast_special_attack_speed':0,
                 'invisible':0,
