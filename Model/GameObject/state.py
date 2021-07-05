@@ -3,7 +3,6 @@ import Const
 
 def init():
     state = {
-                'common_attack_adjust':0,
                 'special_attack':0,
                 'be_common_attacked':0,
                 'be_special_attacked':0,
@@ -18,7 +17,6 @@ def init():
 
 def normal(state):
     state = {
-                'common_attack_adjust':0,
                 'special_attack':0,
                 'be_common_attacked':0,
                 'be_special_attacked':0,
@@ -35,7 +33,6 @@ def infect(state):
         return
     state['infected'] = 3 * Const.FPS #Const.INFECTED_TIME
     state['special_attack'] = 3 * Const.FPS #Const.INFECTED_TIME
-    state['common_attack_adjust'] = 3 * Const.FPS #Const.INFECTED_TIME
 
 def invisible(state):
     state['invisible'] = int(0.5*Const.FPS) #Const.INVISIBLE_TIME
@@ -49,7 +46,7 @@ def folder(state):
     state['be_special_attacked'] = 3 * Const.FPS #Const.IN_FOLDER_TIME
 
 def slow_down(state):
-    state['slow'] = 3 * Const.FPS #Const.SLOW_DOWN_TIME
+    state['slow_move_speed'] = 3 * Const.FPS #Const.SLOW_DOWN_TIME
 
 def broken(state):
     state['special_attack'] = 3 * Const.FPS #Const.BROKEN_TIME

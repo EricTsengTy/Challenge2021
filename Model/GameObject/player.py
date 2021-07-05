@@ -40,9 +40,9 @@ class Player(Basic_Game_Object):
             # player can jump only if he is falling
             if self.speed.y>=0 and self.jump_count < self.max_jump:
                 self.jump_count += 1
-                self.speed.y = -Const.PLAYER_JUMP_SPEED
+                self.speed.y = -Const.PLAYER_JUMP_SPEED * self.speed_adjust()
         else:
-            self.position += Const.PLAYER_SHIFT_SPEED / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
+            self.position += Const.PLAYER_SHIFT_SPEED * self.speed_adjust() / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
             self.face = Const.DIRECTION_TO_VEC2[direction]
         self.clip_position()
 
@@ -102,45 +102,42 @@ class Player(Basic_Game_Object):
             self.blood-=attack.damage
             State.broken(self.state)
         
-    def be_common_attacked(self):
-        self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
-
-    def can_be_common_attacked(self):
-        if self.state['be_common_attacked'] == 0:
-            return True
+    def be_common_attacked(self, infected):
+        if infected:
+            self.blood -= Const.PLAYER_INFECTED_COMMON_ATTACK_DAMAGE
+            State.infect(self.state)
         else:
-            return False
+            self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
 
     def __random_target(self):
         player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
         player_id_list.remove(self.player_id)
         return random.choice(player_id_list)
+
+    def can_be_common_attacked(self):
+        if self.state['be_common_attacked'] == 0: return True
+        else: return False
+
     def can_be_special_attacked(self):
-        if self.state['be_special_attacked'] == 0:
-            return True
-        else:
-            return False
+        if self.state['be_special_attacked'] == 0: return True
+        else: return False
 
     def is_invisible(self):
-        if self.state['invisible'] == 0:
-            return False
-        else:
-            return True
+        if self.state['invisible'] == 0: return False
+        else: return True
 
     def can_special_attack(self):
-        if self.state['special_attack'] == 0:
-            return True
-        else:
-            return False
+        if self.state['special_attack'] == 0: return True
+        else: return False
 
     def infected(self):
-        if self.state['infected'] == 0:
-            return False
-        else:
-            return True
+        if self.state['infected'] == 0: return False
+        else: return True
 
     def in_folder(self):
-        if self.state['in_folder'] == 0:
-            return False
-        else:
-            return True
+        if self.state['in_folder'] == 0: return False
+        else: return True
+
+    def speed_adjust(self):
+        if self.state['slow_move_speed'] == 0: return 1
+        else: return Const.PLAYER_SPEED_ADJUST_RATIO

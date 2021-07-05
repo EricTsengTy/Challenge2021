@@ -131,9 +131,7 @@ class GameEngine:
                 for player in self.players:
                     if attacker.player_id != player.player_id and\
                        player.can_be_common_attacked() and attack_range.colliderect(player):
-                        player.be_common_attacked()
-                        if attacker.infected():
-                            State.infect(player.state)
+                        player.be_common_attacked(attacker.infected())
             else:
                 print("Can not common attack")
     
@@ -174,7 +172,7 @@ class GameEngine:
 
         # generate the items
         while len(self.items) < 5:
-            testing_item_type = 'DOS'
+            testing_item_type = 'USB'
             self.items.append(Item(self,
                                     random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
                                     random.randint(300, 400),testing_item_type))
