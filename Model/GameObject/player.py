@@ -25,6 +25,7 @@ class Player(Basic_Game_Object):
         self.keep_item_type = ''
         self.can_leave_screen = False
         self.face = Const.DIRECTION_TO_VEC2['right']
+        self.death = 0
 
     @property
     def common_attack_range(self):
@@ -47,7 +48,13 @@ class Player(Basic_Game_Object):
         self.clip_position()
 
     def tick(self):
-
+        if self.blood <= 0:
+            State.normal(self.state)
+            State.invisible(self.state)
+            self.position = Const.PLAYER_INIT_POSITION[self.player_id]
+            self.blood = Const.PLAYER_FULL_BLOOD
+            self.death += 1
+            return
         for key,value in self.state.items():
             if key == 'in_folder' and value == 1:
                 State.invisible(self.state)
