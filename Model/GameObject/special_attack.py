@@ -109,12 +109,17 @@ class Fireball(Basic_Attack_Object):
                 and self.collide_player(player):
                 player.be_special_attacked(self)
 
-class Tornado(Basic_Attack_Object_No_Vanish):
-    def __init__(self, model, attacker_id, position, direction, damage):
-        super().__init__(model, attacker_id, position, direction, damage, 'Tornado', Const.TORNADO_WIDTH, Const.TORNADO_HEIGHT)
-
-    def check_col(self, player):
-        return player.rect.colliderect(self.rect)
+class Tornado(Basic_Attack_Object):
+    def __init__(self, model, attacker_id, position, speed, damage):
+        super().__init__(model, attacker_id, position, Const.TORNADO_WIDTH, Const.TORNADO_HEIGHT, speed, damage, 'Tornado')
+    
+    def tick(self):
+        self.basic_tick()
+        for player in self.model.players:
+            if self.attacker_id != player.player_id\
+                and player.can_be_special_attacked()\
+                and player.rect.colliderect(self.rect):
+                player.be_special_attacked(self)
 
 class Lightning(Basic_Attack_Object_No_Vanish):
     def __init__(self, model, attacker_id, position, direction, damage):
@@ -210,7 +215,7 @@ class Cast_Tornado(Basic_Game_Object):
         super().__init__(model, attacker.rect.x + Const.PLAYER_WIDTH, attacker.rect.y + Const.PLAYER_HEIGHT - Const.TORNADO_HEIGHT, 1, 1)
         self.name = 'Cast_Tornado'
         self.model.attacks.append(Tornado(model,attacker.player_id, self.position, 
-                                      attacker.face, Const.TORNADO_DAMAGE))
+                                          attacker.face.normalize() * Const.FIREBALL_SPEED, Const.TORNADO_DAMAGE))
         self.kill()
 
 class Cast_Lightning(Basic_Game_Object):

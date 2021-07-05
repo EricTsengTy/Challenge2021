@@ -174,7 +174,7 @@ class GameEngine:
 
         # generate the items
         while len(self.items) < 5:
-            testing_item_type = 'FOLDER_UNUSED'
+            testing_item_type = 'FAN'
             self.items.append(Item(self,
                                     random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
                                     random.randint(300, 400),testing_item_type))
