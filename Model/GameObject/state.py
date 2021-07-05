@@ -3,6 +3,7 @@ import Const
 
 def init():
     state = {
+                'infected_common_attack':0,
                 'special_attack':0,
                 'be_common_attacked':0,
                 'be_special_attacked':0,
@@ -17,11 +18,12 @@ def init():
 
 def normal(state):
     state = {
+                'infected_common_attack':0,
                 'special_attack':0,
                 'be_common_attacked':0,
                 'be_special_attacked':0,
                 'in_folder':0,
-                'infected':0,
+                'infection':0,
                 'slow_move_speed':0,
                 'fast_special_attack_speed':0,
                 'invisible':0,
@@ -31,8 +33,9 @@ def normal(state):
 def infect(state):
     if state['immune'] != 0:
         return
-    state['infected'] = 3 * Const.FPS #Const.INFECTED_TIME
-    state['special_attack'] = 3 * Const.FPS #Const.INFECTED_TIME
+    state['infection'] = 3 * Const.FPS #Const.INFECTED_TIME
+    state['special_attack'] = 10 * Const.FPS #Const.INFECTED_TIME
+    state['infected_common_attack'] = 10 * Const.FPS #Const.INFECTED_COMMON_ATTACK_TIME
 
 def invisible(state):
     state['invisible'] = int(0.5*Const.FPS) #Const.INVISIBLE_TIME

@@ -47,6 +47,7 @@ class Player(Basic_Game_Object):
         self.clip_position()
 
     def tick(self):
+
         for key,value in self.state.items():
             if key == 'in_folder' and value == 1:
                 State.invisible(self.state)
@@ -102,10 +103,12 @@ class Player(Basic_Game_Object):
             self.blood-=attack.damage
             State.broken(self.state)
         
-    def be_common_attacked(self, infected):
-        if infected:
-            self.blood -= Const.PLAYER_INFECTED_COMMON_ATTACK_DAMAGE
+    def be_common_attacked(self, attacker):
+        if attacker.infection():
             State.infect(self.state)
+            self.blood -= Const.PLAYER_INFECTED_COMMON_ATTACK_DAMAGE
+        elif attacker.infected_common_attack():
+            self.blood -= Const.PLAYER_INFECTED_COMMON_ATTACK_DAMAGE
         else:
             self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
 
@@ -130,8 +133,12 @@ class Player(Basic_Game_Object):
         if self.state['special_attack'] == 0: return True
         else: return False
 
-    def infected(self):
-        if self.state['infected'] == 0: return False
+    def infected_common_attack(self):
+        if self.state['infected_common_attack'] == 0: return False
+        else: return True
+
+    def infection(self):
+        if self.state['infection'] == 0: return False
         else: return True
 
     def in_folder(self):

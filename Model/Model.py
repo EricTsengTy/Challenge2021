@@ -131,7 +131,7 @@ class GameEngine:
                 for player in self.players:
                     if attacker.player_id != player.player_id and\
                        player.can_be_common_attacked() and attack_range.colliderect(player):
-                        player.be_common_attacked(attacker.infected())
+                        player.be_common_attacked(attacker)
             else:
                 print("Can not common attack")
     
