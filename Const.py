@@ -125,6 +125,8 @@ ARROW_COLOR = pg.Color("red")
 COFFEE_COLOR = pg.Color("brown")
 BUG_COLOR = pg.Color("DarkOliveGreen")
 HP_BAR_COLOR = [pg.Color('white'), pg.Color('green')]
+ENERGY_BAR_COLOR = [pg.Color('white'), pg.Color('orange')]
+ITEM_BOX_COLOR = pg.Color('brown')
 
 # controller
 PLAYER_MOVE_KEYS = {

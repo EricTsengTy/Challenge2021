@@ -55,6 +55,8 @@ class GraphicalView:
             elif cur_state == Const.STATE_STOP: self.render_stop()
             elif cur_state == Const.STATE_ENDGAME: self.render_endgame()
 
+
+        
     def display_fps(self):
         '''
         Display the current fps on the window caption.
