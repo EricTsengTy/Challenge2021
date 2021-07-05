@@ -136,3 +136,8 @@ PLAYER_SPECIAL_ATTACK_KEYS = {
     pg.K_u: (2, 'special_attack'),
     pg.K_RSHIFT: (3, 'special_attack'),
 }
+
+GAME_STOP_KEY = pg.K_SPACE
+GAME_CONTINUE_KEY = pg.K_RETURN
+GAME_RESTART_KEY = pg.K_F5
+GAME_FULLSCREEN_KEY = pg.K_F11
