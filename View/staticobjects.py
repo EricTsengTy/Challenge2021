@@ -40,3 +40,7 @@ class View_players(__Object_base):
             pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left, player.top-10, player.rect.width*player.blood/Const.PLAYER_FULL_BLOOD, 5])
             # empty hp bar
             pg.draw.rect(screen, Const.HP_BAR_COLOR[0], [player.left, player.top-10, player.rect.width, 5], 2)
+
+            #item
+            pg.draw.rect(screen, Const.ITEM_BOX_COLOR, [player.left-20, player.top-20, 15, 15], 2)
+            
