@@ -38,6 +38,7 @@ class GraphicalView:
         
         # static objects
         self.players = View.staticobjects.View_players(self.model)
+        self.arrow = View.staticobjects.View_Arrow(self.model)
 
     def notify(self, event):
         '''
@@ -104,7 +105,8 @@ class GraphicalView:
 
         for attack in self.model.attacks:
             if attack.name == 'Arrow':
-                pg.draw.circle(self.screen, Const.ARROW_COLOR, attack.position, Const.ARROW_RADIUS)
+                self.arrow.draw(target, attack.position, attack.speed)
+                # pg.draw.circle(self.screen, Const.ARROW_COLOR, attack.position, Const.ARROW_SIZE)
             elif attack.name == 'Bug':
                 pg.draw.rect(self.screen, Const.COFFEE_COLOR, attack)
             elif attack.name == 'Coffee':

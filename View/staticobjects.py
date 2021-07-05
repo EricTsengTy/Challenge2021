@@ -3,7 +3,8 @@ import os.path
 import math
 
 import Model.GameObject.player as model_player
-from View.utils import scale_surface, load_image, resize_surface
+from View.utils import scale_surface, load_image, resize_surface, rotate_surface
+from pygame.math import Vector2
 import Const
 
 class __Object_base():
@@ -15,6 +16,24 @@ class __Object_base():
     
     def __init__(self, model):
         self.model = model
+
+class View_Arrow(__Object_base):
+    images = tuple(
+        rotate_surface(
+            resize_surface(
+                load_image(os.path.join(Const.IMAGE_PATH, 'attack', 'attack_dos.png')),
+                Const.ARROW_SIZE ,Const.ARROW_SIZE
+            ), 180 + 72*_i
+        )
+        for _i in range(5)
+    )
+
+    @classmethod
+    def init_convert(cls):
+        cls.images = tuple( img.convert_alpha() for img in cls.images)
+    def draw(self, screen, pos, speed):
+        angle = round(Vector2().angle_to(speed))
+        screen.blit(self.images[(5-((angle+270)//72))%5], self.images[(5-((angle+270)//72))%5].get_rect(center=pos))
 
 class View_players(__Object_base):
     images = tuple(
@@ -36,7 +55,6 @@ class View_players(__Object_base):
     def init_convert(cls):
         cls.images = tuple( img.convert_alpha() for img in cls.images)
         cls.keep_item_images = tuple( img.convert_alpha() for img in cls.keep_item_images)
-        cls.movement = 0
     
     def draw(self, screen):
         for player in self.model.players:
