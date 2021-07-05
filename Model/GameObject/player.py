@@ -26,6 +26,7 @@ class Player(Basic_Game_Object):
         self.can_leave_screen = False
         self.face = Const.DIRECTION_TO_VEC2['right']
         self.death = 0
+        self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
 
     @property
     def common_attack_range(self):
@@ -59,6 +60,12 @@ class Player(Basic_Game_Object):
             if key == 'in_folder' and value == 1:
                 State.invisible(self.state)
             self.state[key] = max(value-1, 0)
+        
+        if self.state['fast_special_attack_speed'] == 1:
+            self.special_attack_timer = max(self.special_attack_timer - 2, 0)
+        else :
+            self.special_attack_timer = max(self.special_attack_timer - 1, 0)
+        
         if self.in_folder():
             return
         self.basic_tick()
@@ -67,6 +74,7 @@ class Player(Basic_Game_Object):
     def touch_item(self, item_type):
         if item_type in Const.ITEM_TYPE_LIST[0:6]:
             self.keep_item_type = item_type
+            self.special_attack_timer = 0
         elif item_type == 'EXE':
             pass
         elif item_type == 'USB':
@@ -83,6 +91,7 @@ class Player(Basic_Game_Object):
             pass
 
     def special_attack(self):
+        if self.special_attack_timer > 0: return
         if(self.keep_item_type == 'DOS'):
             self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
         elif(self.keep_item_type == 'DDOS'):
@@ -98,6 +107,7 @@ class Player(Basic_Game_Object):
         elif(self.keep_item_type == 'LIGHTNING'):
             self.model.attacks.append(Cast_Lightning(self.model, self))
         self.keep_item_type = ''
+        self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
 
     def be_special_attacked(self, attack):
         if attack.name == 'Arrow':
