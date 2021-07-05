@@ -30,3 +30,6 @@ def resize_surface(surface, width: int, height: int):
         return pg.transform.smoothscale(surface, (width, height))
     except:
         return pg.transform.scale(surface, (width, height))
+
+def rotate_surface(surface, angle):
+    return pg.transform.rotate(surface, angle)
