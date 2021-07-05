@@ -76,9 +76,6 @@ class Player(Basic_Game_Object):
 
     def special_attack(self):
         if(self.keep_item_type == 'DOS'):
-            player_id = [_ for _ in range(Const.PLAYER_NUMBER)]
-            player_id.remove(self.player_id)
-            player_id = random.choice(player_id)
             self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
         elif(self.keep_item_type == 'DDOS'):
             self.model.attacks.append(Ddos(self.model, self, self.model.players[self.__random_target()]))
@@ -87,7 +84,6 @@ class Player(Basic_Game_Object):
         elif(self.keep_item_type == 'THROW_BUG'):
             self.model.attacks.append(Throw_Bug(self.model, self, self.model.players[(self.player_id+1)%4]))
         elif(self.keep_item_type == ''):
-            
             self.model.attacks.append(Cast_Fireball(self.model, self))
         elif(self.keep_item_type == 'FAN'):
             self.model.attacks.append(Cast_Tornado(self.model, self))

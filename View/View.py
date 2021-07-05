@@ -88,10 +88,13 @@ class GraphicalView:
             if attack.name == 'Arrow':
                 pg.draw.circle(self.screen, Const.ARROW_COLOR, attack.position, Const.ARROW_RADIUS)
             elif attack.name == 'Bug':
-                pg.draw.circle(self.screen, Const.COFFEE_COLOR, attack.position, Const.ARROW_RADIUS)
+                pg.draw.rect(self.screen, Const.COFFEE_COLOR, attack)
             elif attack.name == 'Coffee':
-                pg.draw.circle(self.screen, Const.BUG_COLOR, attack.position, Const.ARROW_RADIUS)
-
+                pg.draw.rect(self.screen, Const.BUG_COLOR, attack)
+            elif attack.name == 'Fireball':
+                pg.draw.circle(self.screen, pg.Color('red'), attack.position, attack.radius)
+            elif attack.name == 'Tornado':
+                pg.draw.rect(self.screen, pg.Color('red'), attack)
         pg.display.flip()
 
     def render_stop(self):
