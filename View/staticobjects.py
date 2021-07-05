@@ -20,7 +20,7 @@ class View_players(__Object_base):
     images = tuple(
         resize_surface(
             load_image(os.path.join(Const.IMAGE_PATH, 'players' ,Const.PLAYER_PICS[_i])), 
-            60,80
+            Const.PLAYER_WIDTH,Const.PLAYER_HEIGHT
         )
         for _i in range(8)
     )
@@ -28,6 +28,7 @@ class View_players(__Object_base):
     @classmethod
     def init_convert(cls):
         cls.images = tuple( img.convert_alpha() for img in cls.images)
+        cls.movement = 0
     
     def draw(self, screen):
         for player in self.model.players:
@@ -36,6 +37,6 @@ class View_players(__Object_base):
             screen.blit(self.images[Const.PICS_PER_PLAYER*player.player_id + status], self.images[Const.PICS_PER_PLAYER*player.player_id + status].get_rect(center=player.center))
 
             # blood
-            pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left, player.top+10, player.rect.width*player.blood/Const.PLAYER_FULL_BLOOD, 5])
+            pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left, player.top-10, player.rect.width*player.blood/Const.PLAYER_FULL_BLOOD, 5])
             # empty hp bar
-            pg.draw.rect(screen, Const.HP_BAR_COLOR[0], [player.left, player.top+10, player.rect.width, 5], 2)
+            pg.draw.rect(screen, Const.HP_BAR_COLOR[0], [player.left, player.top-10, player.rect.width, 5], 2)
