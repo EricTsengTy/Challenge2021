@@ -12,15 +12,20 @@ class Basic_Attack_Object(Basic_Game_Object):
         self.attacker_id = attacker_id
         self.speed = speed
         self.damage = damage
-        
+        self.disappear_hit_player = False
+
+    def collide_player(self, player):
+        pass
+
     def tick(self):
         self.basic_tick()
         for player in self.model.players:
             if self.attacker_id != player.player_id\
                 and player.can_be_special_attacked()\
-                and player.rect.collidepoint(self.center.x, self.center.y):
+                and self.collide_player(player):
                 player.be_special_attacked(self)
-                self.kill()
+                if self.disappear_hit_player:
+                    self.kill()
 
 class Basic_Attack_Object_No_Vanish(Basic_Game_Object):
     def __init__(self, model, attacker_id, position, direction, damage, name, width = 1, height = 1, speed = Const.ARROW_SPEED):
@@ -51,24 +56,37 @@ class Basic_Attack_Object_No_Vanish(Basic_Game_Object):
 class Arrow(Basic_Attack_Object):
     def __init__(self, model, attacker_id, position, speed, damage):
         super().__init__(model, attacker_id, position, 1, 1, speed, damage, 'Arrow')
+        self.disappear_hit_player = True
+
+    def collide_player(self, player):
+        return player.rect.collidepoint(self.center.x, self.center.y)
 
 class Bug(Basic_Attack_Object):
     def __init__(self, model, attacker_id, position, speed, damage):
         super().__init__(model, attacker_id, position, Const.BUG_WIDTH, Const.BUG_HEIGHT, speed, damage, 'Bug')
+        self.disappear_hit_player = True
         self.obey_gravity = True
         self.gravity = Const.BUG_GRAVITY
+
+    def collide_player(self, player):
+        return player.rect.collidepoint(self.center.x, self.center.y)
 
 class Coffee(Basic_Attack_Object):
     def __init__(self, model, attacker_id, position, speed, damage):
         super().__init__(model, attacker_id, position, Const.COFFEE_WIDTH, Const.COFFEE_HEIGHT, speed, damage, 'Coffee')
+        self.disappear_hit_player = True
         self.obey_gravity = True
         self.gravity = Const.COFFEE_GRAVITY
+
+    def collide_player(self, player):
+        return player.rect.collidepoint(self.center.x, self.center.y)
 
 class Fireball(Basic_Attack_Object):
     # this is a ball-shaped obj, hence only the position matters, it represents the center of fireball
     def __init__(self, model, attacker_id, position, speed, damage):
         super().__init__(model, attacker_id, position, 1, 1, speed, damage, 'Fireball')
         self.radius = Const.FIREBALL_RADIUS
+        self.disappear_hit_player = False
 
     def collide_player(self, player): # check if a rectangle collide with a ball (self)
         rxl = player.x
@@ -112,14 +130,10 @@ class Fireball(Basic_Attack_Object):
 class Tornado(Basic_Attack_Object):
     def __init__(self, model, attacker_id, position, speed, damage):
         super().__init__(model, attacker_id, position, Const.TORNADO_WIDTH, Const.TORNADO_HEIGHT, speed, damage, 'Tornado')
-    
-    def tick(self):
-        self.basic_tick()
-        for player in self.model.players:
-            if self.attacker_id != player.player_id\
-                and player.can_be_special_attacked()\
-                and player.rect.colliderect(self.rect):
-                player.be_special_attacked(self)
+        self.disappear_hit_player = False
+
+    def collide_player(self, player):
+        return player.rect.colliderect(self.rect)
 
 class Lightning(Basic_Attack_Object_No_Vanish):
     def __init__(self, model, attacker_id, position, direction, damage):
