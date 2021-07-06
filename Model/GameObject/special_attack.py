@@ -236,7 +236,7 @@ class Cast_Tornado(Basic_Game_Object):
         super().__init__(model, attacker.rect.x + Const.PLAYER_WIDTH, attacker.rect.y + Const.PLAYER_HEIGHT - Const.TORNADO_HEIGHT, 1, 1)
         self.name = 'Cast_Tornado'
         self.model.attacks.append(Tornado(model,attacker.player_id, self.position, 
-                                          attacker.face.normalize() * Const.FIREBALL_SPEED, Const.TORNADO_DAMAGE))
+                                          attacker.face.normalize() * Const.TORNADO_SPEED))
         self.kill()
 
 class Cast_Lightning(Basic_Game_Object):
