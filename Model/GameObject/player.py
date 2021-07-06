@@ -50,11 +50,7 @@ class Player(Basic_Game_Object):
 
     def tick(self):
         if self.blood <= 0:
-            self.state = State.init()
-            State.invisible(self.state)
-            self.position = Const.PLAYER_INIT_POSITION[self.player_id]
-            self.blood = Const.PLAYER_FULL_BLOOD
-            self.death += 1
+            self.die()
             return
         for key,value in self.state.items():
             if key == 'in_folder' and value == 1:
@@ -70,6 +66,17 @@ class Player(Basic_Game_Object):
             return
         self.basic_tick()
           
+
+    def die(self):
+        self.state = State.init()
+        State.invisible(self.state)
+        self.position = Const.PLAYER_INIT_POSITION[self.player_id]
+        self.blood = Const.PLAYER_FULL_BLOOD
+        self.death += 1
+        self.keep_item_type = ''
+        self.face = Const.DIRECTION_TO_VEC2['right']
+        self.jump_count = 0
+
 
     def touch_item(self, item_type):
         if item_type in Const.ITEM_TYPE_LIST[0:6]:
