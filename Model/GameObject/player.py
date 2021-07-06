@@ -84,7 +84,7 @@ class Player(Basic_Game_Object):
         elif item_type == 'GRAPHIC_CARD':
             State.graphiccard(self.state)
         elif item_type == 'FORMAT':
-            State.normal(self.state)
+            self.state = State.init()
         elif item_type == 'FOLDER_UNUSED':
             State.folder(self.state)
         elif item_type == 'CHARGE':
