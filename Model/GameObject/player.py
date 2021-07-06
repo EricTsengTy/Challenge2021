@@ -123,11 +123,7 @@ class Player(Basic_Game_Object):
     def be_common_attacked(self, attacker):
         if attacker.infection():
             State.infect(self.state)
-            self.blood -= Const.PLAYER_INFECTED_COMMON_ATTACK_DAMAGE
-        elif attacker.infected_common_attack():
-            self.blood -= Const.PLAYER_INFECTED_COMMON_ATTACK_DAMAGE
-        else:
-            self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE
+        self.blood -= Const.PLAYER_INFECTED_COMMON_ATTACK_DAMAGE * self.damage_adjust()
 
     def __random_target(self):
         player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
@@ -150,10 +146,6 @@ class Player(Basic_Game_Object):
         if self.state['special_attack'] == 0: return True
         else: return False
 
-    def infected_common_attack(self):
-        if self.state['infected_common_attack'] == 0: return False
-        else: return True
-
     def infection(self):
         if self.state['infection'] == 0: return False
         else: return True
@@ -162,6 +154,10 @@ class Player(Basic_Game_Object):
         if self.state['in_folder'] == 0: return False
         else: return True
 
+    def damage_adjust(self):
+        if self.state['infected_common_attack'] == 0: return 1
+        else: return Const.PLAYER_COMMON_ATTACK_DAMAGE_ADJUST
+
     def speed_adjust(self):
         if self.state['slow_move_speed'] == 0: return 1
-        else: return Const.PLAYER_SPEED_ADJUST_RATIO
+        else: return Const.PLAYER_SPEED_ADJUST
