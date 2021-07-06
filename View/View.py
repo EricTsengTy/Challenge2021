@@ -44,6 +44,8 @@ class GraphicalView:
         self.arrow = View.staticobjects.View_Arrow(self.model)
         self.bug = View.activeobjects.View_Bug(8)
         self.coffee = View.activeobjects.View_Coffee(10)
+        self.fireball = View.activeobjects.View_Fireball(10)
+        self.tornado = View.activeobjects.View_Tornado(10)
         self.lightning = View.staticobjects.View_Lightning(self.model)
 
     def notify(self, event):
@@ -112,16 +114,14 @@ class GraphicalView:
         for attack in self.model.attacks:
             if attack.name == 'Arrow':
                 self.arrow.draw(target, attack.position, attack.speed)
-                # pg.draw.circle(self.screen, Const.ARROW_COLOR, attack.position, Const.ARROW_SIZE)
             elif attack.name == 'Bug':
                 self.bug.draw(target, attack.position, attack.timer)
             elif attack.name == 'Coffee':
                 self.coffee.draw(target, attack.position, attack.timer)
-                # pg.draw.rect(self.screen, Const.BUG_COLOR, attack)
             elif attack.name == 'Fireball':
-                pg.draw.circle(self.screen, pg.Color('red'), attack.position, attack.radius)
+                self.fireball.draw(target, attack.position, attack.timer, attack.speed)
             elif attack.name == 'Tornado':
-                pg.draw.rect(self.screen, pg.Color('red'), attack)
+                self.tornado.draw(target, attack.rect.center, attack.timer, attack.speed)
             elif attack.name == 'Lightning':
                 self.lightning.draw(target, attack.rect.center, attack.range)
         pg.display.flip()

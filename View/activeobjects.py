@@ -99,5 +99,100 @@ class View_Coffee(__Object_base):
                 self.frames[self.frame_index_to_draw].get_rect(center=pos)
             )
     
+class View_Fireball(__Object_base):
+    frames = tuple(
+            resize_surface(
+                load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_fireball{_i+1}.png')),
+                Const.FIREBALL_RADIUS*2, Const.FIREBALL_RADIUS*2
+            )
+            for _i in range(2)
+        )
+    fliped_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in frames
+        )
+
+    @classmethod
+    def init_convert(cls):
+        cls.frames = tuple(_frame.convert_alpha() for _frame in cls.frames)
+    
+    def __init__(self, delay_of_frames):
+        self.delay_of_frames = delay_of_frames
+
+    def draw(self, screen, pos, timer, speed):
+        self.frame_index_to_draw = (timer // self.delay_of_frames) % len(self.frames)
+        if speed.x > 0:
+            screen.blit(
+                self.frames[self.frame_index_to_draw],
+                self.frames[self.frame_index_to_draw].get_rect(center=pos),
+            )
+        else:
+            screen.blit(
+                self.fliped_frames[self.frame_index_to_draw],
+                self.fliped_frames[self.frame_index_to_draw].get_rect(center=pos),
+            )
+
+class View_Fireball(__Object_base):
+    frames = tuple(
+            resize_surface(
+                load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_fireball{_i+1}.png')),
+                Const.FIREBALL_RADIUS*2, Const.FIREBALL_RADIUS*2
+            )
+            for _i in range(2)
+        )
+    fliped_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in frames
+        )
+
+    @classmethod
+    def init_convert(cls):
+        cls.frames = tuple(_frame.convert_alpha() for _frame in cls.frames)
+    
+    def __init__(self, delay_of_frames):
+        self.delay_of_frames = delay_of_frames
+
+    def draw(self, screen, pos, timer, speed):
+        self.frame_index_to_draw = (timer // self.delay_of_frames) % len(self.frames)
+        if speed.x > 0:
+            screen.blit(
+                self.frames[self.frame_index_to_draw],
+                self.frames[self.frame_index_to_draw].get_rect(center=pos),
+            )
+        else:
+            screen.blit(
+                self.fliped_frames[self.frame_index_to_draw],
+                self.fliped_frames[self.frame_index_to_draw].get_rect(center=pos),
+            )
+
+class View_Tornado(__Object_base):
+    frames = tuple(
+            resize_surface(
+                load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_fan{_i+1}.png')),
+                Const.TORNADO_WIDTH, Const.TORNADO_HEIGHT
+            )
+            for _i in range(4)
+        )
+    fliped_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in frames
+        )
+
+    @classmethod
+    def init_convert(cls):
+        cls.frames = tuple(_frame.convert_alpha() for _frame in cls.frames)
+    
+    def __init__(self, delay_of_frames):
+        self.delay_of_frames = delay_of_frames
+
+    def draw(self, screen, pos, timer, speed):
+        self.frame_index_to_draw = (timer // self.delay_of_frames) % len(self.frames)
+        if speed.x > 0:
+            screen.blit(
+                self.frames[self.frame_index_to_draw],
+                self.frames[self.frame_index_to_draw].get_rect(center=pos),
+            )
+        else:
+            screen.blit(
+                self.fliped_frames[self.frame_index_to_draw],
+                self.fliped_frames[self.frame_index_to_draw].get_rect(center=pos),
+            )
 
     
