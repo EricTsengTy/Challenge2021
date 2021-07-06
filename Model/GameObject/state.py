@@ -16,20 +16,6 @@ def init():
             }
     return state
 
-def normal(state):
-    state = {
-                'infected_common_attack':0,
-                'special_attack':0,
-                'be_common_attacked':0,
-                'be_special_attacked':0,
-                'in_folder':0,
-                'infection':0,
-                'slow_move_speed':0,
-                'fast_special_attack_speed':0,
-                'invisible':0,
-                'immune':0
-            }
-
 def infect(state):
     if state['immune'] != 0:
         return

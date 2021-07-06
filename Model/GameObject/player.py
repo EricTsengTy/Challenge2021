@@ -50,7 +50,7 @@ class Player(Basic_Game_Object):
 
     def tick(self):
         if self.blood <= 0:
-            State.normal(self.state)
+            self.state = State.init()
             State.invisible(self.state)
             self.position = Const.PLAYER_INIT_POSITION[self.player_id]
             self.blood = Const.PLAYER_FULL_BLOOD
