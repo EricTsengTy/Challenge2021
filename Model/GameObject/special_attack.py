@@ -14,12 +14,14 @@ class Basic_Attack_Object(Basic_Game_Object):
         self.disappear_hit_player = False
         self.immune = [False for _ in range(Const.PLAYER_NUMBER)]
         self.immune[attacker_id] = True
+        self.tiemr = 0
 
     def collide_player(self, player):
         pass
 
     def tick(self):
         self.basic_tick()
+        self.timer += 1
         for player in self.model.players:
             if (not self.immune[player.player_id]) and player.can_be_special_attacked() and self.collide_player(player):
                 player.be_special_attacked(self)
