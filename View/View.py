@@ -44,6 +44,7 @@ class GraphicalView:
         self.arrow = View.staticobjects.View_Arrow(self.model)
         self.bug = View.activeobjects.View_Bug(8)
         self.coffee = View.activeobjects.View_Coffee(10)
+        self.lightning = View.staticobjects.View_Lightning(self.model)
 
     def notify(self, event):
         '''
@@ -121,6 +122,8 @@ class GraphicalView:
                 pg.draw.circle(self.screen, pg.Color('red'), attack.position, attack.radius)
             elif attack.name == 'Tornado':
                 pg.draw.rect(self.screen, pg.Color('red'), attack)
+            elif attack.name == 'Lightning':
+                self.lightning.draw(target, attack.rect.center, attack.range)
         pg.display.flip()
 
     def render_stop(self):
