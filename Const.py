@@ -32,7 +32,7 @@ DIRECTION_TO_VEC2 = {
 }
 
 GROUND_POSITION = [
-    (  0, 500, 800, 10),
+    (  0, 500, 1200, 10),
     (  0, 370, 200, 10),
     (150, 430, 200, 10),
 ]
@@ -122,8 +122,8 @@ SPECIAL_ATTACK_KEEP_TO_NUM = {
 }
 # view
 WINDOW_CAPTION = 'Challenge 2021'
-WINDOW_SIZE = (800, 800)
-ARENA_SIZE = (800, 800)
+WINDOW_SIZE = (1200, 800)
+ARENA_SIZE = (1200, 800)
 BACKGROUND_COLOR = pg.Color('black')
 PLAYER_COLOR = [pg.Color('green'), pg.Color('magenta'), pg.Color('cyan'), pg.Color('white')]
 ATTACK_RANGE_COLOR = [pg.Color('lightgreen'), pg.Color('orchid1'), pg.Color('lightcyan'), pg.Color('whitesmoke')]
