@@ -172,7 +172,11 @@ class GameEngine:
 
         # generate the items
         while len(self.items) < 5:
+<<<<<<< HEAD
             testing_item_type = 'THROW_BUG'
+=======
+            testing_item_type = 'DOS'
+>>>>>>> 249ea31 (fix dos animation)
             self.items.append(Item(self,
                                     random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
                                     random.randint(300, 400),testing_item_type))
