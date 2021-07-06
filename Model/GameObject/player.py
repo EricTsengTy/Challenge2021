@@ -1,6 +1,6 @@
 import pygame as pg
 import random
-from pygame.display import mode_ok
+from pygame.display import mode_ok, set_allow_screensaver
 from pygame.mixer import fadeout
 import Const 
 from pygame.math import Vector2
@@ -17,7 +17,7 @@ class Player(Basic_Game_Object):
                          Const.PLAYER_WIDTH,Const.PLAYER_HEIGHT)
         self.player_id = player_id
         self.max_jump = 2
-        self.jump_count = 0
+        self.jump_count = self.max_jump
         self.blood = Const.PLAYER_FULL_BLOOD
         self.state = State.init()
         self.landing = True
@@ -27,6 +27,7 @@ class Player(Basic_Game_Object):
         self.face = Const.DIRECTION_TO_VEC2['right']
         self.death = 0
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
+        self.standing_tick = 0
 
     @property
     def common_attack_range(self):
@@ -38,6 +39,7 @@ class Player(Basic_Game_Object):
         Will automatically clip the position so no need to worry out-of-bound moving.
         '''
         # Modify position and velocity of player
+        self.standing_tick = 0
         if direction=='jump':
             # player can jump only if he is falling
             if self.speed.y>=0 and self.jump_count < self.max_jump:
@@ -49,6 +51,9 @@ class Player(Basic_Game_Object):
         self.clip_position()
 
     def tick(self):
+        if self.jump_count == 0:
+            self.standing_tick +=1
+        else: self.standing_tick = 0
         if self.blood <= 0:
             self.die()
             return
@@ -168,3 +173,6 @@ class Player(Basic_Game_Object):
     def speed_adjust(self):
         if self.state['slow_move_speed'] == 0: return 1
         else: return Const.PLAYER_SPEED_ADJUST
+
+    def is_standing(self):
+        return self.standing_tick>5
