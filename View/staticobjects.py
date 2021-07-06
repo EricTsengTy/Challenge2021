@@ -31,6 +31,7 @@ class View_Arrow(__Object_base):
     @classmethod
     def init_convert(cls):
         cls.images = tuple( img.convert_alpha() for img in cls.images)
+    
     def draw(self, screen, pos, speed):
         angle = round(Vector2().angle_to(speed))
         if angle in [90,162,-54,126,18]:

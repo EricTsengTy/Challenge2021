@@ -4,6 +4,7 @@ from EventManager.EventManager import *
 from Model.Model import GameEngine
 import Const
 import View.staticobjects
+import View.activeobjects
 from View.utils import Text
 
 
@@ -41,6 +42,8 @@ class GraphicalView:
         # static objects
         self.players = View.staticobjects.View_players(self.model)
         self.arrow = View.staticobjects.View_Arrow(self.model)
+        self.bug = View.activeobjects.View_Bug(8)
+        self.coffee = View.activeobjects.View_Coffee(10)
 
     def notify(self, event):
         '''
@@ -110,9 +113,10 @@ class GraphicalView:
                 self.arrow.draw(target, attack.position, attack.speed)
                 # pg.draw.circle(self.screen, Const.ARROW_COLOR, attack.position, Const.ARROW_SIZE)
             elif attack.name == 'Bug':
-                pg.draw.rect(self.screen, Const.COFFEE_COLOR, attack)
+                self.bug.draw(target, attack.position, attack.timer)
             elif attack.name == 'Coffee':
-                pg.draw.rect(self.screen, Const.BUG_COLOR, attack)
+                self.coffee.draw(target, attack.position, attack.timer)
+                # pg.draw.rect(self.screen, Const.BUG_COLOR, attack)
             elif attack.name == 'Fireball':
                 pg.draw.circle(self.screen, pg.Color('red'), attack.position, attack.radius)
             elif attack.name == 'Tornado':
