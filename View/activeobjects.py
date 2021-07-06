@@ -64,7 +64,16 @@ class View_Coffee(__Object_base):
                 pg.transform.rotate(
                     scale_surface(
                         load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_coffee{_i+1}.png'))
-                        , 0.5
+                        , 0.3
+                    ), 72 * _i
+                )
+                for _i in range(5)
+            )
+    last_frames = tuple(
+                pg.transform.rotate(
+                    scale_surface(
+                        load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_coffee5.png'))
+                        , 0.3
                     ), 72 * _i
                 )
                 for _i in range(5)
@@ -78,12 +87,17 @@ class View_Coffee(__Object_base):
         self.delay_of_frames = delay_of_frames
 
     def draw(self, screen, pos, timer):
-        self.frame_index_to_draw = (timer // self.delay_of_frames) % len(self.frames)
-        
-        screen.blit(
-            self.frames[self.frame_index_to_draw],
-            self.frames[self.frame_index_to_draw].get_rect(center=pos),
-        )
+        self.frame_index_to_draw = timer // self.delay_of_frames
+        if self.frame_index_to_draw >= len(self.frames):
+            screen.blit(
+                self.last_frames[self.frame_index_to_draw % len(self.frames)],
+                self.last_frames[self.frame_index_to_draw % len(self.frames)].get_rect(center=pos)
+            )
+        else:
+            screen.blit(
+                self.frames[self.frame_index_to_draw],
+                self.frames[self.frame_index_to_draw].get_rect(center=pos)
+            )
     
 
     

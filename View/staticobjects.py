@@ -74,8 +74,8 @@ class View_players(__Object_base):
             pg.draw.rect(screen, Const.HP_BAR_COLOR[0], [player.left, player.top-10, player.rect.width, 5], 2)
 
             #item frame
-            pg.draw.rect(screen, Const.ITEM_BOX_COLOR, [player.left-20, player.top-20, Const.ITEM_BOX_SIZE, Const.ITEM_BOX_SIZE], 2)
+            pg.draw.rect(screen, Const.ITEM_BOX_COLOR, [player.left-20, player.top-15, Const.ITEM_BOX_SIZE, Const.ITEM_BOX_SIZE], 2)
             #item
             if player.keep_item_type != '':
                 screen.blit(self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]],
-                    self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-20)))
+                    self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-15)))
