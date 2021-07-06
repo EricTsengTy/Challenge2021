@@ -33,7 +33,11 @@ class View_Arrow(__Object_base):
         cls.images = tuple( img.convert_alpha() for img in cls.images)
     def draw(self, screen, pos, speed):
         angle = round(Vector2().angle_to(speed))
-        screen.blit(self.images[(5-((angle+270)//72))%5], self.images[(5-((angle+270)//72))%5].get_rect(center=pos))
+        if angle in [90,162,-54,126,18]:
+            screen.blit(self.images[(5-((angle+270)//72))%5], self.images[(5-((angle+270)//72))%5].get_rect(center=pos))
+        else:
+            img = rotate_surface(self.images[0], -angle+90)
+            screen.blit(img, img.get_rect(center=pos))
 
 class View_players(__Object_base):
     images = tuple(
