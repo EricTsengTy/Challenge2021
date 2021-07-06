@@ -92,6 +92,7 @@ LIGHTNING_SPEED = 1100
 LIGHTNING_DAMAGE = 30
 LIGHTNING_INIT_RANGE = 40 
 LIGHTNING_TIME = 25
+LIGHTNING_SIZE = 20
 
 # State machine constants
 STATE_POP = 0 # for convenience, not really a state which we can be in
