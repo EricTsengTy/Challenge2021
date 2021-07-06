@@ -19,9 +19,11 @@ PLAYER_COMMON_ATTACK_DAMAGE = 10
 PLAYER_COMMON_ATTACK_DAMAGE_ADJUST = 1.5
 PLAYER_SPECIAL_ATTACK_TIMER = 1 * FPS
 
+SCORE_KILL_OTHER = 500
+SCORE_NEVER_DIE = 1000
+SCORE_HELLO_WORLD = 300
+
 #item effect
-DAMAGE_MULTIPLE = 2 # multiple of common attack damage affected by USB
-SPEED_MULTIPLE = 0.5 # multiple of speed affected by DOS and DDOS
 ENERGY_MULTIPLE = 2 # multiple of accumulate energy speed affected by video card
 
 DIRECTION_TO_VEC2 = {
@@ -92,6 +94,17 @@ LIGHTNING_SPEED = 1100
 LIGHTNING_DAMAGE = 30
 LIGHTNING_INIT_RANGE = 40 
 LIGHTNING_TIME = 25
+
+# state time
+INFECTED_TIME = 3 * FPS
+INFECTED_COMMON_ATTACK_TIME = 10 * FPS
+INVISIBLE_TIME = int(0.5 * FPS)
+IN_FOLDER_TIME = 3 * FPS
+SLOW_DOWN_TIME = 3 * FPS
+BROKEN_TIME_COFFEE = 3 * FPS
+BROKEN_TIME_BUG = 3 * FPS
+FIREWALL_TIME = 3 * FPS
+GRAPHIC_CARD_TIME = 3 * FPS
 
 # State machine constants
 STATE_POP = 0 # for convenience, not really a state which we can be in

@@ -182,7 +182,9 @@ class GameEngine:
         Update the objects in endgame scene.
         For example: scoreboard
         '''
-        pass
+        for player in self.players:
+            if player.death == 0:
+                player.add_score(Const.SCORE_NEVER_DIE)
 
     def run(self):
         '''

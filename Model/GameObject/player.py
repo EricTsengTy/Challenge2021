@@ -28,6 +28,7 @@ class Player(Basic_Game_Object):
         self.death = 0
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
         self.standing_tick = 0
+        self.score = 0
 
     @property
     def common_attack_range(self):
@@ -54,9 +55,6 @@ class Player(Basic_Game_Object):
         if self.jump_count == 0:
             self.standing_tick +=1
         else: self.standing_tick = 0
-        if self.blood <= 0:
-            self.die()
-            return
         for key,value in self.state.items():
             if key == 'in_folder' and value == 1:
                 State.invisible(self.state)
@@ -82,6 +80,15 @@ class Player(Basic_Game_Object):
         self.face = Const.DIRECTION_TO_VEC2['right']
         self.jump_count = 0
 
+    def add_score(self, s):
+        self.score += s
+
+    def count_score(self, attacker, damage):
+        # count how much score that attacker earn
+        attacker.add_score(damage)
+        if self.blood <= 0:
+            attacker.add_score(Const.SCORE_KILL_OTHER + self.blood)
+            self.die()
 
     def touch_item(self, item_type):
         if item_type in Const.ITEM_TYPE_LIST[0:6]:
@@ -123,19 +130,20 @@ class Player(Basic_Game_Object):
 
     def be_special_attacked(self, attack):
         if attack.name == 'Arrow':
-            self.blood-=attack.damage
             State.slow_down(self.state)
-        if attack.name == 'Bug':
-            self.blood-=attack.damage
-            State.broken(self.state)
-        if attack.name == 'Coffee':
-            self.blood-=attack.damage
-            State.broken(self.state)
+        elif attack.name == 'Bug':
+            State.broken(self.state, Const.BROKEN_TIME_BUG)
+        elif attack.name == 'Coffee':
+            State.broken(self.state, Const.BROKEN_TIME_COFFEE)
+        self.blood-=attack.damage
+        self.count_score(attack.attacker, attack.damage)
+        
         
     def be_common_attacked(self, attacker):
         if attacker.infection():
             State.infect(self.state)
-        self.blood -= Const.PLAYER_INFECTED_COMMON_ATTACK_DAMAGE * self.damage_adjust()
+        self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust()
+        self.count_score(attacker, Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust())
 
     def __random_target(self):
         player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]

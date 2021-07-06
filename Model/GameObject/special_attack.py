@@ -56,9 +56,10 @@ class Basic_Attack_Object_No_Vanish(Basic_Game_Object):
                 self.immune[player.player_id] = True
 
 class Arrow(Basic_Attack_Object):
-    def __init__(self, model, attacker_id, position, speed, Arrow_type):
+    def __init__(self, model, attacker, attacker_id, position, speed, Arrow_type):
         super().__init__(model, attacker_id, position, 1, 1, speed)
         self.name = 'Arrow'
+        self.attacker = attacker
         if Arrow_type == 'Ddos': self.damage = Const.DDOS_DAMAGE
         else: self.damage = Const.DOS_DAMAGE
         self.disappear_hit_player = True
@@ -67,9 +68,10 @@ class Arrow(Basic_Attack_Object):
         return player.rect.collidepoint(self.center.x, self.center.y)
 
 class Bug(Basic_Attack_Object):
-    def __init__(self, model, attacker_id, position, speed):
+    def __init__(self, model, attacker, attacker_id, position, speed):
         super().__init__(model, attacker_id, position, Const.BUG_WIDTH, Const.BUG_HEIGHT, speed)
         self.name = 'Bug'
+        self.attacker = attacker
         self.damage = Const.BUG_DAMAGE
         self.disappear_hit_player = True
         self.obey_gravity = True
@@ -79,9 +81,10 @@ class Bug(Basic_Attack_Object):
         return player.rect.collidepoint(self.center.x, self.center.y)
 
 class Coffee(Basic_Attack_Object):
-    def __init__(self, model, attacker_id, position, speed):
+    def __init__(self, model, attacker, attacker_id, position, speed):
         super().__init__(model, attacker_id, position, Const.COFFEE_WIDTH, Const.COFFEE_HEIGHT, speed)
         self.name = 'Coffee'
+        self.attacker = attacker
         self.damage = Const.COFFEE_DAMAGE
         self.disappear_hit_player = True
         self.obey_gravity = True
@@ -92,9 +95,10 @@ class Coffee(Basic_Attack_Object):
 
 class Fireball(Basic_Attack_Object):
     # this is a ball-shaped obj, hence only the position matters, it represents the center of fireball
-    def __init__(self, model, attacker_id, position, speed):
+    def __init__(self, model, attacker, attacker_id, position, speed):
         super().__init__(model, attacker_id, position, 1, 1, speed)
         self.name = 'Fireball'
+        self.attacker = attacker
         self.damage = Const.FIREBALL_DAMAGE
         self.radius = Const.FIREBALL_RADIUS
         self.disappear_hit_player = False
@@ -133,9 +137,10 @@ class Fireball(Basic_Attack_Object):
         return (self.x - corx) ** 2 + (self.y - cory) ** 2 < self.radius ** 2
     
 class Tornado(Basic_Attack_Object):
-    def __init__(self, model, attacker_id, position, speed):
+    def __init__(self, model, attacker, attacker_id, position, speed):
         super().__init__(model, attacker_id, position, Const.TORNADO_WIDTH, Const.TORNADO_HEIGHT, speed)
         self.name = 'Tornado'
+        self.attacker = attacker
         self.damage = Const.TORNADO_DAMAGE
         self.disappear_hit_player = False
         
@@ -143,8 +148,10 @@ class Tornado(Basic_Attack_Object):
         return player.rect.colliderect(self.rect)
 
 class Lightning(Basic_Attack_Object_No_Vanish):
-    def __init__(self, model, attacker_id, position, direction, damage):
+    def __init__(self, model, attacker, attacker_id, position, direction, damage):
         super().__init__(model, attacker_id, position, direction, damage, 'Lightning', 0, 0)
+        self.attacker = attacker
+        self.damage = damage
         self.speed = Const.LIGHTNING_SPEED / Const.FPS
         self.range = Const.LIGHTNING_INIT_RANGE
         self.timer = Const.LIGHTNING_TIME
@@ -178,7 +185,7 @@ class Dos(Basic_Game_Object):
         if self.timer<=0:
             self.timer = Const.DOS_TIMER
             self.rounds -=1
-            self.model.attacks.append(Arrow(self.model, self.attacker.player_id, self.position, 
+            self.model.attacks.append(Arrow(self.model, self.attacker, self.attacker.player_id, self.position, 
                                             self.direction.normalize() * Const.ARROW_SPEED, 'Dos'))
         self.timer -= 1
         if self.rounds<=0:
@@ -200,7 +207,7 @@ class Ddos(Basic_Game_Object):
             self.rounds -= 1
             for _ in range(5):
                 From = self.position - self.direction
-                self.model.attacks.append(Arrow(self.model, self.attacker.player_id, From, 
+                self.model.attacks.append(Arrow(self.model, self.attacker, self.attacker.player_id, From, 
                                                 self.direction.normalize() * Const.ARROW_SPEED, 'Ddos'))
                 self.direction.rotate_ip(72)
         self.timer -= 1
@@ -211,7 +218,7 @@ class Throw_Bug(Basic_Game_Object):
     def __init__(self, model, attacker, target):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = 'Throw_Bug'
-        self.model.attacks.append(Bug(model,attacker.player_id, self.position, 
+        self.model.attacks.append(Bug(model, attacker, attacker.player_id, self.position, 
                                       (attacker.face + Vector2(0,-1)).normalize() * Const.BUG_THROW_SPEED))
         self.kill()
 
@@ -219,7 +226,7 @@ class Throw_Coffee(Basic_Game_Object):
     def __init__(self, model, attacker, target):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = 'Throw_Coffee'
-        self.model.attacks.append(Coffee(model,attacker.player_id, self.position, 
+        self.model.attacks.append(Coffee(model, attacker, attacker.player_id, self.position, 
                                          (attacker.face + Vector2(0,-1)).normalize() * Const.COFFEE_THROW_SPEED))
         self.kill()
         
@@ -227,7 +234,7 @@ class Cast_Fireball(Basic_Game_Object):
     def __init__(self, model, attacker):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = "Cast_Fireball"
-        self.model.attacks.append(Fireball(model, attacker.player_id, self.position, 
+        self.model.attacks.append(Fireball(model, attacker, attacker.player_id, self.position, 
                                            attacker.face.normalize() * Const.FIREBALL_SPEED))
         self.kill()
 
@@ -235,14 +242,13 @@ class Cast_Tornado(Basic_Game_Object):
     def __init__(self, model, attacker):
         super().__init__(model, attacker.rect.x + Const.PLAYER_WIDTH, attacker.rect.y + Const.PLAYER_HEIGHT - Const.TORNADO_HEIGHT, 1, 1)
         self.name = 'Cast_Tornado'
-        self.model.attacks.append(Tornado(model,attacker.player_id, self.position, 
-                                          attacker.face.normalize() * Const.TORNADO_SPEED))
+        self.model.attacks.append(Tornado(model,attacker.player_id, self.position, attacker.face.normalize() * Const.TORNADO_SPEED))
         self.kill()
 
 class Cast_Lightning(Basic_Game_Object):
     def __init__(self, model, attacker):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = "Cast_Lightning"
-        self.model.attacks.append(Lightning(model, attacker.player_id, self.position, Vector2(1,0), Const.LIGHTNING_DAMAGE))
+        self.model.attacks.append(Lightning(model, attacker, attacker.player_id, self.position, Vector2(1,0), Const.LIGHTNING_DAMAGE))
         self.kill()
 
