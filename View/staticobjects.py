@@ -17,6 +17,18 @@ class __Object_base():
     def __init__(self, model):
         self.model = model
 
+class View_stage(__Object_base):
+    stage = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'stage', 'stage.png')),
+        Const.ARENA_SIZE[0], Const.ARENA_SIZE[1])
+
+    @classmethod
+    def init_convert(cls):
+        cls.stage = cls.stage.convert()
+
+    def draw(self, screen):
+        #screen.fill(Const.BACKGROUND_COLOR)
+        screen.blit(self.stage, (0, 0))
+
 class View_Arrow(__Object_base):
     images = tuple(
         rotate_surface(
