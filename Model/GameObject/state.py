@@ -19,31 +19,31 @@ def init():
 def infect(state):
     if state['immune'] != 0:
         return
-    state['infection'] = 3 * Const.FPS #Const.INFECTED_TIME
-    state['special_attack'] = 10 * Const.FPS #Const.INFECTED_TIME
-    state['infected_common_attack'] = 10 * Const.FPS #Const.INFECTED_COMMON_ATTACK_TIME
+    state['infection'] = Const.INFECTED_TIME
+    state['special_attack'] = Const.INFECTED_TIME
+    state['infected_common_attack'] = Const.INFECTED_COMMON_ATTACK_TIME
 
 def invisible(state):
-    state['invisible'] = int(0.5*Const.FPS) #Const.INVISIBLE_TIME
-    state['be_common_attacked'] = int(0.5*Const.FPS) #Const.INVISIBLE_TIME
-    state['be_special_attacked'] = int(0.5*Const.FPS) #Const.INVISIBLE_TIME
+    state['invisible'] = Const.INVISIBLE_TIME
+    state['be_common_attacked'] = Const.INVISIBLE_TIME
+    state['be_special_attacked'] = Const.INVISIBLE_TIME
 
 def folder(state):
-    state['in_folder'] = 3 * Const.FPS #Const.IN_FOLDER_TIME
-    state['special_attack'] = 3 * Const.FPS #Const.IN_FOLDER_TIME
-    state['be_common_attacked'] = 3 * Const.FPS #Const.IN_FOLDER_TIME
-    state['be_special_attacked'] = 3 * Const.FPS #Const.IN_FOLDER_TIME
+    state['in_folder'] = Const.IN_FOLDER_TIME
+    state['special_attack'] = Const.IN_FOLDER_TIME
+    state['be_common_attacked'] = Const.IN_FOLDER_TIME
+    state['be_special_attacked'] = Const.IN_FOLDER_TIME
 
 def slow_down(state):
-    state['slow_move_speed'] = 3 * Const.FPS #Const.SLOW_DOWN_TIME
+    state['slow_move_speed'] = Const.SLOW_DOWN_TIME
 
-def broken(state):
-    state['special_attack'] = 3 * Const.FPS #Const.BROKEN_TIME
+def broken(state, time):
+    state['special_attack'] = time
 
 def firewall(state):
-    state['immune'] = 3 * Const.FPS #Const.FIREWALL_TIME
+    state['immune'] = Const.FIREWALL_TIME
 
 def graphiccard(state):
-    state['fast_special_attack_speed'] = 3 * Const.FPS #Const.GRAPHIC_CARD_TIME
+    state['fast_special_attack_speed'] = Const.GRAPHIC_CARD_TIME
 
 
