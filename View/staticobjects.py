@@ -71,6 +71,7 @@ class View_Lightning(__Object_base):
         for _i in range(8):
             screen.blit(self.images[_i], self.images[_i].get_rect(center=(pos - dist * Vector2(1, 0).rotate(45 * _i))))
 
+'''
 class View_players(__Object_base):
     images = tuple(
         resize_surface(
@@ -110,3 +111,4 @@ class View_players(__Object_base):
             if player.keep_item_type != '':
                 screen.blit(self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]],
                     self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-15)))
+'''

@@ -251,4 +251,3 @@ class Cast_Lightning(Basic_Game_Object):
         self.name = "Cast_Lightning"
         self.model.attacks.append(Lightning(model, attacker, attacker.player_id, self.position, Vector2(1,0), Const.LIGHTNING_DAMAGE))
         self.kill()
-

@@ -195,4 +195,95 @@ class View_Tornado(__Object_base):
                 self.fliped_frames[self.frame_index_to_draw].get_rect(center=pos),
             )
 
+class View_players(__Object_base):
     
+    standing_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players' , 'standing', Const.PLAYER_STANDING_PICS[_i])), 
+            Const.PLAYER_WIDTH,Const.PLAYER_HEIGHT
+        )
+        for _i in range(1)
+    )
+
+    walk_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'move_right', f'right_move-{_i+1}.png')),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        ) 
+        for _i in range(12)
+    )
+
+    jump_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'jump_drop', f'main_chracter_jump_drop-{_i+1}.png')),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        )
+        for _i in range(12)
+    )
+
+    keep_item_images = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'special_attack_keep', Const.SPECIAL_ATTACK_KEEP_PICS[_i])),
+            Const.ITEM_BOX_SIZE, Const.ITEM_BOX_SIZE
+        ) 
+        for _i in range(6)
+    )
+
+    @classmethod
+    def init_convert(cls):
+        cls.frames = tuple( frame.convert_alpha() for frame in cls.frames)
+        cls.keep_item_images = tuple( img.convert_alpha() for img in cls.keep_item_images)
+
+    def __init__(self, model, delay_of_frames):
+        self.model = model
+        self.delay_of_frames = delay_of_frames
+        self.timer = [0, 0, 0, 0]
+        self.status = ['standing', 'standing', 'standing', 'standing']
+    
+    def draw(self, screen):
+        for player in self.model.players:
+            
+            # player itself
+            if player.is_standing():
+                self.status[player.player_id] = 'standing'
+                self.timer[player.player_id] = 0
+                screen.blit(self.standing_frames[0],
+                    self.standing_frames[0].get_rect(center=player.center))
+            elif player.jump_count > 0:
+                if self.status[player.player_id] == 'jump':
+                    self.timer[player.player_id] += 1
+                else:
+                    self.status[player.player_id] = 'jump'
+                    self.timer[player.player_id] = 0
+                self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames) % len(self.jump_frames)
+                screen.blit(
+                    self.jump_frames[self.frame_index_to_draw],
+                    self.jump_frames[self.frame_index_to_draw].get_rect(center=player.center),
+                )
+            else:
+                if self.status[player.player_id] == 'walk':
+                    self.timer[player.player_id] += 1
+                else:
+                    self.status[player.player_id] = 'walk'
+                    self.timer[player.player_id] = 0
+                self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames) % len(self.walk_frames)
+                screen.blit(
+                    self.walk_frames[self.frame_index_to_draw],
+                    self.walk_frames[self.frame_index_to_draw].get_rect(center=player.center),
+                )
+            '''
+            status = 0 if player.face == Const.DIRECTION_TO_VEC2['right'] else 1
+            screen.blit(self.images[Const.PICS_PER_PLAYER*player.player_id + status],
+                self.images[Const.PICS_PER_PLAYER*player.player_id + status].get_rect(center=player.center))
+            '''
+            # blood
+            pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left, player.top-10, player.rect.width*player.blood/Const.PLAYER_FULL_BLOOD, 5])
+            # empty hp bar
+            pg.draw.rect(screen, Const.HP_BAR_COLOR[0], [player.left, player.top-10, player.rect.width, 5], 2)
+
+            #item frame
+            pg.draw.rect(screen, Const.ITEM_BOX_COLOR, [player.left-20, player.top-15, Const.ITEM_BOX_SIZE, Const.ITEM_BOX_SIZE], 2)
+            #item
+            if player.keep_item_type != '':
+                screen.blit(self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]],
+                    self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-15)))

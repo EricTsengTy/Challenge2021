@@ -53,9 +53,10 @@ class GraphicalView:
         
         # static objects
         self.stage =  View.staticobjects.View_stage(self.model)
-        self.players = View.staticobjects.View_players(self.model)
+        # self.players = View.staticobjects.View_players(self.model)
+        self.players = View.activeobjects.View_players(self.model, 7)
         self.arrow = View.staticobjects.View_Arrow(self.model)
-        self.bug = View.activeobjects.View_Bug(8)
+        self.bug = View.activeobjects.View_Bug(10)
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)

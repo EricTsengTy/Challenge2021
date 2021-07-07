@@ -118,13 +118,10 @@ STATE_ENDGAME = 4
 IMAGE_PATH = os.path.join('View', 'assets')
 
 # Images
-PLAYER_PICS = [
-    'player1_0.png', 'player1_1.png',
-    'player2_0.png', 'player2_1.png',
-    'player3_0.png', 'player3_1.png',
-    'player4_0.png', 'player4_1.png',
+PLAYER_STANDING_PICS = [
+    'standing-01.png'
     ]
-PICS_PER_PLAYER = 2
+PICS_PER_PLAYER = 1 # not used now
 
 SPECIAL_ATTACK_KEEP_PICS = [
     'prop_bug.png', 'prop_coffee.png',
