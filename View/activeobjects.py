@@ -205,12 +205,20 @@ class View_players(__Object_base):
         for _i in range(1)
     )
 
+    fliped_standing_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in standing_frames
+    )
+
     walk_frames = tuple(
         resize_surface(
             load_image(os.path.join(Const.IMAGE_PATH, 'players', 'move_right', f'right_move-{_i+1}.png')),
             Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
         ) 
         for _i in range(12)
+    )
+    
+    fliped_walk_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in walk_frames
     )
 
     jump_frames = tuple(
@@ -219,6 +227,10 @@ class View_players(__Object_base):
             Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
         )
         for _i in range(12)
+    )
+
+    fliped_jump_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in jump_frames
     )
 
     keep_item_images = tuple(
@@ -231,7 +243,12 @@ class View_players(__Object_base):
 
     @classmethod
     def init_convert(cls):
-        cls.frames = tuple( frame.convert_alpha() for frame in cls.frames)
+        cls.standing_frames = tuple( frame.convert_alpha() for frame in cls.standing_frames)
+        cls.fliped_standing_frames = tuple( frame.convert_alpha() for frame in cls.fliped_standing_frames)
+        cls.walk_frames = tuple( frame.convert_alpha() for frame in cls.walk_frames)
+        cls.fliped_walk_frames = tuple( frame.convert_alpha() for frame in cls.fliped_walk_frames)
+        cls.jump_frames = tuple( frame.convert_alpha() for frame in cls.jump_frames)
+        cls.fliped_jump_frames = tuple( frame.convert_alpha() for frame in cls.fliped_jump_frames)
         cls.keep_item_images = tuple( img.convert_alpha() for img in cls.keep_item_images)
 
     def __init__(self, model, delay_of_frames):
@@ -247,8 +264,13 @@ class View_players(__Object_base):
             if player.is_standing():
                 self.status[player.player_id] = 'standing'
                 self.timer[player.player_id] = 0
-                screen.blit(self.standing_frames[0],
-                    self.standing_frames[0].get_rect(center=player.center))
+                if player.face == Const.DIRECTION_TO_VEC2['right']:
+                    screen.blit(self.standing_frames[0],
+                        self.standing_frames[0].get_rect(center=player.center))
+                else:
+                    screen.blit(self.fliped_standing_frames[0],
+                        self.fliped_standing_frames[0].get_rect(center=player.center))
+
             elif player.jump_count > 0:
                 if self.status[player.player_id] == 'jump':
                     self.timer[player.player_id] += 1
@@ -256,10 +278,14 @@ class View_players(__Object_base):
                     self.status[player.player_id] = 'jump'
                     self.timer[player.player_id] = 0
                 self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames) % len(self.jump_frames)
-                screen.blit(
-                    self.jump_frames[self.frame_index_to_draw],
-                    self.jump_frames[self.frame_index_to_draw].get_rect(center=player.center),
-                )
+                if player.face == Const.DIRECTION_TO_VEC2['right']:
+                    screen.blit(
+                        self.jump_frames[self.frame_index_to_draw],
+                        self.jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                else:
+                    screen.blit(
+                        self.fliped_jump_frames[self.frame_index_to_draw],
+                        self.fliped_jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
             else:
                 if self.status[player.player_id] == 'walk':
                     self.timer[player.player_id] += 1
@@ -267,15 +293,16 @@ class View_players(__Object_base):
                     self.status[player.player_id] = 'walk'
                     self.timer[player.player_id] = 0
                 self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames) % len(self.walk_frames)
-                screen.blit(
-                    self.walk_frames[self.frame_index_to_draw],
-                    self.walk_frames[self.frame_index_to_draw].get_rect(center=player.center),
-                )
-            '''
-            status = 0 if player.face == Const.DIRECTION_TO_VEC2['right'] else 1
-            screen.blit(self.images[Const.PICS_PER_PLAYER*player.player_id + status],
-                self.images[Const.PICS_PER_PLAYER*player.player_id + status].get_rect(center=player.center))
-            '''
+                if player.face == Const.DIRECTION_TO_VEC2['right']:
+                    screen.blit(
+                        self.walk_frames[self.frame_index_to_draw],
+                        self.walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                else:
+                    screen.blit(
+                        self.fliped_walk_frames[self.frame_index_to_draw],
+                        self.fliped_walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
+
+           
             # blood
             pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left, player.top-10, player.rect.width*player.blood/Const.PLAYER_FULL_BLOOD, 5])
             # empty hp bar
