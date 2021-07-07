@@ -34,7 +34,7 @@ DIRECTION_TO_VEC2 = {
 }
 
 GROUND_POSITION = [
-    (  0, 500, 800, 10),
+    (  0, 500, 1200, 10),
     (  0, 370, 200, 10),
     (150, 430, 200, 10),
 ]
@@ -58,7 +58,7 @@ ITEM_TYPE_LIST=['FAN',
 
 # special attack
 ARROW_SPEED = 120
-ARROW_RADIUS = 5
+ARROW_SIZE = 20
 
 DOS_ACTIVE_LIMIT = 10
 DOS_DAMAGE = 3
@@ -94,6 +94,7 @@ LIGHTNING_SPEED = 1100
 LIGHTNING_DAMAGE = 30
 LIGHTNING_INIT_RANGE = 40 
 LIGHTNING_TIME = 25
+LIGHTNING_SIZE = 20
 
 # state time
 INFECTED_TIME = 3 * FPS
@@ -117,17 +118,23 @@ STATE_ENDGAME = 4
 IMAGE_PATH = os.path.join('View', 'assets')
 
 # Images
-PLAYER_PICS = [
-    'player1_0.png', 'player1_1.png',
-    'player2_0.png', 'player2_1.png',
-    'player3_0.png', 'player3_1.png',
-    'player4_0.png', 'player4_1.png',
+PLAYER_STANDING_PICS = [
+    'standing-01.png'
     ]
-PICS_PER_PLAYER = 2
+PICS_PER_PLAYER = 1 # not used now
+
+SPECIAL_ATTACK_KEEP_PICS = [
+    'prop_bug.png', 'prop_coffee.png',
+    'prop_ddos.png', 'prop_dos.png',
+    'prop_fan.png', 'prop_lightning.png',
+    ]
+SPECIAL_ATTACK_KEEP_TO_NUM = {
+    'THROW_BUG': 0, 'THROW_COFFEE': 1, 'DDOS': 2, 'DOS': 3, 'FAN': 4, 'LIGHTNING': 5
+}
 # view
 WINDOW_CAPTION = 'Challenge 2021'
-WINDOW_SIZE = (800, 800)
-ARENA_SIZE = (800, 800)
+WINDOW_SIZE = (1200, 800)
+ARENA_SIZE = (1200, 800)
 BACKGROUND_COLOR = pg.Color('black')
 PLAYER_COLOR = [pg.Color('green'), pg.Color('magenta'), pg.Color('cyan'), pg.Color('white')]
 ATTACK_RANGE_COLOR = [pg.Color('lightgreen'), pg.Color('orchid1'), pg.Color('lightcyan'), pg.Color('whitesmoke')]
@@ -138,7 +145,9 @@ ARROW_COLOR = pg.Color("red")
 COFFEE_COLOR = pg.Color("brown")
 BUG_COLOR = pg.Color("DarkOliveGreen")
 HP_BAR_COLOR = [pg.Color('white'), pg.Color('green')]
-
+ENERGY_BAR_COLOR = [pg.Color('white'), pg.Color('orange')]
+ITEM_BOX_COLOR = pg.Color('brown')
+ITEM_BOX_SIZE = 15
 # controller
 PLAYER_MOVE_KEYS = {
     pg.K_w: (0, 'jump'),

@@ -63,6 +63,8 @@ class Controller:
         for event_pg in key_down_events:
             if event_pg.type == pg.KEYDOWN and event_pg.key == pg.K_SPACE:
                 self.ev_manager.post(EventStateChange(Const.STATE_PLAY))
+            # detect fullscreen change
+            self.check_screen_keys(event_pg.key)
 
     def ctrl_play(self, key_down_events):
         # handle movement using key pressed state
@@ -84,7 +86,8 @@ class Controller:
                 # detect stop
                 if event_pg.key == Const.GAME_STOP_KEY:
                     self.ev_manager.post(EventStop())
-
+                else:
+                    self.check_screen_keys(event_pg.key)
 
 
     def ctrl_stop(self, key_down_events):
@@ -92,9 +95,13 @@ class Controller:
         for event_pg in key_down_events:
             if event_pg.key == Const.GAME_CONTINUE_KEY:
                 self.ev_manager.post(EventContinue())
+            else:
+                self.check_screen_keys(event_pg.key)
 
     def ctrl_endgame(self, key_down_events):
         # detect restart event
         for event_pg in key_down_events:
             if event_pg.key == Const.GAME_RESTART_KEY:
                 self.ev_manager.post(EventRestart())
+            else:
+                self.check_screen_keys(event_pg.key)
