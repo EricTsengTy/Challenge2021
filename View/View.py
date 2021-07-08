@@ -25,12 +25,6 @@ class GraphicalView:
         ev_manager.register_listener(self)
 
         self.model = model
-        self.screen = pg.display.set_mode(Const.WINDOW_SIZE, pg.RESIZABLE)
-        # flags = pg.RESIZABLE
-        # self.screen = pg.display.set_mode(Const.WINDOW_SIZE, flags)
-        
-        pg.display.set_caption(Const.WINDOW_CAPTION)
-        self.background.fill(Const.BACKGROUND_COLOR)
         self.is_initialized = False
 
     def initialize(self):
