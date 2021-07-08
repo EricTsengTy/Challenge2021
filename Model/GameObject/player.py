@@ -60,10 +60,7 @@ class Player(Basic_Game_Object):
                 State.invisible(self.state)
             self.state[key] = max(value-1, 0)
         
-        if self.state['fast_special_attack_speed'] == 1:
-            self.special_attack_timer = max(self.special_attack_timer - 2, 0)
-        else :
-            self.special_attack_timer = max(self.special_attack_timer - 1, 0)
+        self.special_attack_timer = max(self.special_attack_timer - self.special_attack_speed_adjust(), 0)
         
         if self.in_folder():
             return
@@ -191,6 +188,10 @@ class Player(Basic_Game_Object):
     def speed_adjust(self):
         if self.state['slow_move_speed'] == 0: return 1
         else: return Const.PLAYER_SPEED_ADJUST
+
+    def special_attack_speed_adjust(self):
+        if self.state['fast_special_attack_speed'] == 0: return 1
+        else: return 2;
 
     def is_standing(self):
         return self.standing_tick>5
