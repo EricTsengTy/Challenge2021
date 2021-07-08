@@ -129,13 +129,23 @@ class Player(Basic_Game_Object):
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
 
     def be_special_attacked(self, attack):
+        # effect (excpet damage) of all sepcial attack
         if attack.name == 'Arrow':
             State.slow_down(self.state)
         elif attack.name == 'Bug':
             State.broken(self.state, Const.BROKEN_TIME_BUG)
         elif attack.name == 'Coffee':
             State.broken(self.state, Const.BROKEN_TIME_COFFEE)
+        elif attack.name == 'Tornado':
+            pass
+        elif attack.name == 'Fireball':
+            pass
+        elif attack.name == 'Lightning':
+            pass
+            
+        # damage of spcail attack
         self.blood-=attack.damage
+
         self.count_score(attack.attacker, attack.damage)
         
         
