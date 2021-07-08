@@ -71,3 +71,23 @@ class View_Lightning(__Object_base):
         for _i in range(8):
             screen.blit(self.images[_i], self.images[_i].get_rect(center=(pos - dist * Vector2(1, 0).rotate(45 * _i))))
 
+class View_Item(__Object_base):
+    images = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'prop', Const.PROP_PICS[_i])),
+            Const.ITEM_WIDTH, Const.ITEM_HEIGHT
+        )
+        for _i in range(13)
+    )
+    prop_image = resize_surface(
+        load_image(os.path.join(Const.IMAGE_PATH, 'prop', 'prop.png')),
+        Const.ITEM_WIDTH//5, Const.ITEM_HEIGHT//5
+    )
+    @classmethod
+    def init_convert(cls):
+        cls.images = tuple( img.convert_alpha() for img in cls.images)
+        cls.prop_image = cls.prop_image.convert_alpha()
+    def draw(self, screen, rect, item_type):
+        _pic = Const.ITEM_TYPE_LIST.index(item_type)
+        screen.blit(self.images[_pic], self.images[_pic].get_rect(center=rect.center))
+        screen.blit(self.prop_image, self.prop_image.get_rect(bottomleft=rect.bottomleft))

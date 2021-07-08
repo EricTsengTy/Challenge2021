@@ -53,14 +53,15 @@ class GraphicalView:
         
         # static objects
         self.stage =  View.staticobjects.View_stage(self.model)
-        # self.players = View.staticobjects.View_players(self.model)
-        self.players = View.activeobjects.View_players(self.model, 7)
         self.arrow = View.staticobjects.View_Arrow(self.model)
+        self.lightning = View.staticobjects.View_Lightning(self.model)
+        self.item = View.staticobjects.View_Item(self.model)
+        # active objects
+        self.players = View.activeobjects.View_players(self.model, 7)
         self.bug = View.activeobjects.View_Bug(10)
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
-        self.lightning = View.staticobjects.View_Lightning(self.model)
 
         self.is_initialized = True
 
@@ -128,7 +129,9 @@ class GraphicalView:
             pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)
         
         for item in self.model.items:
-            pg.draw.rect(self.screen, Const.ITEM_COLOR, item.rect)
+            self.item.draw(self.screen, item.rect, item.item_type)
+        
+        # pg.draw.rect(self.screen, Const.ITEM_COLOR, item.rect)
 
         for attack in self.model.attacks:
             if attack.name == 'Arrow':
