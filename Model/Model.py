@@ -130,7 +130,7 @@ class GameEngine:
                 attack_range = attacker.common_attack_range
                 for player in self.players:
                     if attacker.player_id != player.player_id and\
-                       player.can_be_common_attacked() and attack_range.colliderect(player):
+                       player.can_be_common_attacked() and attack_range.colliderect(player.rect):
                         player.be_common_attacked(attacker)
             else:
                 print("Can not common attack")
