@@ -19,31 +19,29 @@ def init():
 def infect(state):
     if state['immune'] != 0:
         return
-    state['infection'] = Const.INFECTED_TIME
-    state['special_attack'] = Const.INFECTED_TIME
-    state['infected_common_attack'] = Const.INFECTED_COMMON_ATTACK_TIME
+    state['infection'] = max(Const.INFECTED_TIME,state['infection'])
+    state['special_attack'] = max(Const.INFECTED_TIME,state['special_attack'])
+    state['infected_common_attack'] = max(Const.INFECTED_COMMON_ATTACK_TIME,state['infected_common_attack'])
 
 def invisible(state):
-    state['invisible'] = Const.INVISIBLE_TIME
-    state['be_common_attacked'] = Const.INVISIBLE_TIME
-    state['be_special_attacked'] = Const.INVISIBLE_TIME
+    state['invisible'] = max(Const.INVISIBLE_TIME, state['invisible'])
+    state['be_common_attacked'] = max(Const.INVISIBLE_TIME, state['be_common_attacked'])
+    state['be_special_attacked'] = max(Const.INVISIBLE_TIME, state['be_special_attacked'])
 
 def folder(state):
-    state['in_folder'] = Const.IN_FOLDER_TIME
-    state['special_attack'] = Const.IN_FOLDER_TIME
-    state['be_common_attacked'] = Const.IN_FOLDER_TIME
-    state['be_special_attacked'] = Const.IN_FOLDER_TIME
+    state['in_folder'] = max(Const.IN_FOLDER_TIME, state['in_folder'])
+    state['special_attack'] = max(Const.IN_FOLDER_TIME, state['special_attack'])
+    state['be_common_attacked'] = max(Const.IN_FOLDER_TIME, state['be_common_attacked'])
+    state['be_special_attacked'] = max(Const.IN_FOLDER_TIME, state['be_special_attacked'])
 
 def slow_down(state):
-    state['slow_move_speed'] = Const.SLOW_DOWN_TIME
+    state['slow_move_speed'] = max(Const.SLOW_DOWN_TIME, state['slow_move_speed'])
 
 def broken(state, time):
-    state['special_attack'] = time
+    state['special_attack'] = max(time, state['special_attack'])
 
 def firewall(state):
-    state['immune'] = Const.FIREWALL_TIME
+    state['immune'] = max(Const.FIREWALL_TIME, state['immune'])
 
 def graphiccard(state):
-    state['fast_special_attack_speed'] = Const.GRAPHIC_CARD_TIME
-
-
+    state['fast_special_attack_speed'] = max(Const.GRAPHIC_CARD_TIME, state['fast_special_attack_speed'])
