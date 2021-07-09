@@ -168,9 +168,9 @@ class GraphicalView:
         # toggle fullscreen
         self.fullscreen = not self.fullscreen
         if self.fullscreen:
-            _screen = pg.display.set_mode((w, h), pg.FULLSCREEN, bits)
+            _screen = pg.display.set_mode(Const.WINDOW_SIZE, pg.FULLSCREEN, bits)
         else:
-            _screen = pg.display.set_mode((w, h))
+            _screen = pg.display.set_mode(Const.WINDOW_SIZE)
 
         # restore _screen content
         _screen.blit(tmp, (0, 0))
