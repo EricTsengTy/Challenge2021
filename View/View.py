@@ -45,6 +45,9 @@ class GraphicalView:
                 self.real_screen = pg.display.set_mode(self.real_window_size, pg.FULLSCREEN)
                 self.screen = pg.Surface(Const.WINDOW_SIZE)
         
+        if not self.is_initialized:
+             View.staticobjects.init_staticobjects()
+             View.activeobjects.init_activeobjects()
         # static objects
         self.stage =  View.staticobjects.View_stage(self.model)
         self.arrow = View.staticobjects.View_Arrow(self.model)

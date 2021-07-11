@@ -91,3 +91,9 @@ class View_Item(__Object_base):
         _pic = Const.ITEM_TYPE_LIST.index(item_type)
         screen.blit(self.images[_pic], self.images[_pic].get_rect(center=rect.center))
         screen.blit(self.prop_image, self.prop_image.get_rect(bottomleft=rect.bottomleft))
+
+def init_staticobjects():
+    View_stage.init_convert()
+    View_Arrow.init_convert()
+    View_Lightning.init_convert()
+    View_Item.init_convert()

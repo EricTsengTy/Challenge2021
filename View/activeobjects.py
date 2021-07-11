@@ -314,3 +314,10 @@ class View_players(__Object_base):
             if player.keep_item_type != '':
                 screen.blit(self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]],
                     self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-15)))
+
+def init_activeobjects():
+    View_Bug.init_convert()
+    View_Coffee.init_convert()
+    View_Fireball.init_convert()
+    View_Tornado.init_convert()
+    View_players.init_convert()
