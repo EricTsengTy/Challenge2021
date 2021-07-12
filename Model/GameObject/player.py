@@ -8,6 +8,7 @@ from Model.GameObject.basic_game_object import Basic_Game_Object
 from Model.GameObject.item import Item
 from Model.GameObject.special_attack import *
 import Model.GameObject.state as State
+from EventManager.EventManager import *
 
 class Player(Basic_Game_Object):
     def __init__(self, model, player_id):
@@ -95,7 +96,7 @@ class Player(Basic_Game_Object):
             self.keep_item_type = item_type
             self.special_attack_timer = 0
         elif item_type == 'EXE':
-            pass
+            self.model.ev_manager.post(EventHelloWorld())
         elif item_type == 'USB':
             State.infect(self.state)
         elif item_type == 'FIREWALL':

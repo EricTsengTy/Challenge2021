@@ -121,3 +121,9 @@ class EventRestart(BaseEvent):
     '''
     game restart and model stage change to STATE_MENU
     '''
+
+class EventHelloWorld(BaseEvent):
+    name = 'Hello World event'
+    '''
+    hello world triggered
+    '''

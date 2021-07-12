@@ -5,7 +5,9 @@ from Model.Model import GameEngine
 import Const
 import View.staticobjects
 import View.activeobjects
+import View.animation
 from View.utils import Text
+import random
 
 
 class GraphicalView:
@@ -45,6 +47,9 @@ class GraphicalView:
                 self.real_screen = pg.display.set_mode(self.real_window_size, pg.FULLSCREEN)
                 self.screen = pg.Surface(Const.WINDOW_SIZE)
         
+        # animations
+        self.animation_list = []
+
         if not self.is_initialized:
              View.staticobjects.init_staticobjects()
              View.activeobjects.init_activeobjects()
@@ -84,6 +89,12 @@ class GraphicalView:
         elif isinstance(event, EventPlayerAttack):
             self.players.status[event.player_id[0]] = 'common_attack'
             self.players.timer[event.player_id[0]] = 0
+        elif isinstance(event, EventHelloWorld):
+            style = random.randint(1,3)
+
+            style = 1 # now test type1 hello world
+            self.animation_list.append(View.animation.Animation_hello_world(3,2)) #delay_of_frames, speed
+
         
     def display_fps(self):
         '''
@@ -146,6 +157,14 @@ class GraphicalView:
                 self.tornado.draw(target, attack.rect.center, attack.timer, attack.speed)
             elif attack.name == 'Lightning':
                 self.lightning.draw(target, attack.rect.center, attack.range)
+        
+        #animation
+        for ani in self.animation_list:
+            if ani.expired:
+                self.animation_list.remove(ani)
+            else: 
+                ani.draw(target)
+        
         pg.display.flip()
 
     def render_stop(self):
