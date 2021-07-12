@@ -241,6 +241,18 @@ class View_players(__Object_base):
         for _i in range(6)
     )
 
+    common_attack_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'player_atk_normal', f'main_chracter_phisical_atk-{_i+1}.png')),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        )
+        for _i in range(14)
+    )
+
+    fliped_common_attack_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in common_attack_frames
+    )
+
     @classmethod
     def init_convert(cls):
         cls.standing_frames = tuple( frame.convert_alpha() for frame in cls.standing_frames)
@@ -250,10 +262,13 @@ class View_players(__Object_base):
         cls.jump_frames = tuple( frame.convert_alpha() for frame in cls.jump_frames)
         cls.fliped_jump_frames = tuple( frame.convert_alpha() for frame in cls.fliped_jump_frames)
         cls.keep_item_images = tuple( img.convert_alpha() for img in cls.keep_item_images)
+        cls.common_attack_frames = tuple( frame.convert_alpha() for frame in cls.common_attack_frames)
+        cls.fliped_common_attack_frames = tuple( frame.convert_alpha() for frame in cls.fliped_common_attack_frames)
 
     def __init__(self, model, delay_of_frames):
         self.model = model
         self.delay_of_frames = delay_of_frames
+        self.quicker_delay_of_frames = delay_of_frames // 2
         self.timer = [0, 0, 0, 0]
         self.status = ['standing', 'standing', 'standing', 'standing']
     
@@ -261,6 +276,17 @@ class View_players(__Object_base):
         for player in self.model.players:
             
             # player itself
+            if self.status[player.player_id] == 'common_attack' and self.timer[player.player_id] < (14 * self.quicker_delay_of_frames):
+                #14: atk frame num
+                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames) % 14
+                if player.face == Const.DIRECTION_TO_VEC2['right']:
+                    screen.blit(self.common_attack_frames[self.frame_index_to_draw],
+                        self.common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                else:
+                    screen.blit(self.fliped_common_attack_frames[self.frame_index_to_draw],
+                        self.fliped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                self.timer[player.player_id] += 1
+                continue
             if player.is_standing():
                 self.status[player.player_id] = 'standing'
                 self.timer[player.player_id] = 0

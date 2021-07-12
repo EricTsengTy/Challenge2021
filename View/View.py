@@ -80,7 +80,10 @@ class GraphicalView:
         
         elif isinstance(event, EventToggleFullScreen):
             self.toggle_fullscreen()
-
+        
+        elif isinstance(event, EventPlayerAttack):
+            self.players.status[event.player_id[0]] = 'common_attack'
+            self.players.timer[event.player_id[0]] = 0
         
     def display_fps(self):
         '''
