@@ -253,6 +253,30 @@ class View_players(__Object_base):
         pg.transform.flip(_frame, True, False) for _frame in common_attack_frames
     )
 
+    be_attacked_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'be_attacked', f'be_attacked-{_i+1}.png')),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        )
+        for _i in range(9)
+    )
+
+    fliped_be_attacked_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in be_attacked_frames
+    )
+
+    attack_fireball_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'player_atk_fire_ball', f'fire_ball_movement-{_i+1}.png')),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        )
+        for _i in range(13)
+    )
+
+    fliped_attack_fireball_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in attack_fireball_frames
+    )
+
     @classmethod
     def init_convert(cls):
         cls.standing_frames = tuple( frame.convert_alpha() for frame in cls.standing_frames)
@@ -264,6 +288,10 @@ class View_players(__Object_base):
         cls.keep_item_images = tuple( img.convert_alpha() for img in cls.keep_item_images)
         cls.common_attack_frames = tuple( frame.convert_alpha() for frame in cls.common_attack_frames)
         cls.fliped_common_attack_frames = tuple( frame.convert_alpha() for frame in cls.fliped_common_attack_frames)
+        cls.be_attacked_frames = tuple( frame.convert_alpha() for frame in cls.be_attacked_frames)
+        cls.fliped_be_attacked_frames = tuple( frame.convert_alpha() for frame in cls.fliped_be_attacked_frames)
+        cls.attack_fireball_frames = tuple( frame.convert_alpha() for frame in cls.attack_fireball_frames)
+        cls.fliped_attack_fireball_frames = tuple( frame.convert_alpha() for frame in cls.fliped_attack_fireball_frames)
 
     def __init__(self, model, delay_of_frames):
         self.model = model
@@ -275,16 +303,55 @@ class View_players(__Object_base):
     def draw(self, screen):
         for player in self.model.players:
             
+            # blood
+            pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left, player.top-10, player.rect.width*player.blood/Const.PLAYER_FULL_BLOOD, 5])
+            
+            # empty hp bar
+            pg.draw.rect(screen, Const.HP_BAR_COLOR[0], [player.left, player.top-10, player.rect.width, 5], 2)
+
+            #item frame
+            pg.draw.rect(screen, Const.ITEM_BOX_COLOR, [player.left-20, player.top-15, Const.ITEM_BOX_SIZE, Const.ITEM_BOX_SIZE], 2)
+            
+            #item
+            if player.keep_item_type != '':
+                screen.blit(self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]],
+                    self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-15)))
+            
+            
             # player itself
             if self.status[player.player_id] == 'common_attack' and self.timer[player.player_id] < (14 * self.quicker_delay_of_frames):
                 #14: atk frame num
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames) % 14
+                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     screen.blit(self.common_attack_frames[self.frame_index_to_draw],
                         self.common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
                     screen.blit(self.fliped_common_attack_frames[self.frame_index_to_draw],
                         self.fliped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                self.timer[player.player_id] += 1
+                continue
+
+            if self.status[player.player_id] == 'special_attack_fireball' and self.timer[player.player_id] < (13 * self.quicker_delay_of_frames):
+                #13: frame num
+                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
+                if player.face == Const.DIRECTION_TO_VEC2['right']:
+                    screen.blit(self.attack_fireball_frames[self.frame_index_to_draw],
+                        self.attack_fireball_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                else:
+                    screen.blit(self.fliped_attack_fireball_frames[self.frame_index_to_draw],
+                        self.fliped_attack_fireball_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                self.timer[player.player_id] += 1
+                continue
+
+            if self.status[player.player_id] == 'be_attacked' and self.timer[player.player_id] < (9 * self.delay_of_frames):
+                #9 : be atk frame num
+                self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames)
+                if player.face == Const.DIRECTION_TO_VEC2['right']:
+                    screen.blit(self.be_attacked_frames[self.frame_index_to_draw],
+                        self.be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                else:
+                    screen.blit(self.fliped_be_attacked_frames[self.frame_index_to_draw],
+                        self.fliped_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 self.timer[player.player_id] += 1
                 continue
             if player.is_standing():
@@ -328,18 +395,6 @@ class View_players(__Object_base):
                         self.fliped_walk_frames[self.frame_index_to_draw],
                         self.fliped_walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
 
-           
-            # blood
-            pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left, player.top-10, player.rect.width*player.blood/Const.PLAYER_FULL_BLOOD, 5])
-            # empty hp bar
-            pg.draw.rect(screen, Const.HP_BAR_COLOR[0], [player.left, player.top-10, player.rect.width, 5], 2)
-
-            #item frame
-            pg.draw.rect(screen, Const.ITEM_BOX_COLOR, [player.left-20, player.top-15, Const.ITEM_BOX_SIZE, Const.ITEM_BOX_SIZE], 2)
-            #item
-            if player.keep_item_type != '':
-                screen.blit(self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]],
-                    self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-15)))
 
 def init_activeobjects():
     View_Bug.init_convert()

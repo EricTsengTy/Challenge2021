@@ -112,6 +112,8 @@ class Player(Basic_Game_Object):
 
     def special_attack(self):
         if self.special_attack_timer > 0: return
+        self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type))
+
         if(self.keep_item_type == 'DOS'):
             self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
         elif(self.keep_item_type == 'DDOS'):
@@ -129,6 +131,7 @@ class Player(Basic_Game_Object):
         self.keep_item_type = ''
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
 
+
     def be_special_attacked(self, attack):
         if attack.name == 'Arrow':
             State.slow_down(self.state)
@@ -138,6 +141,7 @@ class Player(Basic_Game_Object):
             State.broken(self.state, Const.BROKEN_TIME_COFFEE)
         self.blood-=attack.damage
         self.count_score(attack.attacker, attack.damage)
+        self.model.ev_manager.post(EventBeAttacked(self.player_id))
         
         
     def be_common_attacked(self, attacker):
@@ -145,7 +149,8 @@ class Player(Basic_Game_Object):
             State.infect(self.state)
         self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust()
         self.count_score(attacker, Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust())
-
+        self.model.ev_manager.post(EventBeAttacked(self.player_id))
+    
     def __random_target(self):
         player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
         player_id_list.remove(self.player_id)

@@ -89,12 +89,27 @@ class GraphicalView:
         elif isinstance(event, EventPlayerAttack):
             self.players.status[event.player_id[0]] = 'common_attack'
             self.players.timer[event.player_id[0]] = 0
+        
         elif isinstance(event, EventHelloWorld):
             style = random.randint(1,3)
 
             style = 1 # now test type1 hello world
             self.animation_list.append(View.animation.Animation_hello_world(3,2)) #delay_of_frames, speed
 
+        elif isinstance(event, EventBeAttacked):
+            # event.player_id
+            self.players.status[event.player_id] = 'be_attacked'
+            self.players.timer[event.player_id] = 0
+        
+        elif isinstance(event, EventSpecialAttackMovement):
+            # event.player_id
+            # event.attack_type
+            if event.attack_type == '':
+                self.players.status[event.player_id] = f'special_attack_fireball'
+            else:
+                self.players.status[event.player_id] = f'special_attack_{event.attack_type}'
+            self.players.timer[event.player_id] = 0
+            
         
     def display_fps(self):
         '''
