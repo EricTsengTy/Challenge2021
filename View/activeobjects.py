@@ -211,10 +211,10 @@ class View_players(__Object_base):
 
     walk_frames = tuple(
         resize_surface(
-            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'move_right', f'right_move-{_i+1}.png')),
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'right_move', 'right_move-{:02d}.png'.format(_i))),
             Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
         ) 
-        for _i in range(12)
+        for _i in range(1,9)
     )
     
     fliped_walk_frames = tuple(
@@ -223,10 +223,10 @@ class View_players(__Object_base):
 
     jump_frames = tuple(
         resize_surface(
-            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'jump_drop', f'main_chracter_jump_drop-{_i+1}.png')),
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'jump_drop', 'jump_drop-{:02d}.png'.format(_i))),
             Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
         )
-        for _i in range(12)
+        for _i in range(1,14)
     )
 
     fliped_jump_frames = tuple(
@@ -243,10 +243,10 @@ class View_players(__Object_base):
 
     common_attack_frames = tuple(
         resize_surface(
-            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'player_atk_normal', f'main_chracter_phisical_atk-{_i+1}.png')),
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'physical_atk', 'physical_atk-{:02d}.png'.format(_i))),
             Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
         )
-        for _i in range(14)
+        for _i in range(1,14)
     )
 
     fliped_common_attack_frames = tuple(
@@ -255,10 +255,10 @@ class View_players(__Object_base):
 
     be_attacked_frames = tuple(
         resize_surface(
-            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'be_attacked', f'be_attacked-{_i+1}.png')),
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'be_attacked', 'be_attacked-{:02d}.png'.format(_i))),
             Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
         )
-        for _i in range(9)
+        for _i in range(1,10)
     )
 
     fliped_be_attacked_frames = tuple(
@@ -267,10 +267,10 @@ class View_players(__Object_base):
 
     attack_fireball_frames = tuple(
         resize_surface(
-            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'player_atk_fire_ball', f'fire_ball_movement-{_i+1}.png')),
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'special_atk', 'fire_ball-{:02d}.png'.format(_i))),
             Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
         )
-        for _i in range(13)
+        for _i in range(1,14)
     )
 
     fliped_attack_fireball_frames = tuple(
@@ -319,7 +319,7 @@ class View_players(__Object_base):
             
             
             # player itself
-            if self.status[player.player_id] == 'common_attack' and self.timer[player.player_id] < (14 * self.quicker_delay_of_frames):
+            if self.status[player.player_id] == 'common_attack' and self.timer[player.player_id] < ( len(self.common_attack_frames) * self.quicker_delay_of_frames):
                 #14: atk frame num
                 self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
@@ -331,7 +331,7 @@ class View_players(__Object_base):
                 self.timer[player.player_id] += 1
                 continue
 
-            if self.status[player.player_id] == 'special_attack_fireball' and self.timer[player.player_id] < (13 * self.quicker_delay_of_frames):
+            if self.status[player.player_id] == 'special_attack_fireball' and self.timer[player.player_id] < ( len(self.attack_fireball_frames) * self.quicker_delay_of_frames):
                 #13: frame num
                 self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
@@ -343,7 +343,7 @@ class View_players(__Object_base):
                 self.timer[player.player_id] += 1
                 continue
 
-            if self.status[player.player_id] == 'be_attacked' and self.timer[player.player_id] < (9 * self.delay_of_frames):
+            if self.status[player.player_id] == 'be_attacked' and self.timer[player.player_id] < ( len(self.be_attacked_frames) * self.delay_of_frames):
                 #9 : be atk frame num
                 self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
