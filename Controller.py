@@ -46,7 +46,7 @@ class Controller:
 
             cur_state = self.model.state_machine.peek()
             if cur_state == Const.STATE_MENU: self.ctrl_menu(key_down_events)
-            if cur_state == Const.STATE_TUTORIAL: self.ctrl_menu(key_down_events)
+            if cur_state == Const.STATE_TUTORIAL: self.ctrl_tutorial(key_down_events)
             if cur_state == Const.STATE_PLAY: self.ctrl_play(key_down_events)
             if cur_state == Const.STATE_STOP: self.ctrl_stop(key_down_events)
             if cur_state == Const.STATE_ENDGAME: self.ctrl_endgame(key_down_events)
