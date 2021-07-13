@@ -21,6 +21,7 @@ STATE_MENU = 1
 STATE_PLAY = 2
 STATE_STOP = 3 # not implemented yet
 STATE_ENDGAME = 4
+STATE_TUTORIAL = 5
 
 
 # view
