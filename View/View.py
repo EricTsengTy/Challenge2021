@@ -108,6 +108,7 @@ class GraphicalView:
                 self.players.status[event.player_id] = f'special_attack_fireball'
             else:
                 self.players.status[event.player_id] = f'special_attack_{event.attack_type}'
+                print(f'special_attack_{event.attack_type}')
             self.players.timer[event.player_id] = 0
             
         

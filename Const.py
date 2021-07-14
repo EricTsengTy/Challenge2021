@@ -131,19 +131,7 @@ SPECIAL_ATTACK_KEEP_PICS = [
 SPECIAL_ATTACK_KEEP_TO_NUM = {
     'THROW_BUG': 0, 'THROW_COFFEE': 1, 'DDOS': 2, 'DOS': 3, 'FAN': 4, 'LIGHTNING': 5
 }
-['FAN',
-                'LIGHTNING',
-                'THROW_COFFEE',
-                'THROW_BUG',
-                'DOS',
-                'DDOS',
-                'EXE' ,
-                'USB',
-                'FIREWALL',
-                'GRAPHIC_CARD',
-                'FORMAT',
-                'FOLDER_UNUSED',
-                'CHARGE']
+
 PROP_PICS = [
     'prop_fan.png', 'prop_lightning.png', 'prop_coffee.png', 'prop_bug.png', 
     'prop_dos.png', 'prop_ddos.png', 'prop_hello_world.png', 'prop_usb.png', 'prop_firewall.png', 
