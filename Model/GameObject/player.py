@@ -27,12 +27,18 @@ class Player(Basic_Game_Object):
         self.face = Const.DIRECTION_TO_VEC2['right']
         self.death = 0
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
+        self.common_attack_timer = 0
+        self.special_attack_delay = -1 # -1 for no special attack
         self.standing_tick = 0
         self.score = 0
 
     @property
     def common_attack_range(self):
-        return self.rect.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
+        attack_range = self.rect.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
+        width = attack_range.width
+        attack_range = attack_range.inflate(-width/2, 0)
+        attack_range.move_ip(self.face * (width/4))
+        return attack_range
 
     def move(self, direction: str):
         '''
@@ -61,6 +67,10 @@ class Player(Basic_Game_Object):
             self.state[key] = max(value-1, 0)
         
         self.special_attack_timer = max(self.special_attack_timer - self.special_attack_speed_adjust(), 0)
+        self.common_attack_timer = max(self.common_attack_timer - 1, 0)
+        self.special_attack_delay = max(self.special_attack_delay - 1, -1)
+        if self.special_attack_delay == 0:
+            self.special_attack()
         
         if self.in_folder():
             return
@@ -108,6 +118,10 @@ class Player(Basic_Game_Object):
 
     def special_attack(self):
         if self.special_attack_timer > 0: return
+        if self.special_attack_delay == -1:
+            self.special_attack_delay = Const.PLAYER_SPECIAL_ATTACK_DELAY
+            return
+        if self.special_attack_delay > 0: return
         if(self.keep_item_type == 'DOS'):
             self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
         elif(self.keep_item_type == 'DDOS'):
@@ -124,6 +138,7 @@ class Player(Basic_Game_Object):
             self.model.attacks.append(Cast_Lightning(self.model, self))
         self.keep_item_type = ''
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
+        self.special_attack_delay = -1
 
     def be_special_attacked(self, attack):
         # effect (excpet damage) of all sepcial attack
@@ -195,3 +210,4 @@ class Player(Basic_Game_Object):
 
     def is_standing(self):
         return self.standing_tick>5
+
