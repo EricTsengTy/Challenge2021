@@ -389,19 +389,7 @@ class View_players(__Object_base):
                 screen.blit(self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]],
                     self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-15)))
             
-            
             # player itself
-            if self.status[player.player_id] == 'common_attack' and self.timer[player.player_id] < ( len(self.common_attack_frames) * self.quicker_delay_of_frames):
-                
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
-                if player.face == Const.DIRECTION_TO_VEC2['right']:
-                    screen.blit(self.common_attack_frames[self.frame_index_to_draw],
-                        self.common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
-                else:
-                    screen.blit(self.fliped_common_attack_frames[self.frame_index_to_draw],
-                        self.fliped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
-                self.timer[player.player_id] += 1
-                continue
 
             if self.status[player.player_id] == 'special_attack_fireball' and self.timer[player.player_id] < ( len(self.attack_fireball_frames) * self.quicker_delay_of_frames):
                 
@@ -475,6 +463,18 @@ class View_players(__Object_base):
                 self.timer[player.player_id] += 1
                 continue
 
+            if self.status[player.player_id] == 'common_attack' and self.timer[player.player_id] < ( len(self.common_attack_frames) * self.quicker_delay_of_frames):
+                
+                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
+                if player.face == Const.DIRECTION_TO_VEC2['right']:
+                    screen.blit(self.common_attack_frames[self.frame_index_to_draw],
+                        self.common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                else:
+                    screen.blit(self.fliped_common_attack_frames[self.frame_index_to_draw],
+                        self.fliped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                self.timer[player.player_id] += 1
+                continue
+            
             if self.status[player.player_id] == 'be_attacked' and self.timer[player.player_id] < ( len(self.be_attacked_frames) * self.delay_of_frames):
                 
                 self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames)
@@ -486,6 +486,7 @@ class View_players(__Object_base):
                         self.fliped_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 self.timer[player.player_id] += 1
                 continue
+            
             if player.is_standing():
                 self.status[player.player_id] = 'standing'
                 self.timer[player.player_id] = 0
