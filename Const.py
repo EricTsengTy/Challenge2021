@@ -3,12 +3,12 @@ import os.path
 
 # model
 FPS = 60 # frame per second
-GAME_LENGTH = 30 * FPS
+GAME_LENGTH = 60 * FPS
 
-PLAYER_INIT_POSITION = [pg.Vector2(200, 400), pg.Vector2(300, 400), pg.Vector2(400, 400), pg.Vector2(500, 400)]
+PLAYER_INIT_POSITION = [pg.Vector2(50, 160), pg.Vector2(500, 0), pg.Vector2(800, 360), pg.Vector2(1000, 160)]
 PLAYER_NUMBER = 4
-PLAYER_WIDTH = 30
-PLAYER_HEIGHT = 40
+PLAYER_WIDTH = 90
+PLAYER_HEIGHT = 120
 PLAYER_SHIFT_SPEED = 100
 PLAYER_JUMP_SPEED = 100
 PLAYER_SPEED_ADJUST = 0.5
@@ -33,11 +33,14 @@ DIRECTION_TO_VEC2 = {
     'right': pg.Vector2(1, 0),
 }
 
+#(left, top, width, height)
 GROUND_POSITION = [
-    (  0, 500, 1200, 10),
-    (  0, 370, 200, 10),
-    (150, 430, 200, 10),
+    (  450, 160, 480, 40),
+    (  0, 360, 400, 40),
+    (  800, 360, 400, 40),
+    (  200, 560, 720, 40),
 ]
+GROUND_SIZE = 40
 
 ITEM_WIDTH = 30
 ITEM_HEIGHT = 30

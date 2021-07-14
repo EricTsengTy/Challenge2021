@@ -23,11 +23,27 @@ class View_stage(__Object_base):
 
     @classmethod
     def init_convert(cls):
-        cls.stage = cls.stage.convert()
+        cls.stage = cls.stage.convert_alpha()
 
     def draw(self, screen):
         #screen.fill(Const.BACKGROUND_COLOR)
         screen.blit(self.stage, (0, 0))
+
+class View_platform(__Object_base):
+    block = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'floor', 'floor_block.png')),
+        Const.GROUND_SIZE, Const.GROUND_SIZE)
+
+    @classmethod
+    def init_convert(cls):
+        cls.block = cls.block.convert_alpha()
+
+    def draw(self, screen):
+        for ground in Const.GROUND_POSITION:
+            #(left, top, width, height)
+            block_num = ground[2] // Const.GROUND_SIZE
+            for _i in range(block_num):
+                screen.blit(self.block, self.block.get_rect(topleft=(ground[0] + Const.GROUND_SIZE * _i , ground[1])))
+
 
 class View_Arrow(__Object_base):
     images = tuple(
@@ -94,6 +110,7 @@ class View_Item(__Object_base):
 
 def init_staticobjects():
     View_stage.init_convert()
+    View_platform.init_convert()
     View_Arrow.init_convert()
     View_Lightning.init_convert()
     View_Item.init_convert()

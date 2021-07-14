@@ -55,6 +55,7 @@ class GraphicalView:
              View.activeobjects.init_activeobjects()
         # static objects
         self.stage =  View.staticobjects.View_stage(self.model)
+        self.platform = View.staticobjects.View_platform(self.model)
         self.arrow = View.staticobjects.View_Arrow(self.model)
         self.lightning = View.staticobjects.View_Lightning(self.model)
         self.item = View.staticobjects.View_Item(self.model)
@@ -141,7 +142,7 @@ class GraphicalView:
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.stage.draw(target)
-        
+        self.platform.draw(target)
         # draw players
         self.players.draw(target)
 
@@ -152,8 +153,8 @@ class GraphicalView:
         #         pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
         #         pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player.rect)
         
-        for ground in self.model.grounds:
-            pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)
+        '''for ground in self.model.grounds:
+            pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)'''
         
         for item in self.model.items:
             self.item.draw(self.screen, item.rect, item.item_type)
