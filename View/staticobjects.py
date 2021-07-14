@@ -33,7 +33,6 @@ class View_platform(__Object_base):
     block = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'floor', 'floor_block.png')),
         Const.GROUND_SIZE, Const.GROUND_SIZE)
 
-    bottom = pg.Surface([Const.ARENA_SIZE[0],Const.GROUND_SIZE], pg.SRCALPHA, 32)
 
     @classmethod
     def init_convert(cls):
@@ -45,7 +44,6 @@ class View_platform(__Object_base):
             block_num = ground[2] // Const.GROUND_SIZE
             for _i in range(block_num):
                 screen.blit(self.block, self.block.get_rect(topleft=(ground[0] + Const.GROUND_SIZE * _i , ground[1])))
-        screen.blit(self.bottom, self.bottom.get_rect(topleft=(0, 760)))
 
 class View_Arrow(__Object_base):
     images = tuple(
