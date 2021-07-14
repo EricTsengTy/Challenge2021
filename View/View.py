@@ -6,7 +6,7 @@ import Const
 import View.staticobjects
 import View.activeobjects
 import View.animation
-from View.utils import Text
+from View.utils import Text, scale_surface
 import random
 
 
@@ -58,6 +58,7 @@ class GraphicalView:
         self.arrow = View.staticobjects.View_Arrow(self.model)
         self.lightning = View.staticobjects.View_Lightning(self.model)
         self.item = View.staticobjects.View_Item(self.model)
+        self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
         # active objects
         self.players = View.activeobjects.View_players(self.model, 7)
         self.bug = View.activeobjects.View_Bug(10)
@@ -109,6 +110,7 @@ class GraphicalView:
             else:
                 self.players.status[event.player_id] = f'special_attack_{event.attack_type}'
             self.players.timer[event.player_id] = 0
+       
             
         
     def display_fps(self):
@@ -134,7 +136,7 @@ class GraphicalView:
 
         pg.display.flip()
 
-    def render_play(self, target=None, update=True):
+    def render_play(self, target=None, update=True, endgame=False):
         if target is None:
             target = self.screen
         # draw background
@@ -178,7 +180,10 @@ class GraphicalView:
             if ani.expired:
                 self.animation_list.remove(ani)
             else: 
-                ani.draw(target)
+                ani.draw(target, update)
+        
+        if endgame:
+            self.scoreboard.draw(target)
         
         pg.display.flip()
 
@@ -187,9 +192,15 @@ class GraphicalView:
 
     def render_endgame(self):
         # draw background
-        self.screen.fill(Const.BACKGROUND_COLOR)
+        #self.screen.fill(Const.BACKGROUND_COLOR)
+        self.render_play(update=False, endgame=True)
+        '''
+        image = pg.image.load("/Users/shaochunho/Desktop/result_test6.png")
+        image = image.convert_alpha()
+        self.screen.blit(image, (0, 0))
 
         pg.display.flip()
+        '''
     
     def toggle_fullscreen(self):
         self.ev_manager.post(EventStop())

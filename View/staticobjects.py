@@ -92,8 +92,20 @@ class View_Item(__Object_base):
         screen.blit(self.images[_pic], self.images[_pic].get_rect(center=rect.center))
         screen.blit(self.prop_image, self.prop_image.get_rect(bottomleft=rect.bottomleft))
 
+class View_Scoreboard(__Object_base):
+    board = load_image("/Users/shaochunho/Desktop/result_test6.png")
+
+    @classmethod
+    def init_convert(cls):
+        cls.board = cls.board.convert_alpha()
+
+    def draw(self, screen):
+        #screen.fill(Const.BACKGROUND_COLOR)
+        screen.blit(self.board, (0, 0))
+
 def init_staticobjects():
     View_stage.init_convert()
     View_Arrow.init_convert()
     View_Lightning.init_convert()
     View_Item.init_convert()
+    View_Scoreboard.init_convert()
