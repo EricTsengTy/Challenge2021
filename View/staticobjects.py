@@ -17,6 +17,17 @@ class __Object_base():
     def __init__(self, model):
         self.model = model
 
+class View_menu(__Object_base):
+	menu = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'start.png')),
+			Const.ARENA_SIZE[0], Const.ARENA_SIZE[1])
+
+	@classmethod
+	def init_convert(cls):
+		cls.stage = cls.stage.convert_alpha()
+	
+	def draw(self, screen):
+		screen.blit(self.menu, (0,0))
+
 class View_stage(__Object_base):
     stage = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'stage', 'stage.png')),
         Const.ARENA_SIZE[0], Const.ARENA_SIZE[1])
