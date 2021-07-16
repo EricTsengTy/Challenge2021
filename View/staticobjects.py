@@ -94,22 +94,32 @@ class View_Item(__Object_base):
 
 class View_Scoreboard(__Object_base):
     board = load_image("/Users/shaochunho/Desktop/result_test7.png")
+    winner_crown = load_image("/Users/shaochunho/Desktop/crown2.png")
 
     @classmethod
     def init_convert(cls):
         cls.board = cls.board.convert_alpha()
+        cls.winner_crown = cls.winner_crown.convert_alpha()
 
     def draw(self, screen):
-        #screen.fill(Const.BACKGROUND_COLOR)
-        score = [10000, 2000, 30000, 200]
         screen.blit(self.board, (0, 0))
         
-        x_interval = Const.ARENA_SIZE[0]/9
-        x_start = Const.ARENA_SIZE[0]/2 - x_interval*1.8
-        dy = 70
+        player_score = []
+        '''
+        for player in self.model.players:
+            player_score.append(player.score)
+        '''
+        
+        player_score = [1000, 2000, 4000, 2500] #test score
+        x_interval = Const.ARENA_SIZE[0]/8.35
+        x_start = Const.ARENA_SIZE[0]/2 - x_interval*1.75
+        y_start = Const.ARENA_SIZE[1]/1.75
         for i in range(4):
-            score_text = Text(str(score[i]), 36, pg.Color('white'))
-            score_text.blit(screen, topleft=(x_start + i*x_interval, Const.ARENA_SIZE[1]/2 + dy))
+            if player_score[i] == max(player_score):
+                #winner has crown
+                screen.blit(self.winner_crown, (x_start + i*x_interval, Const.ARENA_SIZE[1]/2.8))
+            score_text = Text(str(player_score[i]), 36, pg.Color('white'))
+            score_text.blit(screen, topleft=(x_start + i*x_interval, y_start))
 
 
 def init_staticobjects():
