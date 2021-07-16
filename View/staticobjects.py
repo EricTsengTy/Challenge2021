@@ -101,10 +101,15 @@ class View_Scoreboard(__Object_base):
 
     def draw(self, screen):
         #screen.fill(Const.BACKGROUND_COLOR)
+        score = [10000, 2000, 30000, 200]
         screen.blit(self.board, (0, 0))
-        for player in self.model.players:
-            score = Text(str(player.score), 36, pg.Color('white'))
-            score.blit(screen, center=(Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2))
+        
+        x_interval = Const.ARENA_SIZE[0]/9
+        x_start = Const.ARENA_SIZE[0]/2 - x_interval*1.8
+        dy = 70
+        for i in range(4):
+            score_text = Text(str(score[i]), 36, pg.Color('white'))
+            score_text.blit(screen, topleft=(x_start + i*x_interval, Const.ARENA_SIZE[1]/2 + dy))
 
 
 def init_staticobjects():
