@@ -3,7 +3,7 @@ import os.path
 import math
 
 import Model.GameObject.player as model_player
-from View.utils import scale_surface, load_image, resize_surface, rotate_surface
+from View.utils import Text, scale_surface, load_image, resize_surface, rotate_surface
 from pygame.math import Vector2
 import Const
 
@@ -93,7 +93,7 @@ class View_Item(__Object_base):
         screen.blit(self.prop_image, self.prop_image.get_rect(bottomleft=rect.bottomleft))
 
 class View_Scoreboard(__Object_base):
-    board = load_image("/Users/shaochunho/Desktop/result_test6.png")
+    board = load_image("/Users/shaochunho/Desktop/result_test7.png")
 
     @classmethod
     def init_convert(cls):
@@ -102,6 +102,10 @@ class View_Scoreboard(__Object_base):
     def draw(self, screen):
         #screen.fill(Const.BACKGROUND_COLOR)
         screen.blit(self.board, (0, 0))
+        for player in self.model.players:
+            score = Text(str(player.score), 36, pg.Color('white'))
+            score.blit(screen, center=(Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2))
+
 
 def init_staticobjects():
     View_stage.init_convert()

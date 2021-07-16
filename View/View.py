@@ -184,6 +184,7 @@ class GraphicalView:
         
         if endgame:
             self.scoreboard.draw(target)
+            
         
         pg.display.flip()
 
