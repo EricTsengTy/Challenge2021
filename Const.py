@@ -56,7 +56,7 @@ ITEM_TYPE_LIST=['FAN',
                 'FORMAT',
                 'FOLDER_UNUSED',
                 'CHARGE']
-
+MAX_ITEM_NUMBER = 10
 
 # special attack
 ARROW_SPEED = 120

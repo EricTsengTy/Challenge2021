@@ -175,11 +175,10 @@ class GameEngine:
             else: attack.tick()
 
         # generate the items
-        while len(self.items) < 5:
-            testing_item_type = 'GRAPHIC_CARD'
-            self.items.append(Item(self,
-                                    random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                    random.randint(300, 400),testing_item_type))
+        while len(self.items) < Const.MAX_ITEM_NUMBER:
+            generate_item = Item(self, random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
+                                 random.randint(300, 400),random.choice(Const.ITEM_TYPE_LIST))
+            self.items.append(generate_item)
 
     def update_endgame(self):
         '''
