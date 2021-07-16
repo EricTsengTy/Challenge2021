@@ -1,4 +1,5 @@
 import random
+from typing import Tuple
 import pygame as pg
 from pygame.sprite import collide_mask
 import Const
@@ -176,9 +177,20 @@ class GameEngine:
 
         # generate the items
         while len(self.items) < Const.MAX_ITEM_NUMBER:
-            generate_item = Item(self, random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                 random.randint(300, 400),random.choice(Const.ITEM_TYPE_LIST))
-            self.items.append(generate_item)
+            px = random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH)
+            py = random.randint(300, 400)
+            generate_item = Item(self, px, py, random.choice(Const.ITEM_TYPE_LIST))
+            collided = False
+            for item in self.items:
+                if(generate_item.rect.colliderect(item.rect)):
+                    collided = True
+                    break
+            for player in self.players:
+                if(generate_item.rect.colliderect(player.rect)):
+                    collided = True
+                    break
+            if not collided:
+                self.items.append(generate_item)
 
     def update_endgame(self):
         '''
