@@ -54,7 +54,9 @@ class GraphicalView:
              View.staticobjects.init_staticobjects()
              View.activeobjects.init_activeobjects()
         # static objects
+        self.menu =  View.staticobjects.View_menu(self.model)
         self.stage =  View.staticobjects.View_stage(self.model)
+        self.platform = View.staticobjects.View_platform(self.model)
         self.arrow = View.staticobjects.View_Arrow(self.model)
         self.lightning = View.staticobjects.View_Lightning(self.model)
         self.item = View.staticobjects.View_Item(self.model)
@@ -110,6 +112,7 @@ class GraphicalView:
                 self.players.status[event.player_id] = f'special_attack_fireball'
             else:
                 self.players.status[event.player_id] = f'special_attack_{event.attack_type}'
+                print(f'special_attack_{event.attack_type}')
             self.players.timer[event.player_id] = 0
        
             
@@ -120,10 +123,12 @@ class GraphicalView:
         '''
         pg.display.set_caption(f'{Const.WINDOW_CAPTION} - FPS: {self.model.clock.get_fps():.2f}')
 
-    def render_menu(self):
+    def render_menu(self, target=None):
+        if target is None:
+            target = self.screen
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
-
+        self.menu.draw(target)
         # draw text
 
         '''
@@ -131,9 +136,10 @@ class GraphicalView:
         text_surface = font.render("Press [space] to start ...", 1, pg.Color('gray88'))
         text_center = (Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2)
         self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
-        '''
+        
         menu_text = Text("Press [space] to start ...", 36, pg.Color('gray88'))
         menu_text.blit(self.screen, center=(Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2))
+		'''
 
         pg.display.flip()
 
@@ -143,7 +149,7 @@ class GraphicalView:
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.stage.draw(target)
-        
+        self.platform.draw(target)
         # draw players
         self.players.draw(target)
 
@@ -154,8 +160,8 @@ class GraphicalView:
         #         pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
         #         pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player.rect)
         
-        for ground in self.model.grounds:
-            pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)
+        '''for ground in self.model.grounds:
+            pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)'''
         
         for item in self.model.items:
             self.item.draw(self.screen, item.rect, item.item_type)

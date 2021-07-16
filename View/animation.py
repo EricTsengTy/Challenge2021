@@ -49,7 +49,7 @@ class Animation_hello_world(Animation_base):
         'printf("Hello World!");', 'console.log("Hello World!")', 'System.out.println("Hello World!");','print("Hello World!")','cout<<"Hello World!"<<endl;', 
     ]
     colors = [pg.Color('white'), pg.Color('yellow'), pg.Color('red'), pg.Color('blue'), pg.Color('green'), pg.Color('pink'), pg.Color('black')]
-    positions = [Const.ARENA_SIZE[1] / 3 // 10 * _i for _i in range(1,10)]
+    positions = [Const.ARENA_SIZE[1] // 20 * _i for _i in range(1,20)]
 
     def __init__(self, delay_of_frames, speed):
         self._timer = 0
