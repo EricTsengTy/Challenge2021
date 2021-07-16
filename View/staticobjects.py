@@ -120,7 +120,8 @@ class View_Item(__Object_base):
         screen.blit(self.prop_image, self.prop_image.get_rect(bottomleft=rect.bottomleft))
 
 class View_Pause(__Object_base):
-    pause_window = scale_surface(load_image("/Users/shaochunho/Desktop/stop_test1.png"), 0.7)
+    pause_window = scale_surface(load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'pause.png')), 0.7)
+
     @classmethod
     def init_convert(cls):
         cls.pause_window = cls.pause_window.convert_alpha()
@@ -129,9 +130,15 @@ class View_Pause(__Object_base):
         screen.blit(self.pause_window, self.pause_window.get_rect(center=(Const.ARENA_SIZE[0]/2, Const.ARENA_SIZE[1]/2)))
 
 class View_Scoreboard(__Object_base):
-    board = load_image("/Users/shaochunho/Desktop/result_test8.png")
-    winner_crown = load_image("/Users/shaochunho/Desktop/crown2.png")
-    gray_bg = load_image("/Users/shaochunho/Desktop/transparent_gray.png")
+    board = resize_surface(
+        load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'result.png')), 
+        Const.ARENA_SIZE[0], Const.ARENA_SIZE[1]
+    )
+    winner_crown = load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'crown.png'))
+    gray_bg = resize_surface(
+        load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'transparent_gray.png')),
+        Const.ARENA_SIZE[0], Const.ARENA_SIZE[1]
+    )
 
     @classmethod
     def init_convert(cls):
@@ -141,10 +148,12 @@ class View_Scoreboard(__Object_base):
         cls.draw_gray_bg = True
 
     def draw(self, screen):
+        #only draw gray background one time
         if self.draw_gray_bg:
             screen.blit(self.gray_bg, (0, 0))
             self.draw_gray_bg = False
 
+        #draw main board
         screen.blit(self.board, (0, 0))
         
         player_score = []
@@ -152,7 +161,7 @@ class View_Scoreboard(__Object_base):
         for player in self.model.players:
             player_score.append(player.score)
         '''
-        player_score = [1000, 2000, 4000, 25000] #test score
+        player_score = [10, 10000, 1000, 2000] #test score
         text_interval = Const.ARENA_SIZE[0]/8.35
         text_start = Const.ARENA_SIZE[0]/2 - text_interval*1.75
         text_top = Const.ARENA_SIZE[1]/1.75
@@ -160,10 +169,9 @@ class View_Scoreboard(__Object_base):
             if player_score[i] == max(player_score):
                 #draw winner crown
                 screen.blit(self.winner_crown, (text_start + i*text_interval, Const.ARENA_SIZE[1]/2.8))
-
+            #draw score
             score_text = Text(str(player_score[i]), 36, pg.Color('white'))
             score_text.blit(screen, topleft=(text_start + i*text_interval, text_top))
-
 
 def init_staticobjects():
     View_stage.init_convert()
@@ -171,5 +179,5 @@ def init_staticobjects():
     View_Arrow.init_convert()
     View_Lightning.init_convert()
     View_Item.init_convert()
-    View_Scoreboard.init_convert()
     View_Pause.init_convert()
+    View_Scoreboard.init_convert()

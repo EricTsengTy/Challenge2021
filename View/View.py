@@ -60,8 +60,8 @@ class GraphicalView:
         self.arrow = View.staticobjects.View_Arrow(self.model)
         self.lightning = View.staticobjects.View_Lightning(self.model)
         self.item = View.staticobjects.View_Item(self.model)
-        self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
         self.pause_window = View.staticobjects.View_Pause(self.model)
+        self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
         # active objects
         self.players = View.activeobjects.View_players(self.model, 7)
         self.bug = View.activeobjects.View_Bug(10)
