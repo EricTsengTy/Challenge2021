@@ -1,4 +1,5 @@
 import random
+from typing import Tuple
 import pygame as pg
 from pygame.sprite import collide_mask
 import Const
@@ -126,12 +127,16 @@ class GameEngine:
         elif isinstance(event, EventPlayerAttack):
             # player do common attack
             attacker = self.players[event.player_id[0]]
-            if not attacker.in_folder():
+            if not attacker.in_folder() and attacker.common_attack_timer == 0:
+                do_attack = False
                 attack_range = attacker.common_attack_range
                 for player in self.players:
                     if attacker.player_id != player.player_id and\
-                       player.can_be_common_attacked() and attack_range.colliderect(player):
+                       player.can_be_common_attacked() and attack_range.colliderect(player.rect):
                         player.be_common_attacked(attacker)
+                        do_attack = True
+                if do_attack:
+                    attacker.common_attack_timer = Const.PLAYER_COMMON_ATTACK_TIMER
             else:
                 print("Can not common attack")
     
@@ -172,11 +177,21 @@ class GameEngine:
             else: attack.tick()
 
         # generate the items
-        while len(self.items) < 5:
-            testing_item_type = 'EXE'
-            self.items.append(Item(self,
-                                    random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH),
-                                    random.randint(300, 400),testing_item_type))
+        while len(self.items) < Const.MAX_ITEM_NUMBER:
+            px = random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH)
+            py = random.randint(300, 400)
+            generate_item = Item(self, px, py, random.choice(Const.ITEM_TYPE_LIST))
+            collided = False
+            for item in self.items:
+                if(generate_item.rect.colliderect(item.rect)):
+                    collided = True
+                    break
+            for player in self.players:
+                if(generate_item.rect.colliderect(player.rect)):
+                    collided = True
+                    break
+            if not collided:
+                self.items.append(generate_item)
 
     def update_endgame(self):
         '''

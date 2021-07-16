@@ -43,13 +43,13 @@ class Animation_raster():
 class Animation_hello_world(Animation_base):
     
     pg.font.init()
-    fonts = [ pg.font.Font(None, 12* _i ) for _i in range(1,4)]
-    monospace_font = [pg.font.SysFont("monospace", 12*_i) for _i in range(1,4)]
+    fonts = [ pg.font.Font(None, 24+12* _i ) for _i in range(1,4)]
+    monospace_font = [pg.font.SysFont("monospace", 24+12*_i) for _i in range(1,4)]
     subtitles = [
         'printf("Hello World!");', 'console.log("Hello World!")', 'System.out.println("Hello World!");','print("Hello World!")','cout<<"Hello World!"<<endl;', 
     ]
     colors = [pg.Color('white'), pg.Color('yellow'), pg.Color('red'), pg.Color('blue'), pg.Color('green'), pg.Color('pink'), pg.Color('black')]
-    positions = [Const.ARENA_SIZE[1] // 20 * _i for _i in range(1,20)]
+    positions = [Const.ARENA_SIZE[1] // 20 * _i for _i in range(20)]
 
     def __init__(self, delay_of_frames, speed):
         self._timer = 0

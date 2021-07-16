@@ -28,12 +28,18 @@ class Player(Basic_Game_Object):
         self.face = Const.DIRECTION_TO_VEC2['right']
         self.death = 0
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
+        self.common_attack_timer = 0
+        self.special_attack_delay = -1 # -1 for no special attack
         self.standing_tick = 0
         self.score = 0
 
     @property
     def common_attack_range(self):
-        return self.rect.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
+        attack_range = self.rect.inflate(Const.PLAYER_COMMON_ATTACK_SIZE, Const.PLAYER_COMMON_ATTACK_SIZE)
+        width = attack_range.width
+        attack_range = attack_range.inflate(-width/2, 0)
+        attack_range.move_ip(self.face * (width/4))
+        return attack_range
 
     def move(self, direction: str):
         '''
@@ -61,10 +67,11 @@ class Player(Basic_Game_Object):
                 State.invisible(self.state)
             self.state[key] = max(value-1, 0)
         
-        if self.state['fast_special_attack_speed'] == 1:
-            self.special_attack_timer = max(self.special_attack_timer - 2, 0)
-        else :
-            self.special_attack_timer = max(self.special_attack_timer - 1, 0)
+        self.special_attack_timer = max(self.special_attack_timer - self.special_attack_speed_adjust(), 0)
+        self.common_attack_timer = max(self.common_attack_timer - 1, 0)
+        self.special_attack_delay = max(self.special_attack_delay - 1, -1)
+        if self.special_attack_delay == 0:
+            self.special_attack()
         
         if self.in_folder():
             return
@@ -112,6 +119,11 @@ class Player(Basic_Game_Object):
 
     def special_attack(self):
         if self.special_attack_timer > 0: return
+        if self.special_attack_delay == -1:
+            self.special_attack_delay = Const.PLAYER_SPECIAL_ATTACK_DELAY
+            return
+        if self.special_attack_delay > 0: return
+        
         self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type))
 
         if(self.keep_item_type == 'DOS'):
@@ -130,16 +142,27 @@ class Player(Basic_Game_Object):
             self.model.attacks.append(Cast_Lightning(self.model, self))
         self.keep_item_type = ''
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
+        self.special_attack_delay = -1
 
 
     def be_special_attacked(self, attack):
+        # effect (excpet damage) of all sepcial attack
         if attack.name == 'Arrow':
             State.slow_down(self.state)
         elif attack.name == 'Bug':
             State.broken(self.state, Const.BROKEN_TIME_BUG)
         elif attack.name == 'Coffee':
             State.broken(self.state, Const.BROKEN_TIME_COFFEE)
+        elif attack.name == 'Tornado':
+            pass
+        elif attack.name == 'Fireball':
+            pass
+        elif attack.name == 'Lightning':
+            pass
+            
+        # damage of spcail attack
         self.blood-=attack.damage
+
         self.count_score(attack.attacker, attack.damage)
         self.model.ev_manager.post(EventBeAttacked(self.player_id))
         
@@ -188,5 +211,10 @@ class Player(Basic_Game_Object):
         if self.state['slow_move_speed'] == 0: return 1
         else: return Const.PLAYER_SPEED_ADJUST
 
+    def special_attack_speed_adjust(self):
+        if self.state['fast_special_attack_speed'] == 0: return 1
+        else: return 2;
+
     def is_standing(self):
         return self.standing_tick>5
+
