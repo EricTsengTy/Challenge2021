@@ -59,13 +59,14 @@ class GraphicalView:
         self.lightning = View.staticobjects.View_Lightning(self.model)
         self.item = View.staticobjects.View_Item(self.model)
         self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
+        self.pause_window = View.staticobjects.View_Pause(self.model)
         # active objects
         self.players = View.activeobjects.View_players(self.model, 7)
         self.bug = View.activeobjects.View_Bug(10)
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
-
+        
         self.is_initialized = True
 
     def notify(self, event):
@@ -136,7 +137,7 @@ class GraphicalView:
 
         pg.display.flip()
 
-    def render_play(self, target=None, update=True, endgame=False):
+    def render_play(self, target=None, update=True):
         if target is None:
             target = self.screen
         # draw background
@@ -182,26 +183,18 @@ class GraphicalView:
             else: 
                 ani.draw(target, update)
         
-        if endgame:
-            self.scoreboard.draw(target)
             
         
         pg.display.flip()
 
     def render_stop(self):
-        pass
+        self.pause_window.draw(self.screen)
+        pg.display.flip()
 
     def render_endgame(self):
-        # draw background
-        #self.screen.fill(Const.BACKGROUND_COLOR)
-        self.render_play(update=False, endgame=True)
-        '''
-        image = pg.image.load("/Users/shaochunho/Desktop/result_test6.png")
-        image = image.convert_alpha()
-        self.screen.blit(image, (0, 0))
-
+        self.scoreboard.draw(self.screen)
         pg.display.flip()
-        '''
+        
     
     def toggle_fullscreen(self):
         self.ev_manager.post(EventStop())

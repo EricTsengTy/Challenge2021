@@ -145,6 +145,11 @@ class GameEngine:
 
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
+        
+        elif isinstance(event, EventStop):
+            self.state_machine.push(Const.STATE_STOP)
+        elif isinstance(event, EventContinue):
+            self.state_machine.pop()
 
     def update_menu(self):
         '''
