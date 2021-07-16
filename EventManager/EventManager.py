@@ -121,3 +121,27 @@ class EventRestart(BaseEvent):
     '''
     game restart and model stage change to STATE_MENU
     '''
+
+class EventHelloWorld(BaseEvent):
+    name = 'Hello World event'
+    '''
+    hello world triggered
+    '''
+
+class EventBeAttacked(BaseEvent):
+    name = 'player be special attack event'
+    '''
+    notify view player be special attacked
+    '''
+    def __init__(self, player_id):
+        self.player_id = player_id
+
+class EventSpecialAttackMovement(BaseEvent):
+    name = 'player special attack success and show movement'
+    '''
+    notify view player special attack & its type
+    '''
+
+    def __init__(self, player_id, attack_type):
+        self.player_id = player_id
+        self.attack_type = attack_type

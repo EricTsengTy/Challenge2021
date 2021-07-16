@@ -8,6 +8,7 @@ from Model.GameObject.basic_game_object import Basic_Game_Object
 from Model.GameObject.item import Item
 from Model.GameObject.special_attack import *
 import Model.GameObject.state as State
+from EventManager.EventManager import *
 
 class Player(Basic_Game_Object):
     def __init__(self, model, player_id):
@@ -102,7 +103,7 @@ class Player(Basic_Game_Object):
             self.keep_item_type = item_type
             self.special_attack_timer = 0
         elif item_type == 'EXE':
-            pass
+            self.model.ev_manager.post(EventHelloWorld())
         elif item_type == 'USB':
             State.infect(self.state)
         elif item_type == 'FIREWALL':
@@ -122,6 +123,9 @@ class Player(Basic_Game_Object):
             self.special_attack_delay = Const.PLAYER_SPECIAL_ATTACK_DELAY
             return
         if self.special_attack_delay > 0: return
+        
+        self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type))
+
         if(self.keep_item_type == 'DOS'):
             self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
         elif(self.keep_item_type == 'DDOS'):
@@ -139,6 +143,7 @@ class Player(Basic_Game_Object):
         self.keep_item_type = ''
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
         self.special_attack_delay = -1
+
 
     def be_special_attacked(self, attack):
         # effect (excpet damage) of all sepcial attack
@@ -159,6 +164,7 @@ class Player(Basic_Game_Object):
         self.blood-=attack.damage
 
         self.count_score(attack.attacker, attack.damage)
+        self.model.ev_manager.post(EventBeAttacked(self.player_id))
         
         
     def be_common_attacked(self, attacker):
@@ -166,7 +172,8 @@ class Player(Basic_Game_Object):
             State.infect(self.state)
         self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust()
         self.count_score(attacker, Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust())
-
+        self.model.ev_manager.post(EventBeAttacked(self.player_id))
+    
     def __random_target(self):
         player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
         player_id_list.remove(self.player_id)

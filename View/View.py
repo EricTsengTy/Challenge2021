@@ -5,7 +5,9 @@ from Model.Model import GameEngine
 import Const
 import View.staticobjects
 import View.activeobjects
+import View.animation
 from View.utils import Text
+import random
 
 
 class GraphicalView:
@@ -25,12 +27,6 @@ class GraphicalView:
         ev_manager.register_listener(self)
 
         self.model = model
-        self.screen = pg.display.set_mode(Const.WINDOW_SIZE, pg.RESIZABLE)
-        # flags = pg.RESIZABLE
-        # self.screen = pg.display.set_mode(Const.WINDOW_SIZE, flags)
-        
-        pg.display.set_caption(Const.WINDOW_CAPTION)
-        self.background.fill(Const.BACKGROUND_COLOR)
         self.is_initialized = False
 
     def initialize(self):
@@ -51,16 +47,25 @@ class GraphicalView:
                 self.real_screen = pg.display.set_mode(self.real_window_size, pg.FULLSCREEN)
                 self.screen = pg.Surface(Const.WINDOW_SIZE)
         
+        # animations
+        self.animation_list = []
+
+        if not self.is_initialized:
+             View.staticobjects.init_staticobjects()
+             View.activeobjects.init_activeobjects()
         # static objects
+        self.menu =  View.staticobjects.View_menu(self.model)
         self.stage =  View.staticobjects.View_stage(self.model)
-        # self.players = View.staticobjects.View_players(self.model)
-        self.players = View.activeobjects.View_players(self.model, 7)
+        self.platform = View.staticobjects.View_platform(self.model)
         self.arrow = View.staticobjects.View_Arrow(self.model)
+        self.lightning = View.staticobjects.View_Lightning(self.model)
+        self.item = View.staticobjects.View_Item(self.model)
+        # active objects
+        self.players = View.activeobjects.View_players(self.model, 7)
         self.bug = View.activeobjects.View_Bug(10)
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
-        self.lightning = View.staticobjects.View_Lightning(self.model)
 
         self.is_initialized = True
 
@@ -82,7 +87,32 @@ class GraphicalView:
         
         elif isinstance(event, EventToggleFullScreen):
             self.toggle_fullscreen()
+        
+        elif isinstance(event, EventPlayerAttack):
+            self.players.status[event.player_id[0]] = 'common_attack'
+            self.players.timer[event.player_id[0]] = 0
+        
+        elif isinstance(event, EventHelloWorld):
+            style = random.randint(1,3)
 
+            style = 1 # now test type1 hello world
+            self.animation_list.append(View.animation.Animation_hello_world(3,2)) #delay_of_frames, speed
+
+        elif isinstance(event, EventBeAttacked):
+            # event.player_id
+            self.players.status[event.player_id] = 'be_attacked'
+            self.players.timer[event.player_id] = 0
+        
+        elif isinstance(event, EventSpecialAttackMovement):
+            # event.player_id
+            # event.attack_type
+            if event.attack_type == '':
+                self.players.status[event.player_id] = f'special_attack_fireball'
+            else:
+                self.players.status[event.player_id] = f'special_attack_{event.attack_type}'
+                print(f'special_attack_{event.attack_type}')
+            self.players.timer[event.player_id] = 0
+            
         
     def display_fps(self):
         '''
@@ -90,10 +120,12 @@ class GraphicalView:
         '''
         pg.display.set_caption(f'{Const.WINDOW_CAPTION} - FPS: {self.model.clock.get_fps():.2f}')
 
-    def render_menu(self):
+    def render_menu(self, target=None):
+        if target is None:
+            target = self.screen
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
-
+        self.menu.draw(target)
         # draw text
 
         '''
@@ -101,9 +133,10 @@ class GraphicalView:
         text_surface = font.render("Press [space] to start ...", 1, pg.Color('gray88'))
         text_center = (Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2)
         self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
-        '''
+        
         menu_text = Text("Press [space] to start ...", 36, pg.Color('gray88'))
         menu_text.blit(self.screen, center=(Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2))
+		'''
 
         pg.display.flip()
 
@@ -113,7 +146,7 @@ class GraphicalView:
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.stage.draw(target)
-        
+        self.platform.draw(target)
         # draw players
         self.players.draw(target)
 
@@ -124,11 +157,13 @@ class GraphicalView:
         #         pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
         #         pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player.rect)
         
-        for ground in self.model.grounds:
-            pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)
+        '''for ground in self.model.grounds:
+            pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)'''
         
         for item in self.model.items:
-            pg.draw.rect(self.screen, Const.ITEM_COLOR, item.rect)
+            self.item.draw(self.screen, item.rect, item.item_type)
+        
+        # pg.draw.rect(self.screen, Const.ITEM_COLOR, item.rect)
 
         for attack in self.model.attacks:
             if attack.name == 'Arrow':
@@ -143,6 +178,14 @@ class GraphicalView:
                 self.tornado.draw(target, attack.rect.center, attack.timer, attack.speed)
             elif attack.name == 'Lightning':
                 self.lightning.draw(target, attack.rect.center, attack.range)
+        
+        #animation
+        for ani in self.animation_list:
+            if ani.expired:
+                self.animation_list.remove(ani)
+            else: 
+                ani.draw(target)
+        
         pg.display.flip()
 
     def render_stop(self):
@@ -171,9 +214,9 @@ class GraphicalView:
         # toggle fullscreen
         self.fullscreen = not self.fullscreen
         if self.fullscreen:
-            _screen = pg.display.set_mode((w, h), pg.FULLSCREEN, bits)
+            _screen = pg.display.set_mode(Const.WINDOW_SIZE, pg.FULLSCREEN, bits)
         else:
-            _screen = pg.display.set_mode((w, h))
+            _screen = pg.display.set_mode(Const.WINDOW_SIZE)
 
         # restore _screen content
         _screen.blit(tmp, (0, 0))
