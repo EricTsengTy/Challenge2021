@@ -1,6 +1,7 @@
 import pygame as pg
 import random
 from pygame.display import mode_ok, set_allow_screensaver
+from pygame.event import Event
 from pygame.mixer import fadeout
 import Const 
 from pygame.math import Vector2
@@ -116,6 +117,9 @@ class Player(Basic_Game_Object):
             State.folder(self.state)
         elif item_type == 'CHARGE':
             pass
+
+        self.model.ev_manager.post(EventGetProp(self.player_id, item_type))
+
 
     def special_attack(self):
         if self.special_attack_timer > 0: return

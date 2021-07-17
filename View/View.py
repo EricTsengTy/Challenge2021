@@ -99,11 +99,11 @@ class GraphicalView:
 
             style = 1 # now test type1 hello world
             if style == 1:
-                self.animation_list.append(View.animation.Animation_hello_world(3,2)) #delay_of_frames, speed
+                self.animation_list.append(View.animation.Animation_hello_world(3,4)) #delay_of_frames, speed
             elif style == 2:
                 pass
             elif style == 3:
-                #　self.players.
+                self.players.hello_world_timer = 10*Const.FPS
                 pass
 
         elif isinstance(event, EventBeAttacked):
@@ -121,7 +121,18 @@ class GraphicalView:
                 self.players.status[event.player_id] = f'special_attack_{event.attack_type}'
                 print(f'special_attack_{event.attack_type}')
             self.players.timer[event.player_id] = 0
-       
+
+        elif isinstance(event, EventGetProp):
+
+            if event.item_type == 'CHARGE':
+                self.players.atmosphere[event.player_id]['charge'] = 0
+            elif event.item_type == 'FIREWALL':
+                self.players.atmosphere[event.player_id]['firewall'] = Const.FIREWALL_TIME
+            elif event.item_type == 'FORMAT':
+                self.players.atmosphere[event.player_id]['format'] = 0
+            elif event.item_type != 'FOLDER_UNUSED':
+                self.players.atmosphere[event.player_id]['get_prop'] = 0
+
             
         
     def display_fps(self):

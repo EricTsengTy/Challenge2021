@@ -55,7 +55,7 @@ class Animation_hello_world(Animation_base):
         self._timer = 0
         self.delay_of_frames = delay_of_frames
         self.speed = speed
-        self.expire_time = Const.ARENA_SIZE[0] // speed
+        self.expire_time = 10*Const.FPS
         self.expired = False
         self.text_surfaces = tuple(random.choice(self.fonts).render(random.choice(self.subtitles), 1, random.choice(self.colors)) for _i in range(40))
         self.text_surfaces = tuple(surface.convert_alpha() for surface in self.text_surfaces)
@@ -65,7 +65,7 @@ class Animation_hello_world(Animation_base):
         self._timer += 1
 
         if self._timer == self.expire_time:
-            self.expire = True
+            self.expired = True
         
         if self._timer % self.delay_of_frames == 0:
             for i in range(40):

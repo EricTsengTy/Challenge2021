@@ -397,6 +397,50 @@ class View_players(__Object_base):
         pg.transform.flip(_frame, True, False) for _frame in attack_lightning_frames
     )
 
+    '''
+    hello_world_frames = tuple(
+        scale_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'hello_world', f'hello_world3_{_i+1}.png')), 1
+        )
+        for _i in range(4)
+    )
+
+    fliped_hello_world_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in hello_world_frames
+    )
+    '''
+
+    charging_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'prop', 'charging-{:02d}.png'.format(_i+1))),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        )
+        for _i in range(6)
+    )
+
+    firewall_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'prop', 'firewall-{:02d}.png'.format(_i+1))),
+            int(Const.PLAYER_HEIGHT*1.2), int(Const.PLAYER_HEIGHT*1.2)
+        )
+        for _i in range(4)
+    )
+
+    format_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'prop', 'format-{:02d}.png'.format(_i+1))),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        )
+        for _i in range(6)
+    )
+
+    get_prop_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'prop', 'get_prop-{:02d}.png'.format(_i+1))),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        )
+        for _i in range(7)
+    )
 
     @classmethod
     def init_convert(cls):
@@ -433,7 +477,12 @@ class View_players(__Object_base):
         cls.poison_fliped_common_attack_frames = tuple( frame.convert_alpha() for frame in cls.poison_fliped_common_attack_frames)
         cls.poison_be_attacked_frames = tuple( frame.convert_alpha() for frame in cls.poison_be_attacked_frames)
         cls.poison_fliped_be_attacked_frames = tuple( frame.convert_alpha() for frame in cls.poison_fliped_be_attacked_frames)
-
+        # cls.hello_world_frames = tuple( frame.convert_alpha() for frame in cls.hello_world_frames)
+        # cls.fliped_hello_world_frames = tuple( frame.convert_alpha() for frame in cls.fliped_hello_world_frames)
+        cls.charging_frames = tuple( frame.convert_alpha() for frame in cls.charging_frames)
+        cls.firewall_frames = tuple( frame.convert_alpha() for frame in cls.firewall_frames)
+        cls.format_frames = tuple( frame.convert_alpha() for frame in cls.format_frames)
+        cls.get_prop_frames = tuple( frame.convert_alpha() for frame in cls.get_prop_frames)
 
     def __init__(self, model, delay_of_frames):
         self.model = model
@@ -441,11 +490,20 @@ class View_players(__Object_base):
         self.quicker_delay_of_frames = delay_of_frames // 2
         self.timer = [0, 0, 0, 0]
         self.status = ['standing', 'standing', 'standing', 'standing']
+        self.hello_world_timer = 0
+        self.atmosphere = [
+            {'charge' : -1, 'firewall' : 0, 'format' : -1, 'get_prop':-1},
+            {'charge' : -1, 'firewall' : 0, 'format' : -1, 'get_prop':-1},
+            {'charge' : -1, 'firewall' : 0, 'format' : -1, 'get_prop':-1},
+            {'charge' : -1, 'firewall' : 0, 'format' : -1, 'get_prop':-1},
+        ]
     
     def draw(self, screen):
         for player in self.model.players:
             
-
+            # hello world type 3
+            if self.hello_world_timer > 0:
+                pass
             if player.is_invisible() or player.in_folder():
                 continue
 
@@ -461,14 +519,39 @@ class View_players(__Object_base):
             # empty energy bar
             pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[0], [player.left, player.top-10, player.rect.width, 5], 2)
             
-            #item frame
+            # item frame
             # pg.draw.rect(screen, Const.ITEM_BOX_COLOR, [player.left-20, player.top-15, Const.ITEM_BOX_SIZE, Const.ITEM_BOX_SIZE], 2)
             
-            #item
+            # item
             if player.keep_item_type != '':
                 screen.blit(self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]],
                     self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-15)))
             
+            # atmosphere
+            if self.atmosphere[player.player_id]['charge'] >= 0:
+                frame_ = self.atmosphere[player.player_id]['charge'] // self.delay_of_frames
+                screen.blit(self.charging_frames[frame_],
+                    self.charging_frames[frame_].get_rect(center=player.center))
+                self.atmosphere[player.player_id]['charge'] += 1
+                if self.atmosphere[player.player_id]['charge'] == (len(self.charging_frames) * self.delay_of_frames):
+                    self.atmosphere[player.player_id]['charge'] = -1
+            
+            if self.atmosphere[player.player_id]['format'] >= 0:
+                frame_ = self.atmosphere[player.player_id]['format'] // self.delay_of_frames
+                screen.blit(self.format_frames[frame_],
+                    self.format_frames[frame_].get_rect(center=player.center))
+                self.atmosphere[player.player_id]['format'] += 1
+                if self.atmosphere[player.player_id]['format'] == (len(self.format_frames) * self.delay_of_frames):
+                    self.atmosphere[player.player_id]['format'] = -1
+
+            if self.atmosphere[player.player_id]['get_prop'] >= 0:
+                frame_ = self.atmosphere[player.player_id]['get_prop'] // self.delay_of_frames
+                screen.blit(self.get_prop_frames[frame_],
+                    self.get_prop_frames[frame_].get_rect(center=player.center))
+                self.atmosphere[player.player_id]['get_prop'] += 1
+                if self.atmosphere[player.player_id]['get_prop'] == (len(self.get_prop_frames) * self.delay_of_frames):
+                    self.atmosphere[player.player_id]['get_prop'] = -1
+
             # player itself
             if self.status[player.player_id] == 'special_attack_fireball' and self.timer[player.player_id] < ( len(self.attack_fireball_frames) * self.quicker_delay_of_frames):
                 
