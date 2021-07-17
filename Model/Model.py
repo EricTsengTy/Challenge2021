@@ -150,6 +150,7 @@ class GameEngine:
 
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
+        
 
     def update_menu(self):
         '''

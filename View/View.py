@@ -6,7 +6,7 @@ import Const
 import View.staticobjects
 import View.activeobjects
 import View.animation
-from View.utils import Text
+from View.utils import Text, scale_surface
 import random
 
 
@@ -60,13 +60,15 @@ class GraphicalView:
         self.arrow = View.staticobjects.View_Arrow(self.model)
         self.lightning = View.staticobjects.View_Lightning(self.model)
         self.item = View.staticobjects.View_Item(self.model)
+        self.pause_window = View.staticobjects.View_Pause(self.model)
+        self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
         # active objects
         self.players = View.activeobjects.View_players(self.model, 7)
         self.bug = View.activeobjects.View_Bug(10)
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
-
+        
         self.is_initialized = True
 
     def notify(self, event):
@@ -112,6 +114,7 @@ class GraphicalView:
                 self.players.status[event.player_id] = f'special_attack_{event.attack_type}'
                 print(f'special_attack_{event.attack_type}')
             self.players.timer[event.player_id] = 0
+       
             
         
     def display_fps(self):
@@ -184,18 +187,20 @@ class GraphicalView:
             if ani.expired:
                 self.animation_list.remove(ani)
             else: 
-                ani.draw(target)
+                ani.draw(target, update)
+        
+            
         
         pg.display.flip()
 
     def render_stop(self):
-        pass
+        self.pause_window.draw(self.screen)
+        pg.display.flip()
 
     def render_endgame(self):
-        # draw background
-        self.screen.fill(Const.BACKGROUND_COLOR)
-
+        self.scoreboard.draw(self.screen)
         pg.display.flip()
+        
     
     def toggle_fullscreen(self):
         self.ev_manager.post(EventStop())
