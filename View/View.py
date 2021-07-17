@@ -98,12 +98,19 @@ class GraphicalView:
             style = random.randint(1,3)
 
             style = 1 # now test type1 hello world
-            self.animation_list.append(View.animation.Animation_hello_world(3,2)) #delay_of_frames, speed
+            if style == 1:
+                self.animation_list.append(View.animation.Animation_hello_world(3,2)) #delay_of_frames, speed
+            elif style == 2:
+                pass
+            elif style == 3:
+                #　self.players.
+                pass
 
         elif isinstance(event, EventBeAttacked):
             # event.player_id
-            self.players.status[event.player_id] = 'be_attacked'
-            self.players.timer[event.player_id] = 0
+            if self.players.status[event.player_id] != 'be_attacked':
+                self.players.status[event.player_id] = 'be_attacked'
+                self.players.timer[event.player_id] = 0
         
         elif isinstance(event, EventSpecialAttackMovement):
             # event.player_id
