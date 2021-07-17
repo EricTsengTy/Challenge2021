@@ -4,6 +4,7 @@ import Const
 from pygame.math import Vector2
 from math import sqrt
 from Model.GameObject.basic_game_object import Basic_Game_Object
+from EventManager.EventManager import *
 
 class Basic_Attack_Object(Basic_Game_Object):
     def __init__(self, model, attacker_id, position, width, height, speed):
@@ -29,6 +30,8 @@ class Basic_Attack_Object(Basic_Game_Object):
                 self.immune[player.player_id] = True
                 if self.disappear_hit_player:
                     self.kill()
+            if self.attacker.player_id != player.player_id and self.collide_player(player):
+                self.model.ev_manager.post(EventBeAttacked(player.player_id))
 
 class Basic_Attack_Object_No_Vanish(Basic_Game_Object):
     def __init__(self, model, attacker_id, position, direction, damage, name, width = 1, height = 1, speed = Const.ARROW_SPEED):

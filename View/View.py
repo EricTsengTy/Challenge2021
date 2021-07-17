@@ -109,9 +109,12 @@ class GraphicalView:
 
         elif isinstance(event, EventBeAttacked):
             # event.player_id
-            if self.players.status[event.player_id] != 'be_attacked':
+            if self.model.players[event.player_id].state['immune'] == 0 and self.players.status[event.player_id] != 'be_attacked':
                 self.players.status[event.player_id] = 'be_attacked'
                 self.players.timer[event.player_id] = 0
+            
+            if self.model.players[event.player_id].state['immune'] != 0:
+                self.players.atmosphere[event.player_id]['firewall'] = 1
         
         elif isinstance(event, EventSpecialAttackMovement):
             # event.player_id
@@ -128,7 +131,7 @@ class GraphicalView:
             if event.item_type == 'CHARGE':
                 self.players.atmosphere[event.player_id]['charge'] = 0
             elif event.item_type == 'FIREWALL':
-                self.players.atmosphere[event.player_id]['firewall'] = Const.FIREWALL_TIME
+                pass
             elif event.item_type == 'FORMAT':
                 self.players.atmosphere[event.player_id]['format'] = 0
             elif event.item_type != 'FOLDER_UNUSED':

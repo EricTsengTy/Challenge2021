@@ -371,6 +371,18 @@ class View_players():
                 if self.atmosphere[player.player_id]['get_prop'] == (len(self.get_prop_frames) * self.delay_of_frames):
                     self.atmosphere[player.player_id]['get_prop'] = -1
 
+            if player.state['immune'] > 0:
+                frame_ = self.atmosphere[player.player_id]['firewall'] // self.delay_of_frames
+                screen.blit(self.firewall_frames[frame_],
+                    self.firewall_frames[frame_].get_rect(center=player.center))
+
+                if self.atmosphere[player.player_id]['firewall'] > 0:
+                    self.atmosphere[player.player_id]['firewall'] += 1
+
+                if self.atmosphere[player.player_id]['firewall'] == (len(self.firewall_frames) * self.delay_of_frames):
+                    self.atmosphere[player.player_id]['firewall'] = 0
+
+
             # player itself
             if self.status[player.player_id] == 'special_attack_fireball' and self.timer[player.player_id] < ( len(self.attack_fireball_frames) * self.quicker_delay_of_frames):
                 

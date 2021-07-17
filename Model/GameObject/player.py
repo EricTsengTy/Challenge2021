@@ -168,7 +168,8 @@ class Player(Basic_Game_Object):
         self.blood-=attack.damage
 
         self.count_score(attack.attacker, attack.damage)
-        self.model.ev_manager.post(EventBeAttacked(self.player_id))
+        # self.model.ev_manager.post(EventBeAttacked(self.player_id))
+        # add in special_attack.py by View
         
         
     def be_common_attacked(self, attacker):

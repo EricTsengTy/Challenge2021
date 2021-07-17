@@ -137,6 +137,7 @@ class GameEngine:
                         do_attack = True
                 if do_attack:
                     attacker.common_attack_timer = Const.PLAYER_COMMON_ATTACK_TIMER
+
             else:
                 print("Can not common attack")
     
