@@ -124,7 +124,7 @@ class Player(Basic_Game_Object):
         elif item_type == 'FOLDER_UNUSED':
             State.folder(self.state)
         elif item_type == 'CHARGE':
-            pass
+            self.blood = min(self.blood+100, Const.PLAYER_FULL_BLOOD)
 
     def special_attack(self):
         if self.special_attack_timer > 0: return
