@@ -442,6 +442,11 @@ class View_players(__Object_base):
         for _i in range(7)
     )
 
+    directory_occupied_frame = resize_surface(
+        load_image(os.path.join(Const.IMAGE_PATH, 'prop', 'prop_directory_occupied.png')),
+        Const.ITEM_WIDTH, Const.ITEM_HEIGHT
+    )
+
     @classmethod
     def init_convert(cls):
         cls.standing_frames = tuple( frame.convert_alpha() for frame in cls.standing_frames)
@@ -483,6 +488,7 @@ class View_players(__Object_base):
         cls.firewall_frames = tuple( frame.convert_alpha() for frame in cls.firewall_frames)
         cls.format_frames = tuple( frame.convert_alpha() for frame in cls.format_frames)
         cls.get_prop_frames = tuple( frame.convert_alpha() for frame in cls.get_prop_frames)
+        cls.directory_occupied_frame = cls.directory_occupied_frame.convert_alpha()
 
     def __init__(self, model, delay_of_frames):
         self.model = model
@@ -504,7 +510,10 @@ class View_players(__Object_base):
             # hello world type 3
             if self.hello_world_timer > 0:
                 pass
-            if player.is_invisible() or player.in_folder():
+            if player.is_invisible():
+                continue
+            if player.in_folder():
+                screen.blit(self.directory_occupied_frame, self.directory_occupied_frame.get_rect(center=player.center))
                 continue
 
             # blood

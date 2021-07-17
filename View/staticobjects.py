@@ -12,7 +12,7 @@ class __Object_base():
 
     @classmethod
     def init_convert(cls):
-        cls.images = tuple(img.convert_alpha() for img in images)
+        cls.images = tuple(img.convert_alpha() for img in cls.images)
     
     def __init__(self, model):
         self.model = model
