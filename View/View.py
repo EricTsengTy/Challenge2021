@@ -6,7 +6,7 @@ import Const
 import View.staticobjects
 import View.activeobjects
 import View.animation
-from View.utils import Text, scale_surface
+import View.players
 import random
 
 
@@ -63,12 +63,13 @@ class GraphicalView:
         self.pause_window = View.staticobjects.View_Pause(self.model)
         self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
         # active objects
-        self.players = View.activeobjects.View_players(self.model, 7)
         self.bug = View.activeobjects.View_Bug(10)
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
-        
+        #players
+        self.players = View.players.View_players(self.model, 7)
+
         self.is_initialized = True
 
     def notify(self, event):

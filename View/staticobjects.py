@@ -1,8 +1,6 @@
 import pygame as pg
 import os.path
-import math
 
-import Model.GameObject.player as model_player
 from View.utils import Text, scale_surface, load_image, resize_surface, rotate_surface
 from pygame.math import Vector2
 import Const
