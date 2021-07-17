@@ -12,7 +12,6 @@ class Basic_Game_Object:
         self.speed = Vector2(0.0,0.0)
         self.obey_gravity = False
         self.gravity = 0
-        self.landing = False
         self.__death = False
 
     def clip_position(self):
@@ -25,14 +24,6 @@ class Basic_Game_Object:
             self.speed.y += Const.PLAYER_GRAVITY/Const.FPS
         
         self.position += self.speed / Const.FPS
-
-        if self.landing:
-            collided = self.rect.collidelist([ground.rect for ground in self.model.grounds])
-            collided = self.model.grounds[collided] if collided!=-1 else None
-            if self.speed.y>0 and collided!=None and collided.bottom>self.rect.bottom>collided.top:
-                self.bottom = collided.top
-                self.speed.y = 0
-                self.jump_count = 0
 
         if not self.can_leave_screen:
             self.clip_position()
