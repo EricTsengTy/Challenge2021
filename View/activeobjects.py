@@ -199,7 +199,7 @@ class View_players(__Object_base):
     
     standing_frames = tuple(
         resize_surface(
-            load_image(os.path.join(Const.IMAGE_PATH, 'players' , 'standing', Const.PLAYER_STANDING_PICS[_i])), 
+            load_image(os.path.join(Const.IMAGE_PATH, 'players' , 'standing', 'standing-{:02d}.png'.format(_i+1))), 
             Const.PLAYER_WIDTH,Const.PLAYER_HEIGHT
         )
         for _i in range(1)
@@ -207,6 +207,18 @@ class View_players(__Object_base):
 
     fliped_standing_frames = tuple(
         pg.transform.flip(_frame, True, False) for _frame in standing_frames
+    )
+
+    poison_standing_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players' , 'standing', 'poison_standing-{:02d}.png'.format(_i+1))), 
+            Const.PLAYER_WIDTH,Const.PLAYER_HEIGHT
+        )
+        for _i in range(1)
+    )
+
+    poison_fliped_standing_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in poison_standing_frames
     )
 
     walk_frames = tuple(
@@ -221,6 +233,18 @@ class View_players(__Object_base):
         pg.transform.flip(_frame, True, False) for _frame in walk_frames
     )
 
+    poison_walk_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'right_move', 'poison_right_move-{:02d}.png'.format(_i))),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        ) 
+        for _i in range(1,9)
+    )
+    
+    poison_fliped_walk_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in poison_walk_frames
+    )
+
     jump_frames = tuple(
         resize_surface(
             load_image(os.path.join(Const.IMAGE_PATH, 'players', 'jump_drop', 'jump_drop-{:02d}.png'.format(_i))),
@@ -231,6 +255,18 @@ class View_players(__Object_base):
 
     fliped_jump_frames = tuple(
         pg.transform.flip(_frame, True, False) for _frame in jump_frames
+    )
+
+    poison_jump_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'jump_drop', 'poison_jump_drop-{:02d}.png'.format(_i))),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        )
+        for _i in range(1,14)
+    )
+
+    poison_fliped_jump_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in poison_jump_frames
     )
 
     keep_item_images = tuple(
@@ -253,6 +289,18 @@ class View_players(__Object_base):
         pg.transform.flip(_frame, True, False) for _frame in common_attack_frames
     )
 
+    poison_common_attack_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'physical_atk', 'poison_physical_atk-{:02d}.png'.format(_i+1))),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        )
+        for _i in range(13)
+    )
+
+    poison_fliped_common_attack_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in poison_common_attack_frames
+    )
+
     be_attacked_frames = tuple(
         resize_surface(
             load_image(os.path.join(Const.IMAGE_PATH, 'players', 'be_attacked', 'be_attacked-{:02d}.png'.format(_i+1))),
@@ -263,6 +311,18 @@ class View_players(__Object_base):
 
     fliped_be_attacked_frames = tuple(
         pg.transform.flip(_frame, True, False) for _frame in be_attacked_frames
+    )
+
+    poison_be_attacked_frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'players', 'be_attacked', 'poison_be_attacked-{:02d}.png'.format(_i+1))),
+            Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+        )
+        for _i in range(9)
+    )
+
+    poison_fliped_be_attacked_frames = tuple(
+        pg.transform.flip(_frame, True, False) for _frame in poison_be_attacked_frames
     )
 
     attack_fireball_frames = tuple(
@@ -363,6 +423,16 @@ class View_players(__Object_base):
         cls.fliped_attack_fan_frames = tuple( frame.convert_alpha() for frame in cls.fliped_attack_fan_frames)
         cls.attack_lightning_frames = tuple( frame.convert_alpha() for frame in cls.attack_lightning_frames)
         cls.fliped_attack_lightning_frames = tuple( frame.convert_alpha() for frame in cls.fliped_attack_lightning_frames)
+        cls.poison_standing_frames = tuple( frame.convert_alpha() for frame in cls.poison_standing_frames)
+        cls.poison_fliped_standing_frames = tuple( frame.convert_alpha() for frame in cls.poison_fliped_standing_frames)
+        cls.poison_walk_frames = tuple( frame.convert_alpha() for frame in cls.poison_walk_frames)
+        cls.poison_fliped_walk_frames = tuple( frame.convert_alpha() for frame in cls.poison_fliped_walk_frames)
+        cls.poison_jump_frames = tuple( frame.convert_alpha() for frame in cls.poison_jump_frames)
+        cls.poison_fliped_jump_frames = tuple( frame.convert_alpha() for frame in cls.poison_fliped_jump_frames)
+        cls.poison_common_attack_frames = tuple( frame.convert_alpha() for frame in cls.poison_common_attack_frames)
+        cls.poison_fliped_common_attack_frames = tuple( frame.convert_alpha() for frame in cls.poison_fliped_common_attack_frames)
+        cls.poison_be_attacked_frames = tuple( frame.convert_alpha() for frame in cls.poison_be_attacked_frames)
+        cls.poison_fliped_be_attacked_frames = tuple( frame.convert_alpha() for frame in cls.poison_fliped_be_attacked_frames)
 
 
     def __init__(self, model, delay_of_frames):
@@ -476,11 +546,19 @@ class View_players(__Object_base):
                 
                 self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
-                    screen.blit(self.common_attack_frames[self.frame_index_to_draw],
-                        self.common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    if player.infection():
+                        screen.blit(self.poison_common_attack_frames[self.frame_index_to_draw],
+                            self.poison_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    else:
+                        screen.blit(self.common_attack_frames[self.frame_index_to_draw],
+                            self.common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
-                    screen.blit(self.fliped_common_attack_frames[self.frame_index_to_draw],
-                        self.fliped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    if player.infection():
+                        screen.blit(self.poison_fliped_common_attack_frames[self.frame_index_to_draw],
+                            self.poison_fliped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    else:
+                        screen.blit(self.fliped_common_attack_frames[self.frame_index_to_draw],
+                            self.fliped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 self.timer[player.player_id] += 1
                 continue
             
@@ -488,11 +566,19 @@ class View_players(__Object_base):
                 
                 self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
-                    screen.blit(self.be_attacked_frames[self.frame_index_to_draw],
-                        self.be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    if player.infection():
+                        screen.blit(self.poison_be_attacked_frames[self.frame_index_to_draw],
+                            self.poison_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    else:
+                        screen.blit(self.be_attacked_frames[self.frame_index_to_draw],
+                            self.be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
-                    screen.blit(self.fliped_be_attacked_frames[self.frame_index_to_draw],
-                        self.fliped_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    if player.infection():
+                        screen.blit(self.poison_fliped_be_attacked_frames[self.frame_index_to_draw],
+                            self.poison_fliped_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    else:
+                        screen.blit(self.fliped_be_attacked_frames[self.frame_index_to_draw],
+                            self.fliped_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 self.timer[player.player_id] += 1
                 continue
             
@@ -500,11 +586,19 @@ class View_players(__Object_base):
                 self.status[player.player_id] = 'standing'
                 self.timer[player.player_id] = 0
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
-                    screen.blit(self.standing_frames[0],
-                        self.standing_frames[0].get_rect(center=player.center))
+                    if player.infection():
+                        screen.blit(self.poison_standing_frames[0],
+                            self.poison_standing_frames[0].get_rect(center=player.center))
+                    else:
+                        screen.blit(self.standing_frames[0],
+                            self.standing_frames[0].get_rect(center=player.center))
                 else:
-                    screen.blit(self.fliped_standing_frames[0],
-                        self.fliped_standing_frames[0].get_rect(center=player.center))
+                    if player.infection():
+                        screen.blit(self.poison_fliped_standing_frames[0],
+                            self.poison_fliped_standing_frames[0].get_rect(center=player.center))
+                    else:
+                        screen.blit(self.fliped_standing_frames[0],
+                            self.fliped_standing_frames[0].get_rect(center=player.center))
 
             elif player.jump_count > 0:
                 if self.status[player.player_id] == 'jump':
@@ -514,13 +608,23 @@ class View_players(__Object_base):
                     self.timer[player.player_id] = 0
                 self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames) % len(self.jump_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
-                    screen.blit(
-                        self.jump_frames[self.frame_index_to_draw],
-                        self.jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    if player.infection():
+                        screen.blit(
+                            self.poison_jump_frames[self.frame_index_to_draw],
+                            self.poison_jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    else:
+                        screen.blit(
+                            self.jump_frames[self.frame_index_to_draw],
+                            self.jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
-                    screen.blit(
-                        self.fliped_jump_frames[self.frame_index_to_draw],
-                        self.fliped_jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    if player.infection():
+                        screen.blit(
+                            self.poison_fliped_jump_frames[self.frame_index_to_draw],
+                            self.poison_fliped_jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    else:
+                        screen.blit(
+                            self.fliped_jump_frames[self.frame_index_to_draw],
+                            self.fliped_jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
             else:
                 if self.status[player.player_id] == 'walk':
                     self.timer[player.player_id] += 1
@@ -529,13 +633,23 @@ class View_players(__Object_base):
                     self.timer[player.player_id] = 0
                 self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames) % len(self.walk_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
-                    screen.blit(
-                        self.walk_frames[self.frame_index_to_draw],
-                        self.walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    if player.infection():
+                        screen.blit(
+                            self.poison_walk_frames[self.frame_index_to_draw],
+                            self.poison_walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    else:
+                        screen.blit(
+                            self.walk_frames[self.frame_index_to_draw],
+                            self.walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
-                    screen.blit(
-                        self.fliped_walk_frames[self.frame_index_to_draw],
-                        self.fliped_walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    if player.infection():
+                        screen.blit(
+                            self.poison_fliped_walk_frames[self.frame_index_to_draw],
+                            self.poison_fliped_walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                    else:
+                        screen.blit(
+                            self.fliped_walk_frames[self.frame_index_to_draw],
+                            self.fliped_walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
 
 
 def init_activeobjects():
