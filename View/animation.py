@@ -1,3 +1,4 @@
+import os.path
 import pygame as pg
 import numpy as np
 from View.utils import scale_surface, load_image, resize_surface
@@ -146,3 +147,40 @@ class Greeting_from_prog(Animation_base):
         source_arr = pg.surfarray.pixels3d(screen)
         self.RGB_shift(source_arr)
         self.shifting(source_arr)
+
+class Greeeting_from_player(Animation_base):
+    
+    chatlog_img = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'hello_world', f'hello_world3_{_i+1}.png'))
+        for _i in range(4)
+    )
+
+    @classmethod
+    def init_convert(cls):
+        cls.chatlog_img = tuple(img.convert_alpha() for img in cls.chatlog_img)
+
+    def __init__(self, model):
+        self.expire_time = 10*Const.FPS
+        self.refresh_time = 2*Const.FPS
+        self.expired = False
+        self._timer = 0
+        self.model = model
+        self.chatlogs = [0,1,2,3]
+
+    def update(self):
+        self._timer += 1
+
+        if self._timer % self.refresh_time == 0:
+            random.shuffle(self.chatlogs)
+        if self._timer == self.expire_time:
+            self.expired = True
+
+    def draw(self, screen,  update=True):
+        for player in self.model.players:
+            screen.blit(
+                self.chatlog_img[self.chatlogs[player.player_id]], self.chatlog_img[self.chatlogs[player.player_id]].get_rect(bottomright=player.rect.topleft)
+            )
+        if update: self.update()
+
+def init_animation():
+    Greeeting_from_player.init_convert()

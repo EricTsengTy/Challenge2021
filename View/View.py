@@ -53,6 +53,7 @@ class GraphicalView:
         if not self.is_initialized:
              View.staticobjects.init_staticobjects()
              View.activeobjects.init_activeobjects()
+             View.animation.init_animation()
         # static objects
         self.menu =  View.staticobjects.View_menu(self.model)
         self.stage =  View.staticobjects.View_stage(self.model)
@@ -98,14 +99,13 @@ class GraphicalView:
         elif isinstance(event, EventHelloWorld):
             style = random.randint(1,3)
 
-            style = 2 # now test type2 hello world
+            style = 3 # now test type2 hello world
             if style == 1:
                 self.animation_list.append(View.animation.Animation_hello_world(3,4)) #delay_of_frames, speed
             elif style == 2:
                 self.animation_list.append(View.animation.Greeting_from_prog(0))
             elif style == 3:
-                self.players.hello_world_timer = 10*Const.FPS
-                pass
+                self.animation_list.append(View.animation.Greeeting_from_player(self.model))
 
         elif isinstance(event, EventBeAttacked):
             # event.player_id
