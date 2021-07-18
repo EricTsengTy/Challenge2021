@@ -1,5 +1,5 @@
 import pygame as pg
-
+import numpy as np
 from View.utils import scale_surface, load_image, resize_surface
 import Const
 import random
@@ -85,3 +85,68 @@ class Animation_hello_world(Animation_base):
     text_center = (Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2)
     self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
     '''
+
+class Greeting_from_prog(Animation_base):
+    def __init__(self,delay_of_frames):
+        super().__init__(delay_of_frames)
+        self.expired_time = 120
+
+    def rolling(self,source_arr):
+        return np.roll(source_arr,self._timer*-10,axis=1)
+
+    def RGB_shift(self,source_arr):
+        R = source_arr[:,:,0]
+        G = source_arr[:,:,1]
+        B = source_arr[:,:,2]
+        result_arr = np.zeros((*self.canvas_size,3))
+        
+        a,b,c = random.randint(-13,13),random.randint(-13,13),random.randint(-13,13)
+        if a > 0   : result_arr[a:,:,0] = R[:-a,:]
+        elif a < 0 : result_arr[:a,:,0] = R[-a:,:]
+        if b > 0   : result_arr[b:,:,1] = G[:-b,:]
+        elif b < 0 : result_arr[:b,:,1] = G[-b:,:]
+        if c > 0   : result_arr[c:,:,2] = B[:-c,:]
+        elif c < 0 : result_arr[:c,:,2] = B[-c:,:]
+        
+        return result_arr
+    
+    def shifting(self,source_arr):
+        result_arr = np.zeros((*self.canvas_size,3))
+        result_arr[:,:,:] = source_arr[:,:,:]
+        for _ in range(5):
+            stripe_width = random.randint(20,30)
+            stripe_pos = random.randint(0,self.canvas_size[1]-1)
+            stripe_amount = random.randint(5,30)
+            result_arr[stripe_amount:,stripe_pos:stripe_pos+stripe_width] = source_arr[:-stripe_amount,stripe_pos:stripe_pos+stripe_width]
+        
+        for _ in range(10):
+            stripe_width = random.randint(0,10)
+            stripe_pos = random.randint(0,self.canvas_size[1]-1)
+            stripe_amount = random.randint(5,30)
+            result_arr[stripe_amount:,stripe_pos:stripe_pos+stripe_width] = source_arr[:-stripe_amount,stripe_pos:stripe_pos+stripe_width]
+        return result_arr
+    
+    def update(self):
+        self._timer += 1
+
+        if self._timer == self.expired_time:
+            self.expired = True
+
+    def draw(self, screen, update):
+        if update: self.update()
+        self.canvas_size = screen.get_size()
+
+        source_arr = pg.surfarray.array3d(screen)
+        source_arr = self.rolling(source_arr)
+        
+        tmp = pg.surfarray.make_surface(source_arr)
+        head_font = pg.font.SysFont(None, 200)
+        text_surface = head_font.render('Hello World!', True, (0, 0, 0))
+        HW_pos = (100,250)
+        tmp.blit(text_surface, HW_pos)
+        source_arr = pg.surfarray.array3d(tmp) 
+        
+        source_arr = self.RGB_shift(source_arr)
+        source_arr = self.shifting(source_arr)
+        result = pg.surfarray.make_surface(source_arr)
+        screen.blit(result,(0,0))

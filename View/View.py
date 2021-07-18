@@ -98,11 +98,11 @@ class GraphicalView:
         elif isinstance(event, EventHelloWorld):
             style = random.randint(1,3)
 
-            style = 1 # now test type1 hello world
+            style = 2 # now test type2 hello world
             if style == 1:
                 self.animation_list.append(View.animation.Animation_hello_world(3,4)) #delay_of_frames, speed
             elif style == 2:
-                pass
+                self.animation_list.append(View.animation.Greeting_from_prog(0))
             elif style == 3:
                 self.players.hello_world_timer = 10*Const.FPS
                 pass
