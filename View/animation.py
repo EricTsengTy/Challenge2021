@@ -56,9 +56,13 @@ class Animation_hello_world(Animation_base):
     '''
 
 class Greeting_from_prog(Animation_base):
+    
     def __init__(self,delay_of_frames):
         super().__init__(delay_of_frames)
-        self.expired_time = 120
+        self.expired_time = 80
+        font = pg.font.SysFont(None, 200)
+        self.text_surface = font.render('Hello World!', True, (0, 0, 0))
+        self.text_surface = self.text_surface.convert_alpha()
 
     def rolling(self,source_arr):
         return np.roll(source_arr,self._timer*-10,axis=1)
@@ -82,13 +86,13 @@ class Greeting_from_prog(Animation_base):
     def shifting(self,source_arr):
         result_arr = np.zeros((*self.canvas_size,3))
         result_arr[:,:,:] = source_arr[:,:,:]
-        for _ in range(5):
-            stripe_width = random.randint(20,30)
-            stripe_pos = random.randint(0,self.canvas_size[1]-1)
-            stripe_amount = random.randint(5,30)
+        for _ in range(1):
+            stripe_width = 20
+            stripe_pos = 2
+            stripe_amount = 5
             result_arr[stripe_amount:,stripe_pos:stripe_pos+stripe_width] = source_arr[:-stripe_amount,stripe_pos:stripe_pos+stripe_width]
         
-        for _ in range(10):
+        for _ in range(0):
             stripe_width = random.randint(0,10)
             stripe_pos = random.randint(0,self.canvas_size[1]-1)
             stripe_amount = random.randint(5,30)
@@ -101,6 +105,10 @@ class Greeting_from_prog(Animation_base):
         if self._timer == self.expired_time:
             self.expired = True
 
+    def Hello_world(self,screen):
+        HW_pos = (100,250)
+        screen.blit(self.text_surface, HW_pos)
+
     def draw(self, screen, update):
         if update: self.update()
         self.canvas_size = screen.get_size()
@@ -108,14 +116,8 @@ class Greeting_from_prog(Animation_base):
         source_arr = pg.surfarray.array3d(screen)
         source_arr = self.rolling(source_arr)
         
-        tmp = pg.surfarray.make_surface(source_arr)
-        head_font = pg.font.SysFont(None, 200)
-        text_surface = head_font.render('Hello World!', True, (0, 0, 0))
-        HW_pos = (100,250)
-        tmp.blit(text_surface, HW_pos)
-        source_arr = pg.surfarray.array3d(tmp) 
-        
         source_arr = self.RGB_shift(source_arr)
         source_arr = self.shifting(source_arr)
         result = pg.surfarray.make_surface(source_arr)
         screen.blit(result,(0,0))
+        self.Hello_world(screen)
