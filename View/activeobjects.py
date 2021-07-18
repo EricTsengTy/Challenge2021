@@ -4,8 +4,8 @@ import os.path
 from View.utils import scale_surface, load_image, resize_surface
 import Const
 class __Object_base():
+    
     frames = tuple()
-
     
     @classmethod
     def init_convert(cls):
