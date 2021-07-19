@@ -85,6 +85,9 @@ class Controller:
             # handle attack using keydown events
             if event_pg.type == pg.KEYDOWN:
                 key = event_pg.key
+                if key in Const.PLAYER_JUMP_KEYS:
+                    player_id = Const.PLAYER_JUMP_KEYS[key]
+                    self.ev_manager.post(EventPlayerMove(player_id))
                 if key in Const.PLAYER_ATTACK_KEYS:
                     player_id = Const.PLAYER_ATTACK_KEYS[key]
                     self.ev_manager.post(EventPlayerAttack(player_id))
