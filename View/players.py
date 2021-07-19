@@ -3,6 +3,300 @@ import os.path
 
 from View.utils import load_image, resize_surface
 import Const
+import numpy as np
+
+class player_frames():
+    # frames uncolored in cls (is the same between players)
+    # frame colored in self (can be different between players)
+
+    standing_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players' , 'standing', 'standing-{:02d}.png'.format(_i+1)))
+        for _i in range(1)
+    )
+
+    poison_standing_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players' , 'standing', 'poison_standing-{:02d}.png'.format(_i+1)))
+        for _i in range(1)
+    )
+
+    walk_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'right_move', 'right_move-{:02d}.png'.format(_i+1)))
+        for _i in range(8)
+    )
+
+    poison_walk_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'right_move', 'poison_right_move-{:02d}.png'.format(_i+1)))
+        for _i in range(8)
+    )
+
+    jump_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'jump_drop', 'jump_drop-{:02d}.png'.format(_i+1)))
+        for _i in range(13)
+    )
+
+    poison_jump_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'jump_drop', 'poison_jump_drop-{:02d}.png'.format(_i+1)))
+        for _i in range(13)
+    )
+
+    common_attack_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'physical_atk', 'physical_atk-{:02d}.png'.format(_i+1)))
+        for _i in range(13)
+    )
+
+    poison_common_attack_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'physical_atk', 'poison_physical_atk-{:02d}.png'.format(_i+1)))
+        for _i in range(13)
+    )
+
+    be_attacked_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'be_attacked', 'be_attacked-{:02d}.png'.format(_i+1)))
+        for _i in range(9)
+    )
+
+    poison_be_attacked_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'be_attacked', 'poison_be_attacked-{:02d}.png'.format(_i+1)))
+        for _i in range(9)
+    )
+
+    attack_fireball_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'special_atk', 'fire_ball-{:02d}.png'.format(_i+1)))
+        for _i in range(13)
+    )
+
+    attack_bug_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'special_atk', 'bug-{:02d}.png'.format(_i+1)))
+        for _i in range(9)
+    )
+
+    attack_coffee_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'special_atk', 'coffee-{:02d}.png'.format(_i+1)))
+        for _i in range(9)
+    )
+
+    attack_ddos_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'special_atk', 'DDOS-{:02d}.png'.format(_i+1)))
+        for _i in range(13)
+    )
+
+    attack_fan_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'special_atk', 'fan-{:02d}.png'.format(_i+1)))
+        for _i in range(13)
+    )
+
+    attack_lightning_images = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'special_atk', 'lightning-{:02d}.png'.format(_i+1)))
+        for _i in range(13)
+    )
+
+
+    def fill_color(self,player_img):
+        "get a pygame Surface of player image return the colored Surface"
+        nb_color = self.color
+        result_img = player_img.convert_alpha()
+        px_arr = pg.PixelArray(result_img)     
+        w,h = px_arr.shape[0],px_arr.shape[1]
+        tmp = dict()
+        for i in range(w):
+            for j in range(h):
+                
+                if(px_arr[i,j] in tmp):
+                    tmp[px_arr[i,j]]+=1
+                else: tmp[px_arr[i,j]] = 1
+                if px_arr[i,j] == 4288534508:
+                    px_arr[i,j] = nb_color
+        pg.PixelArray(result_img).close()
+        #for i in tmp:
+        #    if(tmp[i]>100): print(i, tmp[i])
+        #exit()
+        return result_img
+    
+    def draw_frames(self):
+        "draw all the frames for self"
+        self.standing_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.standing_images
+        )
+        
+        self.poison_standing_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.poison_standing_images
+        )
+
+        self.walk_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.walk_images
+        )
+
+        self.poison_walk_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.poison_walk_images
+        )
+
+        self.jump_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.jump_images
+        )
+        
+        self.poison_jump_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.poison_jump_images
+        )
+
+        self.common_attack_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.common_attack_images
+        )
+
+        self.poison_common_attack_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.poison_common_attack_images
+        )
+
+        self.be_attacked_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.be_attacked_images
+        )
+
+        self.poison_be_attacked_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.poison_be_attacked_images
+        )
+
+        self.attack_fireball_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.attack_fireball_images
+        )
+
+        self.attack_bug_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.attack_bug_images
+        )
+
+        self.attack_coffee_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.attack_coffee_images
+        )
+
+        self.attack_ddos_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.attack_ddos_images
+        )
+
+        self.attack_fan_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.attack_fan_images
+        )
+
+        self.attack_lightning_frames = tuple(
+            resize_surface(
+                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.attack_lightning_images
+        )
+
+        self.flipped_standing_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.standing_frames
+        )
+        self.flipped_poison_standing_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.poison_standing_frames
+        )
+        self.flipped_walk_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.walk_frames
+        )
+        self.flipped_poison_walk_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.poison_walk_frames
+        )
+        self.flipped_jump_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.jump_frames
+        )
+        self.flipped_poison_jump_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.poison_jump_frames
+        )
+        self.flipped_common_attack_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.common_attack_frames
+        )
+        self.flipped_poison_common_attack_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.poison_common_attack_frames 
+        )
+        self.flipped_be_attacked_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.be_attacked_frames
+        )
+        self.flipped_poison_be_attacked_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.poison_be_attacked_frames
+        )
+        self.flipped_attack_fireball_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.attack_fireball_frames
+        )
+        self.flipped_attack_bug_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.attack_bug_frames
+        )
+        self.flipped_attack_coffee_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.attack_coffee_frames
+        )
+        self.flipped_attack_ddos_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.attack_ddos_frames
+        )
+        self.flipped_attack_fan_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.attack_fan_frames
+        )
+        self.flipped_attack_lightning_frames = tuple(
+            pg.transform.flip(_frame, True, False) for _frame in self.attack_lightning_frames
+        )
+
+
+    def init_convert(self):
+        self.standing_frames = tuple( frame.convert_alpha() for frame in self.standing_frames)
+        self.flipped_standing_frames = tuple( frame.convert_alpha() for frame in self.flipped_standing_frames)
+        self.walk_frames = tuple( frame.convert_alpha() for frame in self.walk_frames)
+        self.flipped_walk_frames = tuple( frame.convert_alpha() for frame in self.flipped_walk_frames)
+        self.jump_frames = tuple( frame.convert_alpha() for frame in self.jump_frames)
+        self.flipped_jump_frames = tuple( frame.convert_alpha() for frame in self.flipped_jump_frames)
+        self.common_attack_frames = tuple( frame.convert_alpha() for frame in self.common_attack_frames)
+        self.flipped_common_attack_frames = tuple( frame.convert_alpha() for frame in self.flipped_common_attack_frames)
+        self.be_attacked_frames = tuple( frame.convert_alpha() for frame in self.be_attacked_frames)
+        self.flipped_be_attacked_frames = tuple( frame.convert_alpha() for frame in self.flipped_be_attacked_frames)
+        self.attack_fireball_frames = tuple( frame.convert_alpha() for frame in self.attack_fireball_frames)
+        self.flipped_attack_fireball_frames = tuple( frame.convert_alpha() for frame in self.flipped_attack_fireball_frames)
+        self.attack_bug_frames = tuple( frame.convert_alpha() for frame in self.attack_bug_frames)
+        self.flipped_attack_bug_frames = tuple( frame.convert_alpha() for frame in self.flipped_attack_bug_frames)
+        self.attack_coffee_frames = tuple( frame.convert_alpha() for frame in self.attack_coffee_frames)
+        self.flipped_attack_coffee_frames = tuple( frame.convert_alpha() for frame in self.flipped_attack_coffee_frames)
+        self.attack_ddos_frames = tuple( frame.convert_alpha() for frame in self.attack_ddos_frames)
+        self.flipped_attack_ddos_frames = tuple( frame.convert_alpha() for frame in self.flipped_attack_ddos_frames)
+        self.attack_fan_frames = tuple( frame.convert_alpha() for frame in self.attack_fan_frames)
+        self.flipped_attack_fan_frames = tuple( frame.convert_alpha() for frame in self.flipped_attack_fan_frames)
+        self.attack_lightning_frames = tuple( frame.convert_alpha() for frame in self.attack_lightning_frames)
+        self.flipped_attack_lightning_frames = tuple( frame.convert_alpha() for frame in self.flipped_attack_lightning_frames)
+        self.poison_standing_frames = tuple( frame.convert_alpha() for frame in self.poison_standing_frames)
+        self.flipped_poison_standing_frames = tuple( frame.convert_alpha() for frame in self.flipped_poison_standing_frames)
+        self.poison_walk_frames = tuple( frame.convert_alpha() for frame in self.poison_walk_frames)
+        self.flipped_poison_walk_frames = tuple( frame.convert_alpha() for frame in self.flipped_poison_walk_frames)
+        self.poison_jump_frames = tuple( frame.convert_alpha() for frame in self.poison_jump_frames)
+        self.flipped_poison_jump_frames = tuple( frame.convert_alpha() for frame in self.flipped_poison_jump_frames)
+        self.poison_common_attack_frames = tuple( frame.convert_alpha() for frame in self.poison_common_attack_frames)
+        self.flipped_poison_common_attack_frames = tuple( frame.convert_alpha() for frame in self.flipped_poison_common_attack_frames)
+        self.poison_be_attacked_frames = tuple( frame.convert_alpha() for frame in self.poison_be_attacked_frames)
+        self.flipped_poison_be_attacked_frames = tuple( frame.convert_alpha() for frame in self.flipped_poison_be_attacked_frames)
+
+    def __init__(self,color):
+        self.color =  color
+        self.draw_frames()
+        self.init_convert()
 
 
 class View_players():
@@ -65,23 +359,21 @@ class View_players():
         self.model = model
         self.delay_of_frames = delay_of_frames
         self.quicker_delay_of_frames = delay_of_frames // 2
-        self.timer = [0, 0, 0, 0]
-        self.status = ['standing', 'standing', 'standing', 'standing']
-        self.hello_world_timer = 0
+        self.timer = [0]*4
+        self.status = ['standing']*4
         self.atmosphere = [
             {'charge' : -1, 'firewall' : 0, 'format' : -1, 'get_prop':-1},
             {'charge' : -1, 'firewall' : 0, 'format' : -1, 'get_prop':-1},
             {'charge' : -1, 'firewall' : 0, 'format' : -1, 'get_prop':-1},
             {'charge' : -1, 'firewall' : 0, 'format' : -1, 'get_prop':-1},
         ]
-        self.players = [Player(),Player(),Player(),Player()]
+        self.player_frames_list = tuple(
+            player_frames(Const.PLAYER_COLOR[_i]) for _i in range(4)
+        )
     
     def draw(self, screen):
-        for (player, player_frame) in zip(self.model.players, self.players):
+        for (player, player_frame) in zip(self.model.players, self.player_frames_list):
             
-            # hello world type 3
-            if self.hello_world_timer > 0:
-                pass
             if player.is_invisible():
                 continue
             if player.in_folder():
@@ -230,8 +522,8 @@ class View_players():
                             player_frame.common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
                     if player.infection():
-                        screen.blit(player_frame.poison_flipped_common_attack_frames[self.frame_index_to_draw],
-                            player_frame.poison_flipped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                        screen.blit(player_frame.flipped_poison_common_attack_frames[self.frame_index_to_draw],
+                            player_frame.flipped_poison_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
                     else:
                         screen.blit(player_frame.flipped_common_attack_frames[self.frame_index_to_draw],
                             player_frame.flipped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
@@ -250,8 +542,8 @@ class View_players():
                             player_frame.be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
                     if player.infection():
-                        screen.blit(player_frame.poison_flipped_be_attacked_frames[self.frame_index_to_draw],
-                            player_frame.poison_flipped_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                        screen.blit(player_frame.flipped_poison_be_attacked_frames[self.frame_index_to_draw],
+                            player_frame.flipped_poison_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
                     else:
                         screen.blit(player_frame.flipped_be_attacked_frames[self.frame_index_to_draw],
                             player_frame.flipped_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
@@ -270,8 +562,8 @@ class View_players():
                             player_frame.standing_frames[0].get_rect(center=player.center))
                 else:
                     if player.infection():
-                        screen.blit(player_frame.poison_flipped_standing_frames[0],
-                            player_frame.poison_flipped_standing_frames[0].get_rect(center=player.center))
+                        screen.blit(player_frame.flipped_poison_standing_frames[0],
+                            player_frame.flipped_poison_standing_frames[0].get_rect(center=player.center))
                     else:
                         screen.blit(player_frame.flipped_standing_frames[0],
                             player_frame.flipped_standing_frames[0].get_rect(center=player.center))
@@ -295,8 +587,8 @@ class View_players():
                 else:
                     if player.infection():
                         screen.blit(
-                            player_frame.poison_flipped_jump_frames[self.frame_index_to_draw],
-                            player_frame.poison_flipped_jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                            player_frame.flipped_poison_jump_frames[self.frame_index_to_draw],
+                            player_frame.flipped_poison_jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
                     else:
                         screen.blit(
                             player_frame.flipped_jump_frames[self.frame_index_to_draw],
@@ -307,7 +599,7 @@ class View_players():
                 else:
                     self.status[player.player_id] = 'walk'
                     self.timer[player.player_id] = 0
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames) % len(self.walk_frames)
+                self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames) % len(player_frame.walk_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     if player.infection():
                         screen.blit(
@@ -320,8 +612,8 @@ class View_players():
                 else:
                     if player.infection():
                         screen.blit(
-                            player_frame.poison_flipped_walk_frames[self.frame_index_to_draw],
-                            player_frame.poison_flipped_walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
+                            player_frame.flipped_poison_walk_frames[self.frame_index_to_draw],
+                            player_frame.flipped_poison_walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
                     else:
                         screen.blit(
                             player_frame.flipped_walk_frames[self.frame_index_to_draw],
