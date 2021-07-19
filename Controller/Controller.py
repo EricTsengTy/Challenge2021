@@ -46,6 +46,7 @@ class Controller:
 
             cur_state = self.model.state_machine.peek()
             if cur_state == Const.STATE_MENU: self.ctrl_menu(key_down_events)
+            if cur_state == Const.STATE_TUTORIAL: self.ctrl_tutorial(key_down_events)
             if cur_state == Const.STATE_PLAY: self.ctrl_play(key_down_events)
             if cur_state == Const.STATE_STOP: self.ctrl_stop(key_down_events)
             if cur_state == Const.STATE_ENDGAME: self.ctrl_endgame(key_down_events)
@@ -60,6 +61,13 @@ class Controller:
                 self.ev_manager.post(EventToggleFullScreen())
 
     def ctrl_menu(self, key_down_events):
+        for event_pg in key_down_events:
+            if event_pg.type == pg.KEYDOWN and event_pg.key == pg.K_SPACE:
+                self.ev_manager.post(EventStateChange(Const.STATE_TUTORIAL))
+            # detect fullscreen change
+            self.check_screen_keys(event_pg.key)
+    
+    def ctrl_tutorial(self, key_down_events):
         for event_pg in key_down_events:
             if event_pg.type == pg.KEYDOWN and event_pg.key == pg.K_SPACE:
                 self.ev_manager.post(EventStateChange(Const.STATE_PLAY))
@@ -77,6 +85,9 @@ class Controller:
             # handle attack using keydown events
             if event_pg.type == pg.KEYDOWN:
                 key = event_pg.key
+                if key in Const.PLAYER_JUMP_KEYS:
+                    player_id = Const.PLAYER_JUMP_KEYS[key]
+                    self.ev_manager.post(EventPlayerMove(player_id))
                 if key in Const.PLAYER_ATTACK_KEYS:
                     player_id = Const.PLAYER_ATTACK_KEYS[key]
                     self.ev_manager.post(EventPlayerAttack(player_id))
@@ -88,7 +99,6 @@ class Controller:
                     self.ev_manager.post(EventStop())
                 else:
                     self.check_screen_keys(event_pg.key)
-
 
     def ctrl_stop(self, key_down_events):
         # detect start/stop events

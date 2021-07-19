@@ -119,6 +119,7 @@ STATE_MENU = 1
 STATE_PLAY = 2
 STATE_STOP = 3 # not implemented yet
 STATE_ENDGAME = 4
+STATE_TUTORIAL = 5
 
 # Path
 IMAGE_PATH = os.path.join('View', 'assets')
@@ -162,18 +163,21 @@ ITEM_BOX_COLOR = pg.Color('brown')
 ITEM_BOX_SIZE = 15
 # controller
 PLAYER_MOVE_KEYS = {
-    pg.K_w: (0, 'jump'),
     pg.K_a: (0, 'left'),
     pg.K_d: (0, 'right'),
-    pg.K_t: (1, 'jump'),
     pg.K_f: (1, 'left'),
     pg.K_h: (1, 'right'),
-    pg.K_i: (2, 'jump'),
     pg.K_j: (2, 'left'),  
     pg.K_l: (2, 'right'),
-    pg.K_UP: (3, 'jump'),
     pg.K_LEFT: (3, 'left'),
     pg.K_RIGHT: (3, 'right')
+}
+
+PLAYER_JUMP_KEYS = {
+    pg.K_w: (0, 'jump'),
+    pg.K_t: (1, 'jump'),
+    pg.K_i: (2, 'jump'),
+    pg.K_UP: (3, 'jump'),
 }
 
 PLAYER_ATTACK_KEYS = {
