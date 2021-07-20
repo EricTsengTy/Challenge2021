@@ -158,29 +158,51 @@ class Helper(object):
     #獲取道具資訊專區
 
     def get_nearest_item_position(self):
-        return
+        nearest_pos, minimum_distance = None, 10000
+        for item in self.model.items:
+            distance = self.get_distance(self.get_self_position(), item.position)
+            if distance < minimum_distance:
+                minimum_distance, nearest_pos = distance, tuple(item.position)
+        return nearest_pos
 
-    def get_nearest_specific_item_position(self,item_id):
-        return
+    def get_nearest_specific_item_position(self, items_type):
+        nearest_pos, minimum_distance = None , 10000
+        specific_items = [item for item in self.model.items if item.item_type == items_type]
+        for item in specific_items:
+            distance = self.get_distance(self.get_self_position(), item.position)
+            if distance < minimum_distance:
+                minimum_distance, nearest_pos = distance , tuple(item.position)
+        return nearest_pos
 
-    def get_all_item_position(self,item_id):
-        return
+    def get_all_item_position(self):
+        return [tuple(item.position) for item in self.model.items]
 
-    def get_all_specific_item_postion(self,item_id):
-        return
+    def get_all_specific_item_postion(self, items_type):
+        return [tuple(item.position) for item in self.model.items if item.item_type == items_type]
 
     #獲取特別資訊專區
     def get_nearest_player_id(self):
-        return
+        index, minimum_distance = None, 10000
+        for player in self.model.players:
+            distance = self.get_distance(self.get_self_position(), player.position)
+            if player.player_id != self.player_id  and distance < minimum_distance:
+                minimum_distance, index = distance, player.player_id
+        return index
     
     def get_nearest_player_position(self):
-        return
+        nearest_player = self.get_nearest_player()     
+        return self.get_other_position(nearest_player)     
+
 
     def get_highest_score_player(self):
-        return
+        index, highest_score = None, -1
+        for player in self.model.players:
+            if player.player_id != self.player_id and player.score > highest_score:
+                highest_score, index = player.score, player.player_id
+        return index
 
-    def get_distance(self):
-        return
+    def get_distance(self, pos1, pos2):
+        return ((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2) ** 0.5
 
-    def get_vector(self,pos1, pos2):
-        return
+    def get_vector(self, pos1, pos2):
+        return (pos2[0] - pos1[0], pos2[1] - pos1[1])
