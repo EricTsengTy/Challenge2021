@@ -73,87 +73,92 @@ class Helper(object):
 
     #獲取所有玩家資訊專區
     def get_all_position(self):
-        return
+        return [tuple(player.__position) for player in self.model.players]
 
     def get_all_velocity(self):
-        return
+        return [tuple(player.speed) for player in self.model.players]
 
     def get_all_direction(self):
-        return
+        return [tuple(player.face) for player in self.model.players]
 
     def get_all_keep_item_type(self):
-        return
+        return [player.keep_item_type for player in self.model.players]
 
     def get_all_can_be_common_attack(self):
-        return
+        return [player.can_be_common_attacked() for player in self.model.players]
 
     def get_all_can_be_specail_attack(self):
-        return 
+        return [player.can_be_special_attacked() for player in self.model.players]
 
     def get_all_is_invisible(self):
-        return
+        return [player.is_invisible() for player in self.model.players]
 
     def get_all_can_special_attack(self):
-        return
+        return [player.can_special_attack() for player in self.model.players]
 
     def get_all_infection(self):
-        return
+        return [player.infection() for player in self.model.players]
 
     def get_all_in_folder(self):
-        return
+        return [player.in_folder() for player in self.model.players]
 
     def get_all_damage_adjust(self):
-        return
+        return [player.damage_adjust() for player in self.model.players]
 
     def get_all_score(self):
-        return
+        return [player.score for player in self.model.players]
 
     def get_all_player_vector(self):
-        return
+        all_pos = self.get_all_position()
+        my_pos = self.get_self_position()
+        return [tuple((dest[0]-my_pos[0], dest[1]-my_pos[1])) for dest in all_pos]
 
     def get_all_player_distance(self):
-        return
+        all_vec = self.get_all_player_vector
+        def dist_cal(vec):
+            return ((vec[0])**2 + (vec[1])**2) ** (1/2)
+        return [dist_cal(vect) for vect in all_vec]
 
 
     #獲取特定玩家資訊專區
     def get_other_position(self,index):
-        return
+        return tuple(self.model.players[index].__position)
 
-    def get_other_velocity(slef,index):
-        return
+    def get_other_velocity(self,index):
+        return tuple(self.model.players[index].speed)
     
     def get_other_direction(self,index):
-        return
+        return tuple(self.model.players[index].face)
 
     def get_other_normal_speed(self,index):
-        return
+        return 
 
     def get_other_jump_speed(self,index):
-        return
+        return 
         
     def get_other_keep_item(self,index):
-        return
+        return self.model.players[index].keep_item_type
 
     def get_other_can_be_common_attack(self,index):
-        return
+        return self.model.players[index].can_be_common_attacked()
 
     def get_other_can_be_special_attack(self,index):
-        return
+        return self.model.players[index].can_be_special_attacked()
 
     def  get_other_can_special_attack(self,index):
-        return
+        return self.model.players[index].can_special_attack()
 
     def get_other_is_invisible(self,index):
-        return
+        return self.model.players[index].is_invisible()
 
     def get_other_infection(self,index):
-        return
+        return self.model.players[index].infection()
     
     def get_other_in_folder(self,index):
-        return
+        return self.model.players[index].in_folder()
 
     def get_other_damage_adjust(self,index):
-        return
+        return self.model.players[index].damage_adjust()
 
     #獲取道具資訊專區
 
