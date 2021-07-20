@@ -17,59 +17,59 @@ class Helper(object):
 
     #獲取遊戲資訊專區
     def get_time_left_time(self):
-        return 
+        return (Const.GAME_LENGTH - self.model.clock) / Const.FPS
 
     def get_game_arena_boundary(self):
-        return 
+        return tuple((0,0),Const.ARROW_SIZE)
 
     #獲取個人資訊專區
     def get_self_id(self):
-        return
+        return self.player.id
 
     def get_self_position(self):
-        return 
+        return tuple(self.model.players[self.player_id].__position)
     
     def get_self_velocity(self):
-        return 
+        return tuple(self.model.players[self.player_id].speed)
 
     def get_self_blood(self):
-        return
+        return self.model.players[self.player_id].blood
     
     def get_keep_item_type(self):
-        return
+        return self.model.player[self.player_id].keep_item_type
 
     def get_self_direction(self):
-        return 
+        return tuple(self.model.players[self.player_id].face)
     
     def get_self_death(self):
-        return
+        return self.model.players[self.player_id].death
 
     def get_self_score(self):
-        return
+        return self.model.players[self.player_id].score
 
     def get_can_be_common_attack(self):
-        return
+        return self.model.players[self.player_id].can_be_common_attack()
 
     def get_can_be_special_attack(self):
-        return
+        return self.model.players[self.playr_id].can_be_special_attack()
     
     def get_is_vincible(self):
-        return
+        return self.model.players[self.player_id].is_invisible()
 
     def get_can_special_attack(self):
-        return
+        return self.model.players[self.player_id].can_special_attack()
     
     def get_can_jump(self):
-        return
+        return self.model.players[self.player_id].jump_count>0
 
     def get_infection(self):
-        return
+        return self.model.players[self.player_id].infection()
 
     def get_in_folder(self):
-        return
+        return self.model.players[self.player_id].in_folder()
 
     def get_damage_adjust(self):
-        return
+        return self.model.players[self.player_id].damage_adjust()
 
     #獲取所有玩家資訊專區
     def get_all_position(self):
