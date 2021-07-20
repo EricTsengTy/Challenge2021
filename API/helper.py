@@ -53,7 +53,7 @@ class Helper(object):
     def get_can_be_special_attack(self):
         return self.model.players[self.playr_id].can_be_special_attack()
     
-    def get_is_vincible(self):
+    def get_is_invisible(self):
         return self.model.players[self.player_id].is_invisible()
 
     def get_can_special_attack(self):
@@ -129,13 +129,7 @@ class Helper(object):
     
     def get_other_direction(self,index):
         return tuple(self.model.players[index].face)
-
-    def get_other_normal_speed(self,index):
-        return 
-
-    def get_other_jump_speed(self,index):
-        return 
-        
+    
     def get_other_keep_item(self,index):
         return self.model.players[index].keep_item_type
 
