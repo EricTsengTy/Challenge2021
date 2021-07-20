@@ -98,9 +98,9 @@ class player_frames():
             return result_img
         px_arr = pg.PixelArray(result_img)  
         w,h = px_arr.shape[0],px_arr.shape[1]
-        for i in range(w):
-            for j in range(h):
-                if px_arr[i,j] == 4288534508:
+        for i in range(w//3,w):
+            for j in range(h//10,h//5*4):
+                if px_arr[i,j] == 4288534508 or px_arr[i,j] == -6432788:
                     px_arr[i,j] = nb_color
         pg.PixelArray(result_img).close()
         return result_img
@@ -394,41 +394,6 @@ class View_players():
                 screen.blit(self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]],
                     self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-15)))
             
-            # atmosphere
-            if self.atmosphere[player.player_id]['charge'] >= 0:
-                frame_ = self.atmosphere[player.player_id]['charge'] // self.delay_of_frames
-                screen.blit(self.charging_frames[frame_],
-                    self.charging_frames[frame_].get_rect(center=player.center))
-                self.atmosphere[player.player_id]['charge'] += 1
-                if self.atmosphere[player.player_id]['charge'] == (len(self.charging_frames) * self.delay_of_frames):
-                    self.atmosphere[player.player_id]['charge'] = -1
-            
-            if self.atmosphere[player.player_id]['format'] >= 0:
-                frame_ = self.atmosphere[player.player_id]['format'] // self.delay_of_frames
-                screen.blit(self.format_frames[frame_],
-                    self.format_frames[frame_].get_rect(center=player.center))
-                self.atmosphere[player.player_id]['format'] += 1
-                if self.atmosphere[player.player_id]['format'] == (len(self.format_frames) * self.delay_of_frames):
-                    self.atmosphere[player.player_id]['format'] = -1
-
-            if self.atmosphere[player.player_id]['get_prop'] >= 0:
-                frame_ = self.atmosphere[player.player_id]['get_prop'] // self.delay_of_frames
-                screen.blit(self.get_prop_frames[frame_],
-                    self.get_prop_frames[frame_].get_rect(center=player.center))
-                self.atmosphere[player.player_id]['get_prop'] += 1
-                if self.atmosphere[player.player_id]['get_prop'] == (len(self.get_prop_frames) * self.delay_of_frames):
-                    self.atmosphere[player.player_id]['get_prop'] = -1
-
-            if player.state['immune'] > 0:
-                frame_ = self.atmosphere[player.player_id]['firewall'] // self.delay_of_frames
-                screen.blit(self.firewall_frames[frame_],
-                    self.firewall_frames[frame_].get_rect(center=player.center))
-
-                if self.atmosphere[player.player_id]['firewall'] > 0:
-                    self.atmosphere[player.player_id]['firewall'] += 1
-
-                if self.atmosphere[player.player_id]['firewall'] == (len(self.firewall_frames) * self.delay_of_frames):
-                    self.atmosphere[player.player_id]['firewall'] = 0
 
 
             # player itself
@@ -612,6 +577,42 @@ class View_players():
                         screen.blit(
                             player_frame.flipped_walk_frames[self.frame_index_to_draw],
                             player_frame.flipped_walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
+            
+            # atmosphere
+            if self.atmosphere[player.player_id]['charge'] >= 0:
+                frame_ = self.atmosphere[player.player_id]['charge'] // self.delay_of_frames
+                screen.blit(self.charging_frames[frame_],
+                    self.charging_frames[frame_].get_rect(center=player.center))
+                self.atmosphere[player.player_id]['charge'] += 1
+                if self.atmosphere[player.player_id]['charge'] == (len(self.charging_frames) * self.delay_of_frames):
+                    self.atmosphere[player.player_id]['charge'] = -1
+            
+            if self.atmosphere[player.player_id]['format'] >= 0:
+                frame_ = self.atmosphere[player.player_id]['format'] // self.delay_of_frames
+                screen.blit(self.format_frames[frame_],
+                    self.format_frames[frame_].get_rect(center=player.center))
+                self.atmosphere[player.player_id]['format'] += 1
+                if self.atmosphere[player.player_id]['format'] == (len(self.format_frames) * self.delay_of_frames):
+                    self.atmosphere[player.player_id]['format'] = -1
+
+            if self.atmosphere[player.player_id]['get_prop'] >= 0:
+                frame_ = self.atmosphere[player.player_id]['get_prop'] // self.delay_of_frames
+                screen.blit(self.get_prop_frames[frame_],
+                    self.get_prop_frames[frame_].get_rect(center=player.center))
+                self.atmosphere[player.player_id]['get_prop'] += 1
+                if self.atmosphere[player.player_id]['get_prop'] == (len(self.get_prop_frames) * self.delay_of_frames):
+                    self.atmosphere[player.player_id]['get_prop'] = -1
+
+            if player.state['immune'] > 0:
+                frame_ = self.atmosphere[player.player_id]['firewall'] // self.delay_of_frames
+                screen.blit(self.firewall_frames[frame_],
+                    self.firewall_frames[frame_].get_rect(center=player.center))
+
+                if self.atmosphere[player.player_id]['firewall'] > 0:
+                    self.atmosphere[player.player_id]['firewall'] += 1
+
+                if self.atmosphere[player.player_id]['firewall'] == (len(self.firewall_frames) * self.delay_of_frames):
+                    self.atmosphere[player.player_id]['firewall'] = 0
 
 def init():
     View_players.init_convert()
