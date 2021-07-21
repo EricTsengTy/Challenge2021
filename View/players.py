@@ -98,8 +98,8 @@ class player_frames():
             return result_img
         px_arr = pg.PixelArray(result_img)  
         w,h = px_arr.shape[0],px_arr.shape[1]
-        for i in range(w//3,w):
-            for j in range(h//10,h//5*4):
+        for i in range(w//2,w):
+            for j in range(h//8,h*3//4):
                 if px_arr[i,j] == 4288534508 or px_arr[i,j] == -6432788:
                     px_arr[i,j] = nb_color
         pg.PixelArray(result_img).close()
