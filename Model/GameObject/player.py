@@ -136,10 +136,10 @@ class Player(Basic_Game_Object):
         if self.special_attack_timer > 0: return
         if self.special_attack_delay == -1:
             self.special_attack_delay = Const.PLAYER_SPECIAL_ATTACK_DELAY
+            self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type)) 
             return
         if self.special_attack_delay > 0: return
         
-        self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type))
 
         if(self.keep_item_type == 'DOS'):
             self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
