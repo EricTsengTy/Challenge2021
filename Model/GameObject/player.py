@@ -107,7 +107,8 @@ class Player(Basic_Game_Object):
             attacker.add_score(Const.SCORE_KILL_OTHER + self.blood)
             self.die()
 
-    def touch_item(self, item_type):
+    def touch_item(self, item):
+        item_type = item.item_type
         if item_type in Const.ITEM_TYPE_LIST[0:6]:
             self.keep_item_type = item_type
             self.special_attack_timer = 0
@@ -122,6 +123,7 @@ class Player(Basic_Game_Object):
         elif item_type == 'FORMAT':
             self.state = State.init()
         elif item_type == 'FOLDER_UNUSED':
+            self.center = item.center
             State.folder(self.state)
         elif item_type == 'CHARGE':
             self.blood = min(self.blood+100, Const.PLAYER_FULL_BLOOD)
