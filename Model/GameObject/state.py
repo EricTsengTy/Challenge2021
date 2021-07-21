@@ -42,6 +42,7 @@ def broken(state, time):
 
 def firewall(state):
     state['immune'] = max(Const.FIREWALL_TIME, state['immune'])
+    state['be_special_attacked'] = max(Const.FIREWALL_TIME, state['be_special_attacked'])
 
 def graphiccard(state):
     state['fast_special_attack_speed'] = max(Const.GRAPHIC_CARD_TIME, state['fast_special_attack_speed'])

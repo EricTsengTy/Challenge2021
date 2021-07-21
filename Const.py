@@ -15,7 +15,7 @@ PLAYER_SPEED_ADJUST = 0.5
 PLAYER_GRAVITY = 200
 PLAYER_FULL_BLOOD = 1000
 PLAYER_COMMON_ATTACK_SIZE = 20 #additional size around player
-PLAYER_COMMON_ATTACK_DAMAGE = 500
+PLAYER_COMMON_ATTACK_DAMAGE = 10
 PLAYER_COMMON_ATTACK_DAMAGE_ADJUST = 1.5
 PLAYER_SPECIAL_ATTACK_TIMER = 1 * FPS
 PLAYER_COMMON_ATTACK_TIMER = 0.5 * FPS
@@ -119,6 +119,7 @@ STATE_MENU = 1
 STATE_PLAY = 2
 STATE_STOP = 3 # not implemented yet
 STATE_ENDGAME = 4
+STATE_TUTORIAL = 5
 
 # Path
 IMAGE_PATH = os.path.join('View', 'assets')
@@ -159,18 +160,21 @@ ITEM_BOX_COLOR = pg.Color('brown')
 ITEM_BOX_SIZE = 15
 # controller
 PLAYER_MOVE_KEYS = {
-    pg.K_w: (0, 'jump'),
     pg.K_a: (0, 'left'),
     pg.K_d: (0, 'right'),
-    pg.K_t: (1, 'jump'),
     pg.K_f: (1, 'left'),
     pg.K_h: (1, 'right'),
-    pg.K_i: (2, 'jump'),
     pg.K_j: (2, 'left'),  
     pg.K_l: (2, 'right'),
-    pg.K_UP: (3, 'jump'),
     pg.K_LEFT: (3, 'left'),
     pg.K_RIGHT: (3, 'right')
+}
+
+PLAYER_JUMP_KEYS = {
+    pg.K_w: (0, 'jump'),
+    pg.K_t: (1, 'jump'),
+    pg.K_i: (2, 'jump'),
+    pg.K_UP: (3, 'jump'),
 }
 
 PLAYER_ATTACK_KEYS = {

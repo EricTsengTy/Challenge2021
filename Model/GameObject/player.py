@@ -22,7 +22,6 @@ class Player(Basic_Game_Object):
         self.jump_count = self.max_jump
         self.blood = Const.PLAYER_FULL_BLOOD
         self.state = State.init()
-        self.landing = True
         self.obey_gravity = True
         self.keep_item_type = ''
         self.can_leave_screen = False
@@ -77,7 +76,17 @@ class Player(Basic_Game_Object):
         if self.in_folder():
             return
         self.basic_tick()
-          
+        
+        #landing
+        landing_detector = pg.Rect(0,0,self.rect.width/3,5)
+        landing_detector.center = self.rect.midbottom
+        collided = landing_detector.collidelist([ground.rect for ground in self.model.grounds])
+        collided = self.model.grounds[collided] if collided!=-1 else None
+        if self.speed.y>0 and collided!=None:
+            self.bottom = collided.top
+            self.speed.y = 0
+            self.jump_count = 0
+        self.clip_position()
 
     def die(self):
         self.state = State.init()
@@ -99,7 +108,8 @@ class Player(Basic_Game_Object):
             attacker.add_score(Const.SCORE_KILL_OTHER + self.blood)
             self.die()
 
-    def touch_item(self, item_type):
+    def touch_item(self, item):
+        item_type = item.item_type
         if item_type in Const.ITEM_TYPE_LIST[0:6]:
             self.keep_item_type = item_type
             self.special_attack_timer = 0
@@ -114,9 +124,10 @@ class Player(Basic_Game_Object):
         elif item_type == 'FORMAT':
             self.state = State.init()
         elif item_type == 'FOLDER_UNUSED':
+            self.center = item.center
             State.folder(self.state)
         elif item_type == 'CHARGE':
-            pass
+            self.blood = min(self.blood+100, Const.PLAYER_FULL_BLOOD)
 
         self.model.ev_manager.post(EventGetProp(self.player_id, item_type))
 

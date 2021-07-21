@@ -134,7 +134,7 @@ class Fireball(Basic_Attack_Object):
             elif tmpx == -1:
                 return rxl - self.x < self.radius
         corx = rxl if tmpx == -1 else rxr
-        cory = ryu if tmpy == -1 else rxl
+        cory = ryu if tmpy == -1 else ryb
         return (self.x - corx) ** 2 + (self.y - cory) ** 2 < self.radius ** 2
     
 class Tornado(Basic_Attack_Object):
