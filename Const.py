@@ -62,6 +62,8 @@ ITEM_TYPE_LIST=['FAN',
                 'CHARGE']
 MAX_ITEM_NUMBER = 10
 
+ITEM_GENERATOR_COOLDOWN = 5 * FPS
+
 # special attack
 ARROW_SPEED = 120
 ARROW_SIZE = 20

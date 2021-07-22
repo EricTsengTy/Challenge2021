@@ -8,6 +8,7 @@ from EventManager.EventManager import *
 from Model.GameObject.player import Player
 from Model.GameObject.ground import Ground
 from Model.GameObject.item import *
+from Model.GameObject.item_generator import *
 import Model.GameObject.state as State
 
 
@@ -85,6 +86,7 @@ class GameEngine:
         self.grounds = [Ground(self, i[0], i[1], i[2], i[3]) for i in Const.GROUND_POSITION]
         self.items = []
         self.attacks = []
+        self.item_generator = Item_Generator(self)
 
     def notify(self, event: BaseEvent):
         '''
@@ -163,6 +165,8 @@ class GameEngine:
         Update the objects not controlled by user.
         For example: obstacles, items, special effects
         '''
+        self.item_generator.tick()
+
         for player in list(self.players):
             if player.killed(): self.players.remove(player)
             else: player.tick()
@@ -174,23 +178,6 @@ class GameEngine:
         for attack in list(self.attacks):
             if attack.killed(): self.attacks.remove(attack)
             else: attack.tick()
-
-        # generate the items
-        while len(self.items) < Const.MAX_ITEM_NUMBER:
-            px = random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH)
-            py = random.randint(300, 400)
-            generate_item = Item(self, px, py, random.choice(Const.ITEM_TYPE_LIST))
-            collided = False
-            for item in self.items:
-                if(generate_item.rect.colliderect(item.rect)):
-                    collided = True
-                    break
-            for player in self.players:
-                if(generate_item.rect.colliderect(player.rect)):
-                    collided = True
-                    break
-            if not collided:
-                self.items.append(generate_item)
 
     def update_endgame(self):
         '''
