@@ -92,17 +92,9 @@ class player_frames():
 
     def fill_color(self,player_img):
         "get a pygame Surface of player image return the colored Surface"
-        nb_color = self.color
         result_img = player_img.convert_alpha()
-        if Const.PLAYER_COLOR_DRAWER == False:
-            return result_img
-        px_arr = pg.PixelArray(result_img)  
-        w,h = px_arr.shape[0],px_arr.shape[1]
-        for i in range(w//2,w):
-            for j in range(h//8,h*3//4):
-                if px_arr[i,j] == 4288534508 or px_arr[i,j] == -6432788:
-                    px_arr[i,j] = nb_color
-        pg.PixelArray(result_img).close()
+        px_arr = pg.surfarray.pixels2d(result_img)
+        px_arr[px_arr==4288534508] = result_img.map_rgb(self.color)
         return result_img
     
     def draw_frames(self):
