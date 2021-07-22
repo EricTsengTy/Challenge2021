@@ -26,6 +26,17 @@ class View_menu(__Object_base):
 	def draw(self, screen):
 		screen.blit(self.menu, (0,0))
 
+class View_tutorial(__Object_base):
+	tutorial = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'tutorial.png')),
+			Const.ARENA_SIZE[0], Const.ARENA_SIZE[1])
+
+	@classmethod
+	def init_convert(cls):
+		cls.stage = cls.stage.convert_alpha()
+	
+	def draw(self, screen):
+		screen.blit(self.tutorial, (0,0))
+
 class View_stage(__Object_base):
     stage = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'stage', 'stage.png')),
         Const.ARENA_SIZE[0], Const.ARENA_SIZE[1])

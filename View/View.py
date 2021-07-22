@@ -56,6 +56,7 @@ class GraphicalView:
              View.animation.init_animation()
         # static objects
         self.menu =  View.staticobjects.View_menu(self.model)
+        self.tutorial = View.staticobjects.View_tutorial(self.model)
         self.stage =  View.staticobjects.View_stage(self.model)
         self.platform = View.staticobjects.View_platform(self.model)
         self.arrow = View.staticobjects.View_Arrow(self.model)
@@ -85,6 +86,7 @@ class GraphicalView:
 
             cur_state = self.model.state_machine.peek()
             if cur_state == Const.STATE_MENU: self.render_menu()
+            elif cur_state == Const.STATE_TUTORIAL: self.render_tutorial()
             elif cur_state == Const.STATE_PLAY: self.render_play()
             elif cur_state == Const.STATE_STOP: self.render_stop()
             elif cur_state == Const.STATE_ENDGAME: self.render_endgame()
@@ -161,8 +163,16 @@ class GraphicalView:
         
         menu_text = Text("Press [space] to start ...", 36, pg.Color('gray88'))
         menu_text.blit(self.screen, center=(Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2))
-		'''
+        '''
 
+        pg.display.flip()
+
+    def render_tutorial(self, target=None):
+        if target is None:
+            target = self.screen
+        # draw background
+        self.screen.fill(Const.BACKGROUND_COLOR)
+        self.tutorial.draw(target)
         pg.display.flip()
 
     def render_play(self, target=None, update=True):
