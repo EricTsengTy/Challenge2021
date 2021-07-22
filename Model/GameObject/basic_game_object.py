@@ -28,9 +28,6 @@ class Basic_Game_Object:
         if not self.can_leave_screen:
             self.clip_position()
 
-        if self.can_leave_screen and (not((0<=self.x<=Const.ARENA_SIZE[0]) and (0<=self.y<=Const.ARENA_SIZE[1]))):
-            self.kill()
-
     def tick(self):
         self.basic_tick()
 
