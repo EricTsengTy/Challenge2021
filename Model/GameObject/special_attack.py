@@ -59,6 +59,8 @@ class Basic_Attack_Object_No_Vanish(Basic_Game_Object):
             if not self.immune[player.player_id] and self.check_col(player):
                 player.be_special_attacked(self)
                 self.immune[player.player_id] = True
+            if self.attacker.player_id != player.player_id and self.check_col(player):
+                self.model.ev_manager.post(EventBeAttacked(player.player_id))
 
 class Arrow(Basic_Attack_Object):
     def __init__(self, model, attacker_id, position, speed, Arrow_type):
