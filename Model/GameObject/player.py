@@ -49,7 +49,7 @@ class Player(Basic_Game_Object):
         self.standing_tick = 0
         if direction=='jump':
             # player can jump only if he is falling
-            if self.speed.y>=0 and self.jump_count < self.max_jump:
+            if self.jump_count < self.max_jump:
                 self.jump_count += 1
                 self.speed.y = -Const.PLAYER_JUMP_SPEED * self.speed_adjust()
         else:
