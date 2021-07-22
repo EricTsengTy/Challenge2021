@@ -365,9 +365,16 @@ class View_players():
             player_frames(Const.PLAYER_COLOR[_i]) for _i in range(4)
         )
     
+    def reset(self, player_id):
+        self.status[player_id] = 'standing'
+        self.timer[player_id] = 0
+        self.atmosphere[player_id] = {'charge' : -1, 'firewall' : 0, 'format' : -1, 'get_prop':-1}
+
     def draw(self, screen):
         for (player, player_frame) in zip(self.model.players, self.player_frames_list):
             
+            player_id = player.player_id
+
             if player.is_invisible():
                 continue
             if player.in_folder():
@@ -397,81 +404,81 @@ class View_players():
 
 
             # player itself
-            if self.status[player.player_id] == 'special_attack_fireball' and self.timer[player.player_id] < ( len(player_frame.attack_fireball_frames) * self.quicker_delay_of_frames):
+            if self.status[player_id] == 'special_attack_fireball' and self.timer[player_id] < ( len(player_frame.attack_fireball_frames) * self.quicker_delay_of_frames):
                 
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
+                self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     screen.blit(player_frame.attack_fireball_frames[self.frame_index_to_draw],
                         player_frame.attack_fireball_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
                     screen.blit(player_frame.flipped_attack_fireball_frames[self.frame_index_to_draw],
                         player_frame.flipped_attack_fireball_frames[self.frame_index_to_draw].get_rect(center=player.center))
-                self.timer[player.player_id] += 1
+                self.timer[player_id] += 1
                 continue
 
-            if self.status[player.player_id] == 'special_attack_THROW_BUG' and self.timer[player.player_id] < ( len(player_frame.attack_bug_frames) * self.quicker_delay_of_frames):
+            if self.status[player_id] == 'special_attack_THROW_BUG' and self.timer[player_id] < ( len(player_frame.attack_bug_frames) * self.quicker_delay_of_frames):
                 
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
+                self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     screen.blit(player_frame.attack_bug_frames[self.frame_index_to_draw],
                         player_frame.attack_bug_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
                     screen.blit(player_frame.flipped_attack_bug_frames[self.frame_index_to_draw],
                         player_frame.flipped_attack_bug_frames[self.frame_index_to_draw].get_rect(center=player.center))
-                self.timer[player.player_id] += 1
+                self.timer[player_id] += 1
                 continue
 
-            if self.status[player.player_id] == 'special_attack_THROW_COFFEE' and self.timer[player.player_id] < ( len(player_frame.attack_coffee_frames) * self.quicker_delay_of_frames):
+            if self.status[player_id] == 'special_attack_THROW_COFFEE' and self.timer[player_id] < ( len(player_frame.attack_coffee_frames) * self.quicker_delay_of_frames):
                 
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
+                self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     screen.blit(player_frame.attack_coffee_frames[self.frame_index_to_draw],
                         player_frame.attack_coffee_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
                     screen.blit(player_frame.flipped_attack_coffee_frames[self.frame_index_to_draw],
                         player_frame.flipped_attack_coffee_frames[self.frame_index_to_draw].get_rect(center=player.center))
-                self.timer[player.player_id] += 1
+                self.timer[player_id] += 1
                 continue
 
-            if (self.status[player.player_id] == 'special_attack_DOS' or self.status[player.player_id] == 'special_attack_DDOS') and self.timer[player.player_id] < ( len(player_frame.attack_ddos_frames) * self.quicker_delay_of_frames):
+            if (self.status[player_id] == 'special_attack_DOS' or self.status[player_id] == 'special_attack_DDOS') and self.timer[player_id] < ( len(player_frame.attack_ddos_frames) * self.quicker_delay_of_frames):
                 
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
+                self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     screen.blit(player_frame.attack_ddos_frames[self.frame_index_to_draw],
                         player_frame.attack_ddos_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
                     screen.blit(player_frame.flipped_attack_ddos_frames[self.frame_index_to_draw],
                         player_frame.flipped_attack_ddos_frames[self.frame_index_to_draw].get_rect(center=player.center))
-                self.timer[player.player_id] += 1
+                self.timer[player_id] += 1
                 continue
 
-            if self.status[player.player_id] == 'special_attack_FAN' and self.timer[player.player_id] < ( len(player_frame.attack_fan_frames) * self.quicker_delay_of_frames):
+            if self.status[player_id] == 'special_attack_FAN' and self.timer[player_id] < ( len(player_frame.attack_fan_frames) * self.quicker_delay_of_frames):
                 
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
+                self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     screen.blit(player_frame.attack_fan_frames[self.frame_index_to_draw],
                         player_frame.attack_fan_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
                     screen.blit(player_frame.flipped_attack_fan_frames[self.frame_index_to_draw],
                         player_frame.flipped_attack_fan_frames[self.frame_index_to_draw].get_rect(center=player.center))
-                self.timer[player.player_id] += 1
+                self.timer[player_id] += 1
                 continue
 
-            if self.status[player.player_id] == 'special_attack_LIGHTNING' and self.timer[player.player_id] < ( len(player_frame.attack_lightning_frames) * self.quicker_delay_of_frames):
+            if self.status[player_id] == 'special_attack_LIGHTNING' and self.timer[player_id] < ( len(player_frame.attack_lightning_frames) * self.quicker_delay_of_frames):
                 
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
+                self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     screen.blit(player_frame.attack_lightning_frames[self.frame_index_to_draw],
                         player_frame.attack_fan_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 else:
                     screen.blit(player_frame.flipped_attack_lightning_frames[self.frame_index_to_draw],
                         player_frame.flipped_attack_lightning_frames[self.frame_index_to_draw].get_rect(center=player.center))
-                self.timer[player.player_id] += 1
+                self.timer[player_id] += 1
                 continue
 
-            if self.status[player.player_id] == 'common_attack' and self.timer[player.player_id] < ( len(player_frame.common_attack_frames) * self.quicker_delay_of_frames):
+            if self.status[player_id] == 'common_attack' and self.timer[player_id] < ( len(player_frame.common_attack_frames) * self.quicker_delay_of_frames):
                 
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.quicker_delay_of_frames)
+                self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     if player.infection():
                         screen.blit(player_frame.poison_common_attack_frames[self.frame_index_to_draw],
@@ -486,12 +493,12 @@ class View_players():
                     else:
                         screen.blit(player_frame.flipped_common_attack_frames[self.frame_index_to_draw],
                             player_frame.flipped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
-                self.timer[player.player_id] += 1
+                self.timer[player_id] += 1
                 continue
             
-            if self.status[player.player_id] == 'be_attacked' and self.timer[player.player_id] < ( len(player_frame.be_attacked_frames) * self.delay_of_frames):
+            if self.status[player_id] == 'be_attacked' and self.timer[player_id] < ( len(player_frame.be_attacked_frames) * self.delay_of_frames):
                 
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames)
+                self.frame_index_to_draw = (self.timer[player_id] // self.delay_of_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     if player.infection():
                         screen.blit(player_frame.poison_be_attacked_frames[self.frame_index_to_draw],
@@ -506,12 +513,12 @@ class View_players():
                     else:
                         screen.blit(player_frame.flipped_be_attacked_frames[self.frame_index_to_draw],
                             player_frame.flipped_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
-                self.timer[player.player_id] += 1
+                self.timer[player_id] += 1
                 continue
             
             if player.is_standing():
-                self.status[player.player_id] = 'standing'
-                self.timer[player.player_id] = 0
+                self.status[player_id] = 'standing'
+                self.timer[player_id] = 0
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     if player.infection():
                         screen.blit(player_frame.poison_standing_frames[0],
@@ -528,12 +535,12 @@ class View_players():
                             player_frame.flipped_standing_frames[0].get_rect(center=player.center))
 
             elif player.jump_count > 0:
-                if self.status[player.player_id] == 'jump':
-                    self.timer[player.player_id] += 1
+                if self.status[player_id] == 'jump':
+                    self.timer[player_id] += 1
                 else:
-                    self.status[player.player_id] = 'jump'
-                    self.timer[player.player_id] = 0
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames) % len(player_frame.jump_frames)
+                    self.status[player_id] = 'jump'
+                    self.timer[player_id] = 0
+                self.frame_index_to_draw = (self.timer[player_id] // self.delay_of_frames) % len(player_frame.jump_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     if player.infection():
                         screen.blit(
@@ -553,12 +560,12 @@ class View_players():
                             player_frame.flipped_jump_frames[self.frame_index_to_draw],
                             player_frame.flipped_jump_frames[self.frame_index_to_draw].get_rect(center=player.center))
             else:
-                if self.status[player.player_id] == 'walk':
-                    self.timer[player.player_id] += 1
+                if self.status[player_id] == 'walk':
+                    self.timer[player_id] += 1
                 else:
-                    self.status[player.player_id] = 'walk'
-                    self.timer[player.player_id] = 0
-                self.frame_index_to_draw = (self.timer[player.player_id] // self.delay_of_frames) % len(player_frame.walk_frames)
+                    self.status[player_id] = 'walk'
+                    self.timer[player_id] = 0
+                self.frame_index_to_draw = (self.timer[player_id] // self.delay_of_frames) % len(player_frame.walk_frames)
                 if player.face == Const.DIRECTION_TO_VEC2['right']:
                     if player.infection():
                         screen.blit(
@@ -579,40 +586,40 @@ class View_players():
                             player_frame.flipped_walk_frames[self.frame_index_to_draw].get_rect(center=player.center))
             
             # atmosphere
-            if self.atmosphere[player.player_id]['charge'] >= 0:
-                frame_ = self.atmosphere[player.player_id]['charge'] // self.delay_of_frames
+            if self.atmosphere[player_id]['charge'] >= 0:
+                frame_ = self.atmosphere[player_id]['charge'] // self.delay_of_frames
                 screen.blit(self.charging_frames[frame_],
                     self.charging_frames[frame_].get_rect(center=player.center))
-                self.atmosphere[player.player_id]['charge'] += 1
-                if self.atmosphere[player.player_id]['charge'] == (len(self.charging_frames) * self.delay_of_frames):
-                    self.atmosphere[player.player_id]['charge'] = -1
+                self.atmosphere[player_id]['charge'] += 1
+                if self.atmosphere[player_id]['charge'] == (len(self.charging_frames) * self.delay_of_frames):
+                    self.atmosphere[player_id]['charge'] = -1
             
-            if self.atmosphere[player.player_id]['format'] >= 0:
-                frame_ = self.atmosphere[player.player_id]['format'] // self.delay_of_frames
+            if self.atmosphere[player_id]['format'] >= 0:
+                frame_ = self.atmosphere[player_id]['format'] // self.delay_of_frames
                 screen.blit(self.format_frames[frame_],
                     self.format_frames[frame_].get_rect(center=player.center))
-                self.atmosphere[player.player_id]['format'] += 1
-                if self.atmosphere[player.player_id]['format'] == (len(self.format_frames) * self.delay_of_frames):
-                    self.atmosphere[player.player_id]['format'] = -1
+                self.atmosphere[player_id]['format'] += 1
+                if self.atmosphere[player_id]['format'] == (len(self.format_frames) * self.delay_of_frames):
+                    self.atmosphere[player_id]['format'] = -1
 
-            if self.atmosphere[player.player_id]['get_prop'] >= 0:
-                frame_ = self.atmosphere[player.player_id]['get_prop'] // self.delay_of_frames
+            if self.atmosphere[player_id]['get_prop'] >= 0:
+                frame_ = self.atmosphere[player_id]['get_prop'] // self.delay_of_frames
                 screen.blit(self.get_prop_frames[frame_],
                     self.get_prop_frames[frame_].get_rect(center=player.center))
-                self.atmosphere[player.player_id]['get_prop'] += 1
-                if self.atmosphere[player.player_id]['get_prop'] == (len(self.get_prop_frames) * self.delay_of_frames):
-                    self.atmosphere[player.player_id]['get_prop'] = -1
+                self.atmosphere[player_id]['get_prop'] += 1
+                if self.atmosphere[player_id]['get_prop'] == (len(self.get_prop_frames) * self.delay_of_frames):
+                    self.atmosphere[player_id]['get_prop'] = -1
 
             if player.state['immune'] > 0:
-                frame_ = self.atmosphere[player.player_id]['firewall'] // self.delay_of_frames
+                frame_ = self.atmosphere[player_id]['firewall'] // self.delay_of_frames
                 screen.blit(self.firewall_frames[frame_],
                     self.firewall_frames[frame_].get_rect(center=player.center))
 
-                if self.atmosphere[player.player_id]['firewall'] > 0:
-                    self.atmosphere[player.player_id]['firewall'] += 1
+                if self.atmosphere[player_id]['firewall'] > 0:
+                    self.atmosphere[player_id]['firewall'] += 1
 
-                if self.atmosphere[player.player_id]['firewall'] == (len(self.firewall_frames) * self.delay_of_frames):
-                    self.atmosphere[player.player_id]['firewall'] = 0
+                if self.atmosphere[player_id]['firewall'] == (len(self.firewall_frames) * self.delay_of_frames):
+                    self.atmosphere[player_id]['firewall'] = 0
 
 def init():
     View_players.init_convert()

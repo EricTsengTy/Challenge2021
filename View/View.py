@@ -139,6 +139,9 @@ class GraphicalView:
             elif event.item_type != 'FOLDER_UNUSED':
                 self.players.atmosphere[event.player_id]['get_prop'] = 0
 
+        elif isinstance(event, EventPlayerDie):
+
+            self.players.reset(event.player_id)
             
         
     def display_fps(self):
