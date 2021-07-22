@@ -90,108 +90,115 @@ class player_frames():
     )
 
 
-    def fill_color(self,player_img):
+    def fill_color(self,player_img,poisoned):
         "get a pygame Surface of player image return the colored Surface"
         result_img = player_img.convert_alpha()
         px_arr = pg.surfarray.pixels2d(result_img)
-        px_arr[px_arr==4288534508] = result_img.map_rgb(self.color)
+        if poisoned: 
+            px_arr[px_arr==4288534508] = result_img.map_rgb(self.color_poison)   
+        else:
+            px_arr[px_arr==4288534508] = result_img.map_rgb(self.color)
         return result_img
     
     def draw_frames(self):
         "draw all the frames for self"
+        
+        poisoned = False
         self.standing_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.standing_images
-        )
-        
-        self.poison_standing_frames = tuple(
-            resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
-            )  for img in self.poison_standing_images
         )
 
         self.walk_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.walk_images
-        )
-
-        self.poison_walk_frames = tuple(
-            resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
-            )  for img in self.poison_walk_images
         )
 
         self.jump_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.jump_images
-        )
-        
-        self.poison_jump_frames = tuple(
-            resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
-            )  for img in self.poison_jump_images
         )
 
         self.common_attack_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.common_attack_images
-        )
-
-        self.poison_common_attack_frames = tuple(
-            resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
-            )  for img in self.poison_common_attack_images
         )
 
         self.be_attacked_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.be_attacked_images
+        )
+        
+        poisoned = True
+        self.poison_standing_frames = tuple(
+            resize_surface(
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.poison_standing_images
+        )
+
+        self.poison_walk_frames = tuple(
+            resize_surface(
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.poison_walk_images
+        )
+        
+        self.poison_jump_frames = tuple(
+            resize_surface(
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.poison_jump_images
+        )
+
+        self.poison_common_attack_frames = tuple(
+            resize_surface(
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+            )  for img in self.poison_common_attack_images
         )
 
         self.poison_be_attacked_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.poison_be_attacked_images
         )
 
+        poisoned = False
         self.attack_fireball_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.attack_fireball_images
         )
 
         self.attack_bug_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.attack_bug_images
         )
 
         self.attack_coffee_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.attack_coffee_images
         )
 
         self.attack_ddos_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.attack_ddos_images
         )
 
         self.attack_fan_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.attack_fan_images
         )
 
         self.attack_lightning_frames = tuple(
             resize_surface(
-                self.fill_color(img), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                self.fill_color(img,poisoned), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
             )  for img in self.attack_lightning_images
         )
 
@@ -281,6 +288,7 @@ class player_frames():
 
     def __init__(self,color):
         self.color =  color
+        self.color_poison = ( max(0, color[0]-100), max(0, color[1]-80), max(0, color[2]-100) )
         self.draw_frames()
         self.init_convert()
 
