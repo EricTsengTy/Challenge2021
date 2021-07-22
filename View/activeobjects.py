@@ -61,7 +61,7 @@ class View_Coffee(__Object_base):
                 pg.transform.rotate(
                     scale_surface(
                         load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_coffee{_i+1}.png'))
-                        , 0.3
+                        , 0.5
                     ), 72 * _i
                 )
                 for _i in range(5)
@@ -70,7 +70,7 @@ class View_Coffee(__Object_base):
                 pg.transform.rotate(
                     scale_surface(
                         load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_coffee5.png'))
-                        , 0.3
+                        , 0.5
                     ), 72 * _i
                 )
                 for _i in range(5)
