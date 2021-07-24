@@ -1,5 +1,4 @@
 import pygame as pg
-
 from EventManager.EventManager import *
 from Model.Model import GameEngine
 import Const
