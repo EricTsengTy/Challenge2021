@@ -6,7 +6,7 @@ import Const
 import View.staticobjects
 import View.activeobjects
 import View.animation
-from View.utils import Text
+import View.players
 import random
 
 
@@ -53,19 +53,24 @@ class GraphicalView:
         if not self.is_initialized:
              View.staticobjects.init_staticobjects()
              View.activeobjects.init_activeobjects()
+             View.animation.init_animation()
         # static objects
         self.menu =  View.staticobjects.View_menu(self.model)
+        self.tutorial = View.staticobjects.View_tutorial(self.model)
         self.stage =  View.staticobjects.View_stage(self.model)
         self.platform = View.staticobjects.View_platform(self.model)
         self.arrow = View.staticobjects.View_Arrow(self.model)
         self.lightning = View.staticobjects.View_Lightning(self.model)
         self.item = View.staticobjects.View_Item(self.model)
+        self.pause_window = View.staticobjects.View_Pause(self.model)
+        self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
         # active objects
-        self.players = View.activeobjects.View_players(self.model, 7)
         self.bug = View.activeobjects.View_Bug(10)
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
+        #players
+        self.players = View.players.View_players(self.model, 7)
 
         self.is_initialized = True
 
@@ -81,6 +86,7 @@ class GraphicalView:
 
             cur_state = self.model.state_machine.peek()
             if cur_state == Const.STATE_MENU: self.render_menu()
+            elif cur_state == Const.STATE_TUTORIAL: self.render_tutorial()
             elif cur_state == Const.STATE_PLAY: self.render_play()
             elif cur_state == Const.STATE_STOP: self.render_stop()
             elif cur_state == Const.STATE_ENDGAME: self.render_endgame()
@@ -95,13 +101,22 @@ class GraphicalView:
         elif isinstance(event, EventHelloWorld):
             style = random.randint(1,3)
 
-            style = 1 # now test type1 hello world
-            self.animation_list.append(View.animation.Animation_hello_world(3,2)) #delay_of_frames, speed
+            #style = 3 # now test type2 hello world
+            if style == 1:
+                self.animation_list.append(View.animation.Animation_hello_world(3,4)) #delay_of_frames, speed
+            elif style == 2:
+                self.animation_list.append(View.animation.Greeting_from_prog(0))
+            elif style == 3:
+                self.animation_list.append(View.animation.Greeeting_from_player(self.model))
 
         elif isinstance(event, EventBeAttacked):
             # event.player_id
-            self.players.status[event.player_id] = 'be_attacked'
-            self.players.timer[event.player_id] = 0
+            if self.model.players[event.player_id].state['immune'] == 0 and self.players.status[event.player_id] != 'be_attacked':
+                self.players.status[event.player_id] = 'be_attacked'
+                self.players.timer[event.player_id] = 0
+            
+            if self.model.players[event.player_id].state['immune'] != 0:
+                self.players.atmosphere[event.player_id]['firewall'] = 1
         
         elif isinstance(event, EventSpecialAttackMovement):
             # event.player_id
@@ -112,6 +127,21 @@ class GraphicalView:
                 self.players.status[event.player_id] = f'special_attack_{event.attack_type}'
                 print(f'special_attack_{event.attack_type}')
             self.players.timer[event.player_id] = 0
+
+        elif isinstance(event, EventGetProp):
+
+            if event.item_type == 'CHARGE':
+                self.players.atmosphere[event.player_id]['charge'] = 0
+            elif event.item_type == 'FIREWALL':
+                pass
+            elif event.item_type == 'FORMAT':
+                self.players.atmosphere[event.player_id]['format'] = 0
+            elif event.item_type != 'FOLDER_UNUSED':
+                self.players.atmosphere[event.player_id]['get_prop'] = 0
+
+        elif isinstance(event, EventPlayerDie):
+
+            self.players.reset(event.player_id)
             
         
     def display_fps(self):
@@ -136,8 +166,16 @@ class GraphicalView:
         
         menu_text = Text("Press [space] to start ...", 36, pg.Color('gray88'))
         menu_text.blit(self.screen, center=(Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2))
-		'''
+        '''
 
+        pg.display.flip()
+
+    def render_tutorial(self, target=None):
+        if target is None:
+            target = self.screen
+        # draw background
+        self.screen.fill(Const.BACKGROUND_COLOR)
+        self.tutorial.draw(target)
         pg.display.flip()
 
     def render_play(self, target=None, update=True):
@@ -184,18 +222,20 @@ class GraphicalView:
             if ani.expired:
                 self.animation_list.remove(ani)
             else: 
-                ani.draw(target)
+                ani.draw(target, update)
+        
+            
         
         pg.display.flip()
 
     def render_stop(self):
-        pass
+        self.pause_window.draw(self.screen)
+        pg.display.flip()
 
     def render_endgame(self):
-        # draw background
-        self.screen.fill(Const.BACKGROUND_COLOR)
-
+        self.scoreboard.draw(self.screen)
         pg.display.flip()
+        
     
     def toggle_fullscreen(self):
         self.ev_manager.post(EventStop())

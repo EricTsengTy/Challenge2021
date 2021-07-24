@@ -1,6 +1,7 @@
 import pygame as pg
 import random
 from pygame.display import mode_ok, set_allow_screensaver
+from pygame.event import Event
 from pygame.mixer import fadeout
 import Const 
 from pygame.math import Vector2
@@ -96,6 +97,7 @@ class Player(Basic_Game_Object):
         self.keep_item_type = ''
         self.face = Const.DIRECTION_TO_VEC2['right']
         self.jump_count = 0
+        self.model.ev_manager.post(EventPlayerDie(self.player_id))
 
     def add_score(self, s):
         self.score += s
@@ -128,14 +130,20 @@ class Player(Basic_Game_Object):
         elif item_type == 'CHARGE':
             self.blood = min(self.blood+100, Const.PLAYER_FULL_BLOOD)
 
+        self.model.ev_manager.post(EventGetProp(self.player_id, item_type))
+
+
     def special_attack(self):
         if self.special_attack_timer > 0: return
         if self.special_attack_delay == -1:
             self.special_attack_delay = Const.PLAYER_SPECIAL_ATTACK_DELAY
+            if self.keep_item_type != 'THROW_COFFEE' and self.keep_item_type != 'THROW_BUG':
+                self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type)) 
             return
         if self.special_attack_delay > 0: return
-        
-        self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type))
+        if self.keep_item_type == 'THROW_COFFEE' or self.keep_item_type == 'THROW_BUG':
+            self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type)) 
+            
 
         if(self.keep_item_type == 'DOS'):
             self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
@@ -175,7 +183,8 @@ class Player(Basic_Game_Object):
         self.blood-=attack.damage
 
         self.count_score(attack.attacker, attack.damage)
-        self.model.ev_manager.post(EventBeAttacked(self.player_id))
+        # self.model.ev_manager.post(EventBeAttacked(self.player_id))
+        # add in special_attack.py by View
         
         
     def be_common_attacked(self, attacker):
