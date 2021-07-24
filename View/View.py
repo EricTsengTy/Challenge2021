@@ -103,7 +103,7 @@ class GraphicalView:
 
             #style = 3 # now test type2 hello world
             if style == 1:
-                self.animation_list.append(View.animation.Animation_hello_world(3,4)) #delay_of_frames, speed
+                self.animation_list.append(View.animation.Greeting_from_audience(3,4)) #delay_of_frames, speed
             elif style == 2:
                 self.animation_list.append(View.animation.Greeting_from_prog(0))
             elif style == 3:
