@@ -100,8 +100,6 @@ class GraphicalView:
         
         elif isinstance(event, EventHelloWorld):
             style = random.randint(1,3)
-
-            #style = 3 # now test type2 hello world
             if style == 1:
                 self.animation_list.append(View.animation.Greeting_from_audience(3,4)) #delay_of_frames, speed
             elif style == 2:
@@ -223,9 +221,7 @@ class GraphicalView:
                 self.animation_list.remove(ani)
             else: 
                 ani.draw(target, update)
-        
-            
-        
+
         pg.display.flip()
 
     def render_stop(self):
