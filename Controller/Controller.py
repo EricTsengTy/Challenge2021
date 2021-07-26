@@ -47,6 +47,7 @@ class Controller:
             cur_state = self.model.state_machine.peek()
             if cur_state == Const.STATE_MENU: self.ctrl_menu(key_down_events)
             if cur_state == Const.STATE_TUTORIAL: self.ctrl_tutorial(key_down_events)
+            if cur_state == Const.STATE_COLOR_SELECT: self.ctrl_selection(key_down_events)
             if cur_state == Const.STATE_PLAY: self.ctrl_play(key_down_events)
             if cur_state == Const.STATE_STOP: self.ctrl_stop(key_down_events)
             if cur_state == Const.STATE_ENDGAME: self.ctrl_endgame(key_down_events)
@@ -70,9 +71,21 @@ class Controller:
     def ctrl_tutorial(self, key_down_events):
         for event_pg in key_down_events:
             if event_pg.type == pg.KEYDOWN and event_pg.key == pg.K_SPACE:
-                self.ev_manager.post(EventStateChange(Const.STATE_PLAY))
+                self.ev_manager.post(EventStateChange(Const.STATE_COLOR_SELECT))
             # detect fullscreen change
             self.check_screen_keys(event_pg.key)
+
+    def ctrl_selection(self, key_down_events):
+        for event_pg in key_down_events:
+            if event_pg.type == pg.KEYDOWN:
+                if event_pg.key == pg.K_SPACE:
+                    self.ev_manager.post(EventStateChange(Const.STATE_PLAY))
+                if event_pg.key in Const.PLAYER_MOVE_KEYS.keys() and Const.PLAYER_MOVE_KEYS[event_pg.key][1] == 'left':
+                    self.ev_manager.post(EventPreviousColor(Const.PLAYER_MOVE_KEYS[event_pg.key][0]))
+                if  event_pg.key in Const.PLAYER_MOVE_KEYS.keys() and Const.PLAYER_MOVE_KEYS[event_pg.key][1] == 'right':
+                    self.ev_manager.post(EventNextColor(Const.PLAYER_MOVE_KEYS[event_pg.key][0]))
+                # detect fullscreen change
+                self.check_screen_keys(event_pg.key)
 
     def ctrl_play(self, key_down_events):
         # handle movement using key pressed state

@@ -32,6 +32,7 @@ class Player(Basic_Game_Object):
         self.special_attack_delay = -1 # -1 for no special attack
         self.standing_tick = 0
         self.score = 0
+        self.color = Const.COLOR_TABLE[player_id]
 
     @property
     def common_attack_range(self):
@@ -237,4 +238,6 @@ class Player(Basic_Game_Object):
 
     def is_standing(self):
         return self.standing_tick>5
-
+    
+    def change_color(self, color):
+        self.color = color

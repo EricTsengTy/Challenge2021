@@ -87,6 +87,7 @@ class GraphicalView:
             cur_state = self.model.state_machine.peek()
             if cur_state == Const.STATE_MENU: self.render_menu()
             elif cur_state == Const.STATE_TUTORIAL: self.render_tutorial()
+            elif cur_state == Const.STATE_COLOR_SELECT: self.render_color_select()
             elif cur_state == Const.STATE_PLAY: self.render_play()
             elif cur_state == Const.STATE_STOP: self.render_stop()
             elif cur_state == Const.STATE_ENDGAME: self.render_endgame()
@@ -177,6 +178,16 @@ class GraphicalView:
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.tutorial.draw(target)
         pg.display.flip()
+
+    def render_color_select(self):
+        '''
+        implement color select view here
+        '''
+        self.screen.fill(Const.BACKGROUND_COLOR)
+        pg.display.flip()
+        for player in self.model.players:
+            print(player.player_id, player.color, end = ', ')
+        print('')
 
     def render_play(self, target=None, update=True):
         if target is None:
