@@ -96,7 +96,7 @@ class Controller:
                     self.ev_manager.post(EventPlayerSpecialAttack(player_id))
                 # detect stop
                 if event_pg.key == Const.GAME_STOP_KEY:
-                    self.ev_manager.post(EventStop())
+                    self.ev_manager.post(EventStateChange(Const.STATE_STOP))
                 else:
                     self.check_screen_keys(event_pg.key)
 
@@ -104,7 +104,7 @@ class Controller:
         # detect start/stop events
         for event_pg in key_down_events:
             if event_pg.key == Const.GAME_CONTINUE_KEY:
-                self.ev_manager.post(EventContinue())
+                self.ev_manager.post(EventStateChange(Const.STATE_PLAY))
             else:
                 self.check_screen_keys(event_pg.key)
 
