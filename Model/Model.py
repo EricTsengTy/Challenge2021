@@ -10,7 +10,7 @@ from Model.GameObject.ground import Ground
 from Model.GameObject.item import *
 from Model.GameObject.item_generator import *
 import Model.GameObject.state as State
-
+from Model.GameObject.color_selector import *
 
 class StateMachine(object):
     '''
@@ -87,7 +87,7 @@ class GameEngine:
         self.items = []
         self.attacks = []
         self.item_generator = Item_Generator(self)
-
+        self.color_selector = Color_Selector(self.players)
     def notify(self, event: BaseEvent):
         '''
         Called by EventManager when a event occurs.
@@ -150,7 +150,12 @@ class GameEngine:
             else:
                 print("Can not special attack")
 
+        elif isinstance(event, EventPreviousColor):
+            self.color_selector.previous_color(self.players[event.player_id])
 
+        elif isinstance(event, EventNextColor):
+            self.color_selector.next_color(self.players[event.player_id])
+            
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
         

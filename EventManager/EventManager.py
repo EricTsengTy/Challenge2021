@@ -164,3 +164,21 @@ class EventPlayerDie(BaseEvent):
 
     def __init__(self, player_id):
         self.player_id = player_id
+
+class EventPreviousColor(BaseEvent):
+    name = 'select previous color'
+    '''
+    notify model to change player's color to previous one
+    '''
+
+    def __init__(self, player_id):
+        self.player_id = player_id
+
+class EventNextColor(BaseEvent):
+    name = 'select next color'
+    '''
+    notify model to change player's color to next one
+    '''
+
+    def __init__(self, player_id):
+        self.player_id = player_id

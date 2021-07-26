@@ -122,7 +122,7 @@ STATE_PLAY = 2
 STATE_STOP = 3 # not implemented yet
 STATE_ENDGAME = 4
 STATE_TUTORIAL = 5
-
+STATE_COLOR_SELECT = 6
 # Path
 IMAGE_PATH = os.path.join('View', 'assets')
 
@@ -197,3 +197,8 @@ GAME_STOP_KEY = pg.K_SPACE
 GAME_CONTINUE_KEY = pg.K_RETURN
 GAME_RESTART_KEY = pg.K_F5
 GAME_FULLSCREEN_KEY = pg.K_F11
+
+#Color Selection
+COLOR_TABLE_SIZE = 6
+COLOR_TABLE = ('red', 'yellow', 'orange', 'green', 'blue', 'purple')
+
