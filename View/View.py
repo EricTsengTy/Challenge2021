@@ -72,8 +72,6 @@ class GraphicalView:
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
         self.color_select = View.activeobjects.View_ColorPicker(self.model, 7)
-        #players
-        self.players = View.players.View_players(self.model, 7)
 
         self.is_initialized = True
 
@@ -144,6 +142,11 @@ class GraphicalView:
         elif isinstance(event, EventPlayerDie):
 
             self.players.reset(event.player_id)
+
+        elif isinstance(event, EventStateChange):
+            if event.state == Const.STATE_PLAY:
+                #players
+                self.players = View.players.View_players(self.model, 7)
             
         
     def display_fps(self):
