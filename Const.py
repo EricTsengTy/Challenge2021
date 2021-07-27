@@ -199,6 +199,23 @@ GAME_RESTART_KEY = pg.K_F5
 GAME_FULLSCREEN_KEY = pg.K_F11
 
 #Color Selection
-COLOR_TABLE_SIZE = 6
-COLOR_TABLE = ('red', 'yellow', 'orange', 'green', 'blue', 'purple')
-
+COLOR_TABLE_SIZE = 11
+COLOR_TABLE = (
+    'aquamarine',
+    'azure',
+    'bisque',
+    'blue',
+    'brown',
+    'chartreuse',
+    'chocolate',
+    'cyan',
+    'gold',
+    'greenyellow',
+    'lightcoral',
+)
+PLAYER_PICKER_COLOR = (
+    pg.Color('orange'),
+    pg.Color('red'),
+    pg.Color('green'),
+    pg.Color('blue'),
+)

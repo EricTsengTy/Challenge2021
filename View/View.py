@@ -1,4 +1,6 @@
+from genericpath import samestat
 import pygame as pg
+from pygame import color
 
 from EventManager.EventManager import *
 from Model.Model import GameEngine
@@ -56,6 +58,7 @@ class GraphicalView:
              View.animation.init_animation()
         # static objects
         self.menu =  View.staticobjects.View_menu(self.model)
+        self.color_select = View.staticobjects.View_ColorPicker(self.model)
         self.tutorial = View.staticobjects.View_tutorial(self.model)
         self.stage =  View.staticobjects.View_stage(self.model)
         self.platform = View.staticobjects.View_platform(self.model)
@@ -177,15 +180,27 @@ class GraphicalView:
         self.tutorial.draw(target)
         pg.display.flip()
 
-    def render_color_select(self):
+    def render_color_select(self, target=None):
         '''
         implement color select view here
         '''
+        if target is None:
+            target = self.screen
         self.screen.fill(Const.BACKGROUND_COLOR)
+        self.color_select.draw(target)
+        
+        color_center = [(470+80*_i,450) for _i in range((Const.COLOR_TABLE_SIZE+1)//2)] + [(505+80*_i,535) for _i in range(Const.COLOR_TABLE_SIZE//2)]
+        for player, _i in zip(self.model.players, range(4)):
+            index = Const.COLOR_TABLE.index(player.color)
+            pg.draw.circle(target, Const.PLAYER_PICKER_COLOR[_i], color_center[index], 40)
+        for _i in range(Const.COLOR_TABLE_SIZE):
+            pg.draw.circle(target, pg.Color(Const.COLOR_TABLE[_i]), color_center[_i], 35)
         pg.display.flip()
+        '''
         for player in self.model.players:
             print(player.player_id, player.color, end = ', ')
         print('')
+        '''
 
     def render_play(self, target=None, update=True):
         if target is None:

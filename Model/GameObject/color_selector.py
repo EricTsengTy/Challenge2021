@@ -13,6 +13,7 @@ class Color_Selector():
             color_index = (color_index - 1) % Const.COLOR_TABLE_SIZE
         self.color_player[player.color] = None
         player.color = Const.COLOR_TABLE[color_index]
+        player.color_index = color_index
         self.color_player[player.color] = player
         print(player.color)
 
@@ -23,5 +24,6 @@ class Color_Selector():
             color_index = (color_index + 1) % Const.COLOR_TABLE_SIZE
         self.color_player[player.color] = None
         player.color = Const.COLOR_TABLE[color_index]
+        player.color_index = color_index
         self.color_player[player.color] = player
         print(player.color)

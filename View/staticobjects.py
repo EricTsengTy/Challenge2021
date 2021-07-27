@@ -182,6 +182,17 @@ class View_Scoreboard(__Object_base):
             score_text = Text(str(player_score[i]), 36, pg.Color('white'))
             score_text.blit(screen, topleft=(text_start + i*text_interval, text_top))
 
+class View_ColorPicker(__Object_base):
+    menu = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'select_color.png')), 
+        Const.ARENA_SIZE[0], Const.ARENA_SIZE[1])
+
+    @classmethod
+    def init_convert(cls):
+        cls.menu = cls.menu.convert_alpha()
+	
+    def draw(self, screen):
+        screen.blit(self.menu, (0,0))
+
 def init_staticobjects():
     View_stage.init_convert()
     View_platform.init_convert()
@@ -190,3 +201,4 @@ def init_staticobjects():
     View_Item.init_convert()
     View_Pause.init_convert()
     View_Scoreboard.init_convert()
+    View_ColorPicker.init_convert()
