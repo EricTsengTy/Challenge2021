@@ -108,10 +108,8 @@ class GameEngine:
                 self.update_objects()
                 self.timer -= 1
                 if self.timer == 0:
+                    self.update_endgame()
                     self.ev_manager.post(EventTimesUp())
-
-            elif cur_state == Const.STATE_ENDGAME:
-                self.update_endgame()
 
         elif isinstance(event, EventStateChange):
             if event.state == Const.STATE_POP:
