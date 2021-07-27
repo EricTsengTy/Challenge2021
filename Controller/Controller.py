@@ -114,6 +114,7 @@ class Controller:
         # detect restart event
         for event_pg in key_down_events:
             if event_pg.key == Const.GAME_RESTART_KEY:
+                self.ev_manager.post(EventStateChange(Const.STATE_MENU))
                 self.ev_manager.post(EventRestart())
             else:
                 self.check_screen_keys(event_pg.key)

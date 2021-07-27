@@ -81,6 +81,7 @@ class GameEngine:
         This method is called when a new game is instantiated.
         '''
         self.clock = pg.time.Clock()
+        self.timer = Const.GAME_LENGTH
         self.state_machine.push(Const.STATE_MENU)
         self.pause = False
         self.players = [Player(self, i) for i in range(Const.PLAYER_NUMBER)]
@@ -167,6 +168,9 @@ class GameEngine:
         elif isinstance(event, EventContinue):
             self.pause = False
 
+        elif isinstance(event, EventRestart):
+            self.initialize()
+
     def update_menu(self):
         '''
         Update the objects in welcome scene.
@@ -210,7 +214,6 @@ class GameEngine:
         self.running = True
         # Tell every one to start
         self.ev_manager.post(EventInitialize())
-        self.timer = Const.GAME_LENGTH
         while self.running:
             self.ev_manager.post(EventEveryTick())
             self.clock.tick(Const.FPS)
