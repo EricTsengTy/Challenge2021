@@ -11,7 +11,7 @@ import Model.GameObject.state as State
 from EventManager.EventManager import *
 
 class Player(Basic_Game_Object):
-    def __init__(self, model, player_id):
+    def __init__(self, model, player_id, name):
         super().__init__(model,
                          Const.PLAYER_INIT_POSITION[player_id].x,
                          Const.PLAYER_INIT_POSITION[player_id].y,
@@ -31,6 +31,7 @@ class Player(Basic_Game_Object):
         self.special_attack_delay = -1 # -1 for no special attack
         self.standing_tick = 0
         self.score = 0
+        self.player_name = name
 
     @property
     def common_attack_range(self):
