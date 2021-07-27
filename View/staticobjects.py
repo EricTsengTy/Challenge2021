@@ -183,51 +183,6 @@ class View_Scoreboard(__Object_base):
             score_text = Text(str(player_score[i]), 36, pg.Color('white'))
             score_text.blit(screen, topleft=(text_start + i*text_interval, text_top))
 
-class View_ColorPicker(__Object_base):
-    menu = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'select_color.png')), 
-        Const.ARENA_SIZE[0], Const.ARENA_SIZE[1])
-
-    player_imgs = tuple(
-        load_image(os.path.join(Const.IMAGE_PATH, 'players' , 'standing', 'standing-{:02d}.png'.format(_i+1)))
-        for _i in range(1)
-    )*Const.COLOR_TABLE_SIZE
-
-    def fill_color(self,player_img, color):
-        "get a pygame Surface of player image return the colored Surface"
-        result_img = player_img.convert_alpha()
-        px_arr = pg.surfarray.pixels2d(result_img)
-        px_arr[px_arr==4288534508] = result_img.map_rgb(color)
-        return result_img
-    
-    
-    @classmethod
-    def init_convert(cls):
-        cls.menu = cls.menu.convert_alpha()
-	
-    def __init__(self, model):
-        super().__init__(model)
-        self.player_imgs = tuple(
-            resize_surface(
-                self.fill_color(img, pg.Color(Const.COLOR_TABLE[_i])), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
-            )  for img, _i in zip(self.player_imgs,range(Const.COLOR_TABLE_SIZE))
-        )
-
-
-    def draw(self, screen):
-        screen.blit(self.menu, (0,0))
-        color_center = [(470+80*_i,450) for _i in range((Const.COLOR_TABLE_SIZE+1)//2)] + [(505+80*_i,535) for _i in range(Const.COLOR_TABLE_SIZE//2)]
-        player_center = [(473+145*_i,300) for _i in range(4)]
-
-        for player, _i in zip(self.model.players, range(4)):
-            #index = Const.COLOR_TABLE.index(player.color)
-            pg.draw.circle(screen, Const.PLAYER_PICKER_COLOR[_i], color_center[player.color_index], 38)
-            screen.blit(
-                self.player_imgs[player.color_index],
-                self.player_imgs[player.color_index].get_rect(center=player_center[_i])
-            )
-
-        for _i in range(Const.COLOR_TABLE_SIZE):
-            pg.draw.circle(screen, pg.Color(Const.COLOR_TABLE[_i]), color_center[_i], 35)
 
 def init_staticobjects():
     View_stage.init_convert()
@@ -237,4 +192,3 @@ def init_staticobjects():
     View_Item.init_convert()
     View_Pause.init_convert()
     View_Scoreboard.init_convert()
-    View_ColorPicker.init_convert()

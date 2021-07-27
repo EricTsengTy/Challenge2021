@@ -58,7 +58,6 @@ class GraphicalView:
              View.animation.init_animation()
         # static objects
         self.menu =  View.staticobjects.View_menu(self.model)
-        self.color_select = View.staticobjects.View_ColorPicker(self.model)
         self.tutorial = View.staticobjects.View_tutorial(self.model)
         self.stage =  View.staticobjects.View_stage(self.model)
         self.platform = View.staticobjects.View_platform(self.model)
@@ -72,6 +71,7 @@ class GraphicalView:
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
+        self.color_select = View.activeobjects.View_ColorPicker(self.model, 7)
         #players
         self.players = View.players.View_players(self.model, 7)
 
