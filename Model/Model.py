@@ -77,7 +77,7 @@ class GameEngine:
 
         self.AI_names = AI_names
         while len(self.AI_names) < 4:
-            self.AI_names.append('manual')
+            self.AI_names.append('m')
 
     def initialize(self):
         '''
@@ -85,7 +85,7 @@ class GameEngine:
         '''
         self.clock = pg.time.Clock()
         self.state_machine.push(Const.STATE_MENU)
-        self.players = [Player(self, i, self.AI_names[i]) for i in range(Const.PLAYER_NUMBER)]
+        self.players = [Player(self, i, 'manual', False) if self.AI_names[i] == 'm' else Player(self, i, self.AI_names[i], True) for i in range(Const.PLAYER_NUMBER)]
         self.grounds = [Ground(self, i[0], i[1], i[2], i[3]) for i in Const.GROUND_POSITION]
         self.items = []
         self.attacks = []

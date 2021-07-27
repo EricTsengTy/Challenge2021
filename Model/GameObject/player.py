@@ -11,7 +11,7 @@ import Model.GameObject.state as State
 from EventManager.EventManager import *
 
 class Player(Basic_Game_Object):
-    def __init__(self, model, player_id, name):
+    def __init__(self, model, player_id, name, is_AI):
         super().__init__(model,
                          Const.PLAYER_INIT_POSITION[player_id].x,
                          Const.PLAYER_INIT_POSITION[player_id].y,
@@ -32,6 +32,7 @@ class Player(Basic_Game_Object):
         self.standing_tick = 0
         self.score = 0
         self.player_name = name
+        self.is_AI = is_AI
 
     @property
     def common_attack_range(self):
