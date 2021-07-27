@@ -33,6 +33,7 @@ class Player(Basic_Game_Object):
         self.standing_tick = 0
         self.score = 0
         self.color = Const.COLOR_TABLE[player_id]
+        self.color_index = player_id
 
     @property
     def common_attack_range(self):

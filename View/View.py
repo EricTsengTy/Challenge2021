@@ -189,12 +189,6 @@ class GraphicalView:
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.color_select.draw(target)
         
-        color_center = [(470+80*_i,450) for _i in range((Const.COLOR_TABLE_SIZE+1)//2)] + [(505+80*_i,535) for _i in range(Const.COLOR_TABLE_SIZE//2)]
-        for player, _i in zip(self.model.players, range(4)):
-            index = Const.COLOR_TABLE.index(player.color)
-            pg.draw.circle(target, Const.PLAYER_PICKER_COLOR[_i], color_center[index], 40)
-        for _i in range(Const.COLOR_TABLE_SIZE):
-            pg.draw.circle(target, pg.Color(Const.COLOR_TABLE[_i]), color_center[_i], 35)
         pg.display.flip()
         '''
         for player in self.model.players:

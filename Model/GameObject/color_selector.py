@@ -15,7 +15,7 @@ class Color_Selector():
         player.color = Const.COLOR_TABLE[color_index]
         player.color_index = color_index
         self.color_player[player.color] = player
-        print(player.color)
+        #print(player.color)
 
     def next_color(self, player):
         color_index = Const.COLOR_TABLE.index(player.color)
@@ -26,4 +26,4 @@ class Color_Selector():
         player.color = Const.COLOR_TABLE[color_index]
         player.color_index = color_index
         self.color_player[player.color] = player
-        print(player.color)
+        #print(player.color)
