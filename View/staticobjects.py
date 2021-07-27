@@ -183,7 +183,6 @@ class View_Scoreboard(__Object_base):
             score_text = Text(str(player_score[i]), 36, pg.Color('white'))
             score_text.blit(screen, topleft=(text_start + i*text_interval, text_top))
 
-
 def init_staticobjects():
     View_stage.init_convert()
     View_platform.init_convert()

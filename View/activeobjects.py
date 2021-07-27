@@ -231,6 +231,26 @@ class View_ColorPicker(__Object_base):
                     self.fill_color(img, pg.Color(Const.COLOR_TABLE[_i])), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
                 )  for img in self.walk_frames[_i]
             )
+        
+        
+        if Const.COLOR_PICKER_TYPE == 0:
+            COLOR_PICKER_NAME = 'selection_icon0-{:02d}.png'
+            self.selection_icon = tuple(
+                resize_surface(
+                    load_image(
+                        os.path.join(Const.IMAGE_PATH, 'selection_icon' , COLOR_PICKER_NAME.format(_i+1))
+                    ),40, 40
+                )for _i in range(4)
+            )
+        else:
+            COLOR_PICKER_NAME = 'selection_icon-{:02d}.png'
+            self.selection_icon = tuple(
+                resize_surface(
+                    load_image(
+                        os.path.join(Const.IMAGE_PATH, 'selection_icon' , COLOR_PICKER_NAME.format(_i+1))
+                    ),60, 60
+                )for _i in range(4)
+            )
 
     def update(self):
         
@@ -240,21 +260,31 @@ class View_ColorPicker(__Object_base):
             if self._timer[_i] % self.delay_of_frames == 0:
                 self.frame_index_to_draw[_i] = (self.frame_index_to_draw[_i] + 1) % len(self.walk_frames[_i])
 
+    @staticmethod
+    def tuple_plus(a,b):
+        return (a[0]+b[0],a[1]+b[1])
+
     def draw(self, screen):
         screen.blit(self.menu, (0,0))
 
+        for _i in range(Const.COLOR_TABLE_SIZE):
+            pg.draw.circle(screen, pg.Color(Const.COLOR_TABLE[_i]), self.color_center[_i], 28)
+        
         for player, _i in zip(self.model.players, range(4)):
-            
-            pg.draw.circle(screen, Const.PLAYER_PICKER_COLOR[_i], self.color_center[player.color_index], 38)
-
             screen.blit(
                 self.walk_frames[player.color_index][self.frame_index_to_draw[_i]],
                 self.walk_frames[player.color_index][self.frame_index_to_draw[_i]].get_rect(center=self.player_center[_i])
             )
-
-        for _i in range(Const.COLOR_TABLE_SIZE):
-            pg.draw.circle(screen, pg.Color(Const.COLOR_TABLE[_i]), self.color_center[_i], 35)
-
+            if Const.COLOR_PICKER_TYPE == 0:
+                screen.blit(
+                    self.selection_icon[_i],
+                    self.tuple_plus(self.color_center[player.color_index],(5,5))
+                )
+            else:
+                screen.blit(
+                    self.selection_icon[_i],
+                    self.selection_icon[_i].get_rect(center=self.color_center[player.color_index])
+                )
         self.update()
 
 def init_activeobjects():

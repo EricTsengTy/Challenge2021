@@ -201,18 +201,22 @@ GAME_FULLSCREEN_KEY = pg.K_F11
 #Color Selection
 COLOR_TABLE_SIZE = 11
 COLOR_TABLE = (
-    'aquamarine',
-    'azure',
-    'bisque',
-    'blue',
-    'brown',
-    'chartreuse',
-    'chocolate',
-    'cyan',
-    'gold',
-    'greenyellow',
-    'lightcoral',
+    (255, 128, 128),
+    (255, 71, 50),
+    (255, 133, 51),
+    (255, 219, 77),
+    (255, 255, 153),
+    (204, 255, 102),
+    #== second line ==
+    (255, 102, 255),
+    (187, 153, 255),
+    (128, 170, 255),
+    (102, 217, 255),
+    (153, 255, 204)
 )
+
+COLOR_PICKER_TYPE = 1
+
 PLAYER_PICKER_COLOR = (
     pg.Color('orange'),
     pg.Color('red'),
