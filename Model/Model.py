@@ -82,6 +82,7 @@ class GameEngine:
         '''
         self.clock = pg.time.Clock()
         self.state_machine.push(Const.STATE_MENU)
+        self.pause = False
         self.players = [Player(self, i) for i in range(Const.PLAYER_NUMBER)]
         self.grounds = [Ground(self, i[0], i[1], i[2], i[3]) for i in Const.GROUND_POSITION]
         self.items = []
@@ -102,6 +103,7 @@ class GameEngine:
                 self.update_menu()
 
             elif cur_state == Const.STATE_PLAY:
+                if self.pause: return
                 self.update_objects()
                 self.timer -= 1
                 if self.timer == 0:
@@ -121,12 +123,16 @@ class GameEngine:
             self.running = False
 
         elif isinstance(event, EventPlayerMove):
+            if self.pause: return
+
             # player move left / move right / jump
             if self.players[event.player_id].in_folder():
                 return
             self.players[event.player_id].move(event.direction)
 
         elif isinstance(event, EventPlayerAttack):
+            if self.pause: return
+
             # player do common attack
             attacker = self.players[event.player_id[0]]
             if not attacker.in_folder() and attacker.common_attack_timer == 0:
@@ -144,16 +150,22 @@ class GameEngine:
                 print("Can not common attack")
     
         elif isinstance(event, EventPlayerSpecialAttack):
+            if self.pause: return
+
             attacker = self.players[event.player_id[0]]
             if attacker.can_special_attack():
                 attacker.special_attack()
             else:
                 print("Can not special attack")
 
-
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
         
+        elif isinstance(event, EventStop):
+            self.pause = True
+        
+        elif isinstance(event, EventContinue):
+            self.pause = False
 
     def update_menu(self):
         '''
