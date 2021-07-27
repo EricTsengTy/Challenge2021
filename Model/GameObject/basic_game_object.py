@@ -16,7 +16,7 @@ class Basic_Game_Object:
 
     def clip_position(self):
         self.x = max(0, min(Const.ARENA_SIZE[0]-self.rect.width, self.x))
-        self.y = max(0, min(Const.ARENA_SIZE[1]-self.rect.height, self.y))
+        self.y = max(-Const.PLAYER_HEIGHT, min(Const.ARENA_SIZE[1]-self.rect.height, self.y))
 
     def basic_tick(self):
         
@@ -27,9 +27,6 @@ class Basic_Game_Object:
 
         if not self.can_leave_screen:
             self.clip_position()
-
-        if self.can_leave_screen and (not((0<=self.x<=Const.ARENA_SIZE[0]) and (0<=self.y<=Const.ARENA_SIZE[1]))):
-            self.kill()
 
     def tick(self):
         self.basic_tick()

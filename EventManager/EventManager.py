@@ -145,3 +145,22 @@ class EventSpecialAttackMovement(BaseEvent):
     def __init__(self, player_id, attack_type):
         self.player_id = player_id
         self.attack_type = attack_type
+
+class EventGetProp(BaseEvent):
+    name = 'player get prop'
+    '''
+    notify view player get prop
+    '''
+
+    def __init__(self, player_id, item_type):
+        self.player_id = player_id
+        self.item_type = item_type
+
+class EventPlayerDie(BaseEvent):
+    name = 'player die'
+    '''
+    notify view to reset player action animation
+    '''
+
+    def __init__(self, player_id):
+        self.player_id = player_id

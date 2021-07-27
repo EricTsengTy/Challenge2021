@@ -8,6 +8,7 @@ from EventManager.EventManager import *
 from Model.GameObject.player import Player
 from Model.GameObject.ground import Ground
 from Model.GameObject.item import *
+from Model.GameObject.item_generator import *
 import Model.GameObject.state as State
 
 
@@ -84,11 +85,14 @@ class GameEngine:
         This method is called when a new game is instantiated.
         '''
         self.clock = pg.time.Clock()
+        self.timer = Const.GAME_LENGTH
         self.state_machine.push(Const.STATE_MENU)
         self.players = [Player(self, i, 'manual', False) if self.AI_names[i] == 'm' else Player(self, i, self.AI_names[i], True) for i in range(Const.PLAYER_NUMBER)]
+        self.pause = False
         self.grounds = [Ground(self, i[0], i[1], i[2], i[3]) for i in Const.GROUND_POSITION]
         self.items = []
         self.attacks = []
+        self.item_generator = Item_Generator(self)
 
     def notify(self, event: BaseEvent):
         '''
@@ -104,13 +108,12 @@ class GameEngine:
                 self.update_menu()
 
             elif cur_state == Const.STATE_PLAY:
+                if self.pause: return
                 self.update_objects()
                 self.timer -= 1
                 if self.timer == 0:
+                    self.update_endgame()
                     self.ev_manager.post(EventTimesUp())
-
-            elif cur_state == Const.STATE_ENDGAME:
-                self.update_endgame()
 
         elif isinstance(event, EventStateChange):
             if event.state == Const.STATE_POP:
@@ -123,12 +126,16 @@ class GameEngine:
             self.running = False
 
         elif isinstance(event, EventPlayerMove):
+            if self.pause: return
+
             # player move left / move right / jump
             if self.players[event.player_id].in_folder():
                 return
             self.players[event.player_id].move(event.direction)
 
         elif isinstance(event, EventPlayerAttack):
+            if self.pause: return
+
             # player do common attack
             attacker = self.players[event.player_id[0]]
             if not attacker.in_folder() and attacker.common_attack_timer == 0:
@@ -141,19 +148,30 @@ class GameEngine:
                         do_attack = True
                 if do_attack:
                     attacker.common_attack_timer = Const.PLAYER_COMMON_ATTACK_TIMER
+
             else:
                 print("Can not common attack")
     
         elif isinstance(event, EventPlayerSpecialAttack):
+            if self.pause: return
+
             attacker = self.players[event.player_id[0]]
             if attacker.can_special_attack():
                 attacker.special_attack()
             else:
                 print("Can not special attack")
 
-
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
+        
+        elif isinstance(event, EventStop):
+            self.pause = True
+        
+        elif isinstance(event, EventContinue):
+            self.pause = False
+
+        elif isinstance(event, EventRestart):
+            self.initialize()
 
     def update_menu(self):
         '''
@@ -167,6 +185,8 @@ class GameEngine:
         Update the objects not controlled by user.
         For example: obstacles, items, special effects
         '''
+        self.item_generator.tick()
+
         for player in list(self.players):
             if player.killed(): self.players.remove(player)
             else: player.tick()
@@ -178,23 +198,6 @@ class GameEngine:
         for attack in list(self.attacks):
             if attack.killed(): self.attacks.remove(attack)
             else: attack.tick()
-
-        # generate the items
-        while len(self.items) < Const.MAX_ITEM_NUMBER:
-            px = random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH)
-            py = random.randint(300, 400)
-            generate_item = Item(self, px, py, random.choice(Const.ITEM_TYPE_LIST))
-            collided = False
-            for item in self.items:
-                if(generate_item.rect.colliderect(item.rect)):
-                    collided = True
-                    break
-            for player in self.players:
-                if(generate_item.rect.colliderect(player.rect)):
-                    collided = True
-                    break
-            if not collided:
-                self.items.append(generate_item)
 
     def update_endgame(self):
         '''
@@ -213,7 +216,6 @@ class GameEngine:
         self.running = True
         # Tell every one to start
         self.ev_manager.post(EventInitialize())
-        self.timer = Const.GAME_LENGTH
         while self.running:
             self.ev_manager.post(EventEveryTick())
             self.clock.tick(Const.FPS)
