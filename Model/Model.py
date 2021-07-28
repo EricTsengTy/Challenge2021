@@ -108,8 +108,13 @@ class GameEngine:
                 self.update_objects()
                 self.timer -= 1
                 if self.timer == 0:
-                    self.update_endgame()
+                    for player in self.players:
+                        if player.death == 0:
+                            player.add_score(Const.SCORE_NEVER_DIE)
                     self.ev_manager.post(EventTimesUp())
+
+            elif cur_state == Const.STATE_ENDGAME:
+                self.update_endgame()
 
         elif isinstance(event, EventStateChange):
             if event.state == Const.STATE_POP:
@@ -200,9 +205,6 @@ class GameEngine:
         Update the objects in endgame scene.
         For example: scoreboard
         '''
-        for player in self.players:
-            if player.death == 0:
-                player.add_score(Const.SCORE_NEVER_DIE)
 
     def run(self):
         '''
