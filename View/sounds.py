@@ -3,7 +3,7 @@ import os.path
 import Const
 from EventManager.EventManager import *
 from Model.Model import GameEngine
-from View._init_ import SOUND_ENABLE
+from View import SOUND_ENABLE
 
 if(SOUND_ENABLE):
     class Audio():
