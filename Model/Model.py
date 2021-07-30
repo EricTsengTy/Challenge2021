@@ -140,6 +140,7 @@ class GameEngine:
             # player do common attack
             attacker = self.players[event.player_id[0]]
             if not attacker.in_folder() and attacker.common_attack_timer == 0:
+                self.ev_manager.post(EventNormalAttackMovement(event.player_id[0]))
                 do_attack = False
                 attack_range = attacker.common_attack_range
                 for player in self.players:
