@@ -3,7 +3,7 @@ import os.path
 
 # model
 FPS = 60 # frame per second
-GAME_LENGTH = 60 * FPS
+GAME_LENGTH = 120 * FPS
 
 PLAYER_INIT_POSITION = [pg.Vector2(50, 160), pg.Vector2(500, 0), pg.Vector2(800, 360), pg.Vector2(1000, 160)]
 PLAYER_NUMBER = 4

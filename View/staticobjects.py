@@ -49,6 +49,19 @@ class View_stage(__Object_base):
     def draw(self, screen):
         #screen.fill(Const.BACKGROUND_COLOR)
         screen.blit(self.stage, (0, 0))
+        # display time
+        _time = self.model.timer//Const.FPS
+        time_str = '{:02d}:{:02d}'.format( _time//60 ,  _time%60 )
+        if self.model.timer > 20:
+            time_text = Text( time_str , 45, pg.Color('white'))
+        else:
+            time_text = Text( time_str , 45, pg.Color('red'))
+        
+        time_text.blit(
+            screen,
+            bottomright=(Const.ARENA_SIZE[0]-10, Const.ARENA_SIZE[1]-10)
+        )
+
 
 class View_platform(__Object_base):
     block = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'floor', 'floor_block.png')),
