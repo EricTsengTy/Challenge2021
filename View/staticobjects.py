@@ -62,7 +62,7 @@ class View_stage(__Object_base):
         
         time_text.blit(
             screen,
-            bottomright=(Const.ARENA_SIZE[0]-15, Const.ARENA_SIZE[1]-10)
+            topleft=(Const.ARENA_SIZE[0]-95, Const.ARENA_SIZE[1]-37)
         )
 
 
