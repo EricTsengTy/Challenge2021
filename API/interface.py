@@ -50,9 +50,9 @@ class Interface(object):
                     self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
                     self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
                 elif AI_dir == 6 and player.can_attack():
-                    self.ev_manager.post(EventPlayerAttack(player.player_id))
+                    self.ev_manager.post(EventPlayerAttack((player.player_id, 'attack')))
                 elif AI_dir == 7:
-                    self.ev_manager.post(EventPlayerSpecialAttack(player.player_id))
+                    self.ev_manager.post(EventPlayerSpecialAttack((player.player_id, 'special_attack')))
 
     def initialize(self):
         if self.is_init_AI:
