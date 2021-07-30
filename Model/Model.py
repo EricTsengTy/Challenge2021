@@ -65,7 +65,7 @@ class GameEngine:
     The main game engine. The main loop of the game is in GameEngine.run()
     '''
 
-    def __init__(self, ev_manager: EventManager):
+    def __init__(self, ev_manager: EventManager, AI_names: list):
         '''
         This function is called when the GameEngine is created.
         For more specific objects related to a game instance
@@ -76,6 +76,10 @@ class GameEngine:
 
         self.state_machine = StateMachine()
 
+        self.AI_names = AI_names
+        while len(self.AI_names) < 4:
+            self.AI_names.append('m')
+
     def initialize(self):
         '''
         This method is called when a new game is instantiated.
@@ -83,8 +87,8 @@ class GameEngine:
         self.clock = pg.time.Clock()
         self.timer = Const.GAME_LENGTH
         self.state_machine.push(Const.STATE_MENU)
+        self.players = [Player(self, i, 'manual', False) if self.AI_names[i] == 'm' else Player(self, i, self.AI_names[i], True) for i in range(Const.PLAYER_NUMBER)]
         self.pause = False
-        self.players = [Player(self, i) for i in range(Const.PLAYER_NUMBER)]
         self.grounds = [Ground(self, i[0], i[1], i[2], i[3]) for i in Const.GROUND_POSITION]
         self.items = []
         self.attacks = []
