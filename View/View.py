@@ -66,6 +66,7 @@ class GraphicalView:
         self.item = View.staticobjects.View_Item(self.model)
         self.pause_window = View.staticobjects.View_Pause(self.model)
         self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
+        self.score_playing = View.staticobjects.View_Score_Playing(self.model)
         # active objects
         self.bug = View.activeobjects.View_Bug(10)
         self.coffee = View.activeobjects.View_Coffee(10)
@@ -206,6 +207,7 @@ class GraphicalView:
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.stage.draw(target)
         self.platform.draw(target)
+        self.score_playing.draw(target)
         # draw players
         self.players.draw(target)
 

@@ -223,3 +223,5 @@ PLAYER_PICKER_COLOR = (
     pg.Color('green'),
     pg.Color('blue'),
 )
+
+SCORE_PLAYING_SIZE = (200,48)

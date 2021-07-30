@@ -183,6 +183,36 @@ class View_Scoreboard(__Object_base):
             score_text = Text(str(player_score[i]), 36, pg.Color('white'))
             score_text.blit(screen, topleft=(text_start + i*text_interval, text_top))
 
+
+class View_Score_Playing(__Object_base):
+    score_bg = (
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'score', 'score_background-{:02d}.png'.format(_i))),
+            Const.SCORE_PLAYING_SIZE[0], Const.SCORE_PLAYING_SIZE[1]
+        ) for _i in range(1,12)
+    )
+    
+    @classmethod
+    def init_convert(cls):
+        cls.score_bg = tuple( bg.convert_alpha() for bg in cls.score_bg)
+
+    def draw(self, screen):
+        c = 1
+        player_score = [10, 10000, 1000, 2000] #test score
+        for player in self.model.players :
+            #print(player.color_index)
+            score_str = 'P{:d} {:8d}'.format(c,player_score[c-1])
+            score_text = Text( score_str , 36, pg.Color('white'))
+            screen.blit(
+                self.score_bg[ player.color_index  ] ,
+                self.score_bg[ player.color_index  ].get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-60 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1] ) )
+            )
+            score_text.blit(
+                screen,
+                topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-60 + 50 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1] + Const.SCORE_PLAYING_SIZE[1]//3 )
+            )
+            c += 1
+
 def init_staticobjects():
     View_stage.init_convert()
     View_platform.init_convert()
@@ -191,3 +221,4 @@ def init_staticobjects():
     View_Item.init_convert()
     View_Pause.init_convert()
     View_Scoreboard.init_convert()
+    View_Score_Playing.init_convert()
