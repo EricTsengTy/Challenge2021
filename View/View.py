@@ -98,8 +98,8 @@ class GraphicalView:
             self.toggle_fullscreen()
         
         elif isinstance(event, EventPlayerAttack):
-            self.players.status[event.player_id[0]] = 'common_attack'
-            self.players.timer[event.player_id[0]] = 0
+            self.players.status[event.player_id] = 'common_attack'
+            self.players.timer[event.player_id] = 0
         
         elif isinstance(event, EventHelloWorld):
             style = random.randint(1,3)

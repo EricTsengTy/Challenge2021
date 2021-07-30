@@ -102,10 +102,10 @@ class Controller:
                     player_id = Const.PLAYER_JUMP_KEYS[key]
                     self.ev_manager.post(EventPlayerMove(*player_id))
                 if key in Const.PLAYER_ATTACK_KEYS:
-                    player_id = Const.PLAYER_ATTACK_KEYS[key]
+                    player_id = Const.PLAYER_ATTACK_KEYS[key][0]
                     self.ev_manager.post(EventPlayerAttack(player_id))
                 if key in Const.PLAYER_SPECIAL_ATTACK_KEYS:
-                    player_id = Const.PLAYER_SPECIAL_ATTACK_KEYS[key]
+                    player_id = Const.PLAYER_SPECIAL_ATTACK_KEYS[key][0]
                     self.ev_manager.post(EventPlayerSpecialAttack(player_id))
                 # detect stop
                 if event_pg.key == Const.GAME_STOP_KEY:

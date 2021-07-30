@@ -141,7 +141,7 @@ class GameEngine:
         elif isinstance(event, EventPlayerAttack):
             if self.pause: return
 
-            attacker = self.players[event.player_id[0]]
+            attacker = self.players[event.player_id]
             if attacker.common_attack_timer>0 or attacker.in_folder(): 
                 print("Can not common attack")
                 return
@@ -156,7 +156,7 @@ class GameEngine:
         elif isinstance(event, EventPlayerSpecialAttack):
             if self.pause: return
 
-            attacker = self.players[event.player_id[0]]
+            attacker = self.players[event.player_id]
             if attacker.can_special_attack():
                 attacker.special_attack()
             else:
