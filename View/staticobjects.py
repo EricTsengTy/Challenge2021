@@ -167,11 +167,10 @@ class View_Scoreboard(__Object_base):
         screen.blit(self.board, (0, 0))
         
         player_score = []
-        '''
+        
         for player in self.model.players:
             player_score.append(player.score)
-        '''
-        player_score = [10, 10000, 1000, 2000] #test score
+
         text_interval = Const.ARENA_SIZE[0]/8.35
         text_start = Const.ARENA_SIZE[0]/2 - text_interval*1.75
         text_top = Const.ARENA_SIZE[1]/1.75
@@ -198,10 +197,9 @@ class View_Score_Playing(__Object_base):
 
     def draw(self, screen):
         c = 1
-        player_score = [10, 10000, 1000, 2000] #test score
         for player in self.model.players :
             #print(player.color_index)
-            score_str = 'P{:d} {:8d}'.format(c,player_score[c-1])
+            score_str = 'P{:d} {:8d}'.format(c,int(player.score))
             score_text = Text( score_str , 36, pg.Color('white'))
             screen.blit(
                 self.score_bg[ player.color_index  ] ,
