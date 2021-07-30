@@ -51,15 +51,18 @@ class View_stage(__Object_base):
         screen.blit(self.stage, (0, 0))
         # display time
         _time = self.model.timer//Const.FPS
-        time_str = '{:02d}:{:02d}'.format( _time//60 ,  _time%60 )
-        if self.model.timer > 20:
-            time_text = Text( time_str , 45, pg.Color('white'))
+        time_str = '{:02d}: {:02d}'.format( _time//60 ,  _time%60 )
+        if self.model.timer == 1:
+            time_str = '{:02d}: {:02d}'.format( 11 , 26 )
+            time_text = Text( time_str , 40, pg.Color('white'))
+        elif _time > 20:
+            time_text = Text( time_str , 40, pg.Color('white'))
         else:
-            time_text = Text( time_str , 45, pg.Color('red'))
+            time_text = Text( time_str , 40, pg.Color('red'))
         
         time_text.blit(
             screen,
-            bottomright=(Const.ARENA_SIZE[0]-10, Const.ARENA_SIZE[1]-10)
+            bottomright=(Const.ARENA_SIZE[0]-15, Const.ARENA_SIZE[1]-10)
         )
 
 
