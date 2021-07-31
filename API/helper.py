@@ -17,17 +17,17 @@ class Helper(object):
 
     #獲取遊戲資訊專區
     def get_time_left_time(self):
-        return (Const.GAME_LENGTH - self.model.clock) / Const.FPS
+        return self.model.timer // Const.FPS
 
     def get_game_arena_boundary(self):
-        return tuple((0,0),Const.ARROW_SIZE)
+        return ((0,0), Const.ARENA_SIZE)
 
     #獲取個人資訊專區
     def get_self_id(self):
         return self.player_id
 
     def get_self_position(self):
-        return tuple(self.model.players[self.player_id].__position)
+        return tuple(self.model.players[self.player_id].position)
     
     def get_self_velocity(self):
         return tuple(self.model.players[self.player_id].speed)
@@ -36,7 +36,7 @@ class Helper(object):
         return self.model.players[self.player_id].blood
     
     def get_keep_item_type(self):
-        return self.model.player[self.player_id].keep_item_type
+        return self.model.players[self.player_id].keep_item_type
 
     def get_self_direction(self):
         return tuple(self.model.players[self.player_id].face)
@@ -47,20 +47,21 @@ class Helper(object):
     def get_self_score(self):
         return self.model.players[self.player_id].score
 
-    def get_can_be_common_attack(self):
-        return self.model.players[self.player_id].can_be_common_attack()
+    def get_can_be_common_attacked(self):
+        return self.model.players[self.player_id].can_be_common_attacked()
 
-    def get_can_be_special_attack(self):
-        return self.model.players[self.playr_id].can_be_special_attack()
+    def get_can_be_special_attacked(self):
+        return self.model.players[self.player_id].can_be_special_attacked()
     
     def get_is_invisible(self):
         return self.model.players[self.player_id].is_invisible()
 
     def get_can_special_attack(self):
-        return self.model.players[self.player_id].can_special_attack()
+        return self.model.players[self.player_id].can_special_attack() and\
+            self.model.players[self.player_id].special_attack_timer == 0 
     
     def get_can_jump(self):
-        return self.model.players[self.player_id].jump_count>0
+        return self.model.players[self.player_id].jump_count < self.model.players[self.player_id].max_jump
 
     def get_infection(self):
         return self.model.players[self.player_id].infection()
@@ -76,7 +77,7 @@ class Helper(object):
 
     #獲取所有玩家資訊專區
     def get_all_position(self):
-        return [tuple(player.__position) for player in self.model.players]
+        return [tuple(player.position) for player in self.model.players]
 
     def get_all_velocity(self):
         return [tuple(player.speed) for player in self.model.players]
@@ -87,17 +88,17 @@ class Helper(object):
     def get_all_keep_item_type(self):
         return [player.keep_item_type for player in self.model.players]
 
-    def get_all_can_be_common_attack(self):
+    def get_all_can_be_common_attacked(self):
         return [player.can_be_common_attacked() for player in self.model.players]
 
-    def get_all_can_be_specail_attack(self):
+    def get_all_can_be_specail_attacked(self):
         return [player.can_be_special_attacked() for player in self.model.players]
 
     def get_all_is_invisible(self):
         return [player.is_invisible() for player in self.model.players]
 
     def get_all_can_special_attack(self):
-        return [player.can_special_attack() for player in self.model.players]
+        return [player.can_special_attack() and player.special_attack_timer == 0 for player in self.model.players]
 
     def get_all_infection(self):
         return [player.infection() for player in self.model.players]
@@ -117,7 +118,7 @@ class Helper(object):
         return [tuple((dest[0]-my_pos[0], dest[1]-my_pos[1])) for dest in all_pos]
 
     def get_all_player_distance(self):
-        all_vec = self.get_all_player_vector
+        all_vec = self.get_all_player_vector()
         def dist_cal(vec):
             return ((vec[0])**2 + (vec[1])**2) ** (1/2)
         return [dist_cal(vect) for vect in all_vec]
@@ -125,7 +126,7 @@ class Helper(object):
 
     #獲取特定玩家資訊專區
     def get_other_position(self,index):
-        return tuple(self.model.players[index].__position)
+        return tuple(self.model.players[index].position)
 
     def get_other_velocity(self,index):
         return tuple(self.model.players[index].speed)
@@ -143,7 +144,7 @@ class Helper(object):
         return self.model.players[index].can_be_special_attacked()
 
     def  get_other_can_special_attack(self,index):
-        return self.model.players[index].can_special_attack()
+        return self.model.players[index].can_special_attack() and self.model.players[index].special_attack_timer == 0
 
     def get_other_is_invisible(self,index):
         return self.model.players[index].is_invisible()
