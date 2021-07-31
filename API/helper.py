@@ -126,6 +126,16 @@ class Helper(object):
             return ((vec[0])**2 + (vec[1])**2) ** (1/2)
         return [dist_cal(vect) for vect in all_vec]
 
+    def get_if_player_in_attack_range(self):
+        attacker = self.model.players[self.player_id]
+        attack_range = attacker.common_attack_range
+        for player in self.model.players:
+            if attacker.player_id != player.player_id and\
+                player.can_be_common_attacked() and attack_range.colliderect(player.rect):
+                return True
+        return False
+
+        
 
     #獲取特定玩家資訊專區
     def get_other_position(self,index):
