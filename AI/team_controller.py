@@ -37,6 +37,7 @@ class TeamAI ():
             decision = self.attack()
         if decision is None:
             decision = self.walk_to_nearest_player()
+        return decision
     
     def special_attack(self):
         pass
