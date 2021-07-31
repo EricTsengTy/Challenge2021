@@ -40,7 +40,7 @@ class TeamAI ():
         return decision
     
     def special_attack(self):
-        if (self.helper.get_can_use_special_attack()):
+        if self.helper.get_can_use_special_attack():
             return AI_DIR_SPECIAL_ATTACK
         return None
         
@@ -48,7 +48,9 @@ class TeamAI ():
         pass
 
     def attack(self):
-        pass
+        if self.helper.get_can_common_attack() and self.helper.get_if_player_in_attack_range():
+            return AI_DIR_ATTACK
+        return None
 
     def walk_to_nearest_player(self):
-        pass
+        return AI_DIR_RIGHT
