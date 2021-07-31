@@ -38,7 +38,7 @@ class Helper(object):
     def get_keep_item_type(self):
         return self.model.players[self.player_id].keep_item_type
 
-    def get_self_direction(self):
+    def get_self_face(self):
         return tuple(self.model.players[self.player_id].face)
     
     def get_self_death(self):
@@ -85,7 +85,7 @@ class Helper(object):
     def get_all_velocity(self):
         return [tuple(player.speed) for player in self.model.players]
 
-    def get_all_direction(self):
+    def get_all_face(self):
         return [tuple(player.face) for player in self.model.players]
 
     def get_all_keep_item_type(self):
@@ -206,8 +206,11 @@ class Helper(object):
         return index
     
     def get_nearest_player_position(self):
-        nearest_player = self.get_nearest_player()     
-        return self.get_other_position(nearest_player)     
+        nearest_player = self.get_nearest_player_id()     
+        return self.get_other_position(nearest_player)
+
+    def get_nearest_platform_position(self):
+        pass    
 
 
     def get_highest_score_player(self):
@@ -222,3 +225,7 @@ class Helper(object):
 
     def get_vector(self, pos1, pos2):
         return (pos2[0] - pos1[0], pos2[1] - pos1[1])
+
+    ###新手友善專區
+    def walk_to_specific_position(self,pos):
+        pass
