@@ -40,8 +40,10 @@ class TeamAI ():
         return decision
     
     def special_attack(self):
-        pass
-
+        if (self.helper.get_can_use_special_attack()):
+            return AI_DIR_SPECIAL_ATTACK
+        return None
+        
     def walk_to_EXE(self):
         pass
 
