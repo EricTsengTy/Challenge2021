@@ -51,7 +51,7 @@ class Helper(object):
         return self.model.players[self.player_id].can_be_common_attack()
 
     def get_can_be_special_attack(self):
-        return self.model.players[self.playr_id].can_be_special_attack()
+        return self.model.players[self.player_id].can_be_special_attack()
     
     def get_is_invisible(self):
         return self.model.players[self.player_id].is_invisible()
@@ -73,6 +73,9 @@ class Helper(object):
     
     def get_can_common_attack(self):
         return self.model.players[self.player_id].can_common_attack()
+    
+    def get_can_use_special_attack(self):
+        return self.model.players[self.player_id].special_attack_timer == 0 and self.model.players[self.player_id].can_special_attack()
 
     #獲取所有玩家資訊專區
     def get_all_position(self):
