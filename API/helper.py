@@ -229,3 +229,8 @@ class Helper(object):
     ###新手友善專區
     def walk_to_specific_position(self,pos):
         pass
+    
+    def double_jump(self):
+        if self.model.players[self.player_id].speed.y >= 0:
+            return AI_DIR_JUMP
+        return None
