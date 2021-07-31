@@ -102,12 +102,12 @@ class GraphicalView:
             self.players.timer[event.player_id] = 0
         
         elif isinstance(event, EventHelloWorld):
-            style = random.randint(1,3)
-            if style == 1:
+            event.style = random.randint(1,3)
+            if event.style == 1:
                 self.animation_list.append(View.animation.Greeting_from_audience(3,4)) #delay_of_frames, speed
-            elif style == 2:
+            elif event.style == 2:
                 self.animation_list.append(View.animation.Greeting_from_prog(0))
-            elif style == 3:
+            elif event.style == 3:
                 self.animation_list.append(View.animation.Greeeting_from_player(self.model))
 
         elif isinstance(event, EventBeAttacked):

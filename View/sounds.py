@@ -37,7 +37,7 @@ if(SOUND_ENABLE):
         def notify(self, event):
             if isinstance(event, EventPlayerAttack):
                 self.sound_list['attack'].play()
-            if isinstance(event, EventSpecialAttackMovement):
+            elif isinstance(event, EventSpecialAttackMovement):
                 if event.attack_type == '':
                     self.sound_list['fireball'].play()
                 elif event.attack_type == 'LIGHTNING':
@@ -54,11 +54,15 @@ if(SOUND_ENABLE):
                     self.sound_list['throw_bug'].play()
                 
 
-            if isinstance(event, EventGetProp):
+            elif isinstance(event, EventGetProp):
                 self.sound_list['get_prop'].play()
                 
                 if event.item_type == 'CHARGE':
                     self.sound_list['charge'].play()
+            
+            elif isinstance(event, EventHelloWorld):
+                #print(event.style)
+                pass
 else:
     class Audio():
         def __init__(self, ev_manager: EventManager, model: GameEngine):
