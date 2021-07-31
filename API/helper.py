@@ -24,7 +24,7 @@ class Helper(object):
 
     #獲取個人資訊專區
     def get_self_id(self):
-        return self.player.id
+        return self.player_id
 
     def get_self_position(self):
         return tuple(self.model.players[self.player_id].__position)
@@ -70,6 +70,9 @@ class Helper(object):
 
     def get_damage_adjust(self):
         return self.model.players[self.player_id].damage_adjust()
+    
+    def get_can_common_attack(self):
+        return self.model.players[self.player_id].can_common_attack()
 
     #獲取所有玩家資訊專區
     def get_all_position(self):
