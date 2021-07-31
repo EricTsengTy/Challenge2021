@@ -18,7 +18,8 @@ if(SOUND_ENABLE):
             'ddos': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'ddos.wav')),
             'charge': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'charge.wav')),
             'throw_coffee': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'throw_coffee.wav')),
-            'throw_bug': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'throw_bug.wav'))
+            'throw_bug': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'throw_bug.wav')),
+            'hello_world2': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world2.wav')),
         }
         
         def __init__(self, ev_manager: EventManager, model: GameEngine):
@@ -33,6 +34,7 @@ if(SOUND_ENABLE):
             self.sound_list['charge'].set_volume(0.5)
             self.sound_list['throw_coffee'].set_volume(0.5)
             self.sound_list['throw_bug'].set_volume(0.7)
+            self.sound_list['hello_world2'].set_volume(0.4)
 
         def notify(self, event):
             if isinstance(event, EventPlayerAttack):
@@ -61,8 +63,9 @@ if(SOUND_ENABLE):
                     self.sound_list['charge'].play()
             
             elif isinstance(event, EventHelloWorld):
-                #print(event.style)
-                pass
+                if event.style == 2:
+                    self.sound_list['hello_world2'].play()
+
 else:
     class Audio():
         def __init__(self, ev_manager: EventManager, model: GameEngine):
