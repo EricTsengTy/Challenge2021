@@ -32,6 +32,8 @@ class Player(Basic_Game_Object):
         self.special_attack_delay = -1 # -1 for no special attack
         self.standing_tick = 0
         self.score = 0
+        self.color = Const.COLOR_TABLE[player_id]
+        self.color_index = player_id
         self.player_name = name
         self.is_AI = is_AI
 
@@ -117,6 +119,7 @@ class Player(Basic_Game_Object):
             self.keep_item_type = item_type
             self.special_attack_timer = 0
         elif item_type == 'EXE':
+            self.score += 300
             self.model.ev_manager.post(EventHelloWorld())
         elif item_type == 'USB':
             State.infect(self.state)
@@ -239,4 +242,6 @@ class Player(Basic_Game_Object):
 
     def is_standing(self):
         return self.standing_tick>5
-
+    
+    def change_color(self, color):
+        self.color = color

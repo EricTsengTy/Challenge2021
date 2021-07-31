@@ -10,7 +10,7 @@ from Model.GameObject.ground import Ground
 from Model.GameObject.item import *
 from Model.GameObject.item_generator import *
 import Model.GameObject.state as State
-
+from Model.GameObject.color_selector import *
 
 class StateMachine(object):
     '''
@@ -93,7 +93,7 @@ class GameEngine:
         self.items = []
         self.attacks = []
         self.item_generator = Item_Generator(self)
-
+        self.color_selector = Color_Selector(self.players)
     def notify(self, event: BaseEvent):
         '''
         Called by EventManager when a event occurs.
@@ -112,8 +112,13 @@ class GameEngine:
                 self.update_objects()
                 self.timer -= 1
                 if self.timer == 0:
-                    self.update_endgame()
+                    for player in self.players:
+                        if player.death == 0:
+                            player.add_score(Const.SCORE_NEVER_DIE)
                     self.ev_manager.post(EventTimesUp())
+
+            elif cur_state == Const.STATE_ENDGAME:
+                self.update_endgame()
 
         elif isinstance(event, EventStateChange):
             if event.state == Const.STATE_POP:
@@ -136,31 +141,33 @@ class GameEngine:
         elif isinstance(event, EventPlayerAttack):
             if self.pause: return
 
-            # player do common attack
-            attacker = self.players[event.player_id[0]]
-            if not attacker.in_folder() and attacker.common_attack_timer == 0:
-                do_attack = False
-                attack_range = attacker.common_attack_range
-                for player in self.players:
-                    if attacker.player_id != player.player_id and\
-                       player.can_be_common_attacked() and attack_range.colliderect(player.rect):
-                        player.be_common_attacked(attacker)
-                        do_attack = True
-                if do_attack:
-                    attacker.common_attack_timer = Const.PLAYER_COMMON_ATTACK_TIMER
-
-            else:
+            attacker = self.players[event.player_id]
+            if attacker.common_attack_timer>0 or attacker.in_folder(): 
                 print("Can not common attack")
+                return
+
+            attacker.common_attack_timer = Const.PLAYER_COMMON_ATTACK_TIMER
+            attack_range = attacker.common_attack_range
+            for player in self.players:
+                if attacker.player_id != player.player_id and\
+                    player.can_be_common_attacked() and attack_range.colliderect(player.rect):
+                    player.be_common_attacked(attacker)
     
         elif isinstance(event, EventPlayerSpecialAttack):
             if self.pause: return
 
-            attacker = self.players[event.player_id[0]]
+            attacker = self.players[event.player_id]
             if attacker.can_special_attack():
                 attacker.special_attack()
             else:
                 print("Can not special attack")
 
+        elif isinstance(event, EventPreviousColor):
+            self.color_selector.previous_color(self.players[event.player_id])
+
+        elif isinstance(event, EventNextColor):
+            self.color_selector.next_color(self.players[event.player_id])
+            
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
         
@@ -204,9 +211,6 @@ class GameEngine:
         Update the objects in endgame scene.
         For example: scoreboard
         '''
-        for player in self.players:
-            if player.death == 0:
-                player.add_score(Const.SCORE_NEVER_DIE)
 
     def run(self):
         '''

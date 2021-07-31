@@ -1,4 +1,6 @@
+from genericpath import samestat
 import pygame as pg
+from pygame import color
 
 from EventManager.EventManager import *
 from Model.Model import GameEngine
@@ -64,13 +66,13 @@ class GraphicalView:
         self.item = View.staticobjects.View_Item(self.model)
         self.pause_window = View.staticobjects.View_Pause(self.model)
         self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
+        self.score_playing = View.staticobjects.View_Score_Playing(self.model)
         # active objects
         self.bug = View.activeobjects.View_Bug(10)
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
-        #players
-        self.players = View.players.View_players(self.model, 7)
+        self.color_select = View.activeobjects.View_ColorPicker(self.model, 7)
 
         self.is_initialized = True
 
@@ -87,6 +89,7 @@ class GraphicalView:
             cur_state = self.model.state_machine.peek()
             if cur_state == Const.STATE_MENU: self.render_menu()
             elif cur_state == Const.STATE_TUTORIAL: self.render_tutorial()
+            elif cur_state == Const.STATE_COLOR_SELECT: self.render_color_select()
             elif cur_state == Const.STATE_PLAY: self.render_play()
             elif cur_state == Const.STATE_STOP: self.render_stop()
             elif cur_state == Const.STATE_ENDGAME: self.render_endgame()
@@ -95,15 +98,13 @@ class GraphicalView:
             self.toggle_fullscreen()
         
         elif isinstance(event, EventPlayerAttack):
-            self.players.status[event.player_id[0]] = 'common_attack'
-            self.players.timer[event.player_id[0]] = 0
+            self.players.status[event.player_id] = 'common_attack'
+            self.players.timer[event.player_id] = 0
         
         elif isinstance(event, EventHelloWorld):
             style = random.randint(1,3)
-
-            #style = 3 # now test type2 hello world
             if style == 1:
-                self.animation_list.append(View.animation.Animation_hello_world(3,4)) #delay_of_frames, speed
+                self.animation_list.append(View.animation.Greeting_from_audience(3,4)) #delay_of_frames, speed
             elif style == 2:
                 self.animation_list.append(View.animation.Greeting_from_prog(0))
             elif style == 3:
@@ -142,6 +143,11 @@ class GraphicalView:
         elif isinstance(event, EventPlayerDie):
 
             self.players.reset(event.player_id)
+
+        elif isinstance(event, EventStateChange):
+            if event.state == Const.STATE_PLAY:
+                #players
+                self.players = View.players.View_players(self.model, 7)
             
         
     def display_fps(self):
@@ -178,6 +184,22 @@ class GraphicalView:
         self.tutorial.draw(target)
         pg.display.flip()
 
+    def render_color_select(self, target=None):
+        '''
+        implement color select view here
+        '''
+        if target is None:
+            target = self.screen
+        self.screen.fill(Const.BACKGROUND_COLOR)
+        self.color_select.draw(target)
+        
+        pg.display.flip()
+        '''
+        for player in self.model.players:
+            print(player.player_id, player.color, end = ', ')
+        print('')
+        '''
+
     def render_play(self, target=None, update=True):
         if target is None:
             target = self.screen
@@ -185,6 +207,7 @@ class GraphicalView:
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.stage.draw(target)
         self.platform.draw(target)
+        self.score_playing.draw(target)
         # draw players
         self.players.draw(target)
 
@@ -223,9 +246,7 @@ class GraphicalView:
                 self.animation_list.remove(ani)
             else: 
                 ani.draw(target, update)
-        
-            
-        
+
         pg.display.flip()
 
     def render_stop(self):

@@ -362,7 +362,7 @@ class View_players():
             {'charge' : -1, 'firewall' : 0, 'format' : -1, 'get_prop':-1},
         ]
         self.player_frames_list = tuple(
-            player_frames(Const.PLAYER_COLOR[_i]) for _i in range(4)
+            player_frames(pg.Color(player.color)) for player in model.players
         )
     
     def reset(self, player_id):

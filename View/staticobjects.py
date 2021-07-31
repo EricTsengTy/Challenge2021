@@ -1,3 +1,4 @@
+from View.players import player_frames
 import pygame as pg
 import os.path
 
@@ -48,6 +49,22 @@ class View_stage(__Object_base):
     def draw(self, screen):
         #screen.fill(Const.BACKGROUND_COLOR)
         screen.blit(self.stage, (0, 0))
+        # display time
+        _time = self.model.timer//Const.FPS
+        time_str = '{:02d}: {:02d}'.format( _time//60 ,  _time%60 )
+        if self.model.timer == 1:
+            time_str = '{:02d}: {:02d}'.format( 11 , 26 )
+            time_text = Text( time_str , 40, pg.Color('white'))
+        elif _time > 20:
+            time_text = Text( time_str , 40, pg.Color('white'))
+        else:
+            time_text = Text( time_str , 40, pg.Color('red'))
+        
+        time_text.blit(
+            screen,
+            topleft=(Const.ARENA_SIZE[0]-95, Const.ARENA_SIZE[1]-37)
+        )
+
 
 class View_platform(__Object_base):
     block = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'floor', 'floor_block.png')),
@@ -166,11 +183,10 @@ class View_Scoreboard(__Object_base):
         screen.blit(self.board, (0, 0))
         
         player_score = []
-        '''
+        
         for player in self.model.players:
             player_score.append(player.score)
-        '''
-        player_score = [10, 10000, 1000, 2000] #test score
+
         text_interval = Const.ARENA_SIZE[0]/8.35
         text_start = Const.ARENA_SIZE[0]/2 - text_interval*1.75
         text_top = Const.ARENA_SIZE[1]/1.75
@@ -182,6 +198,35 @@ class View_Scoreboard(__Object_base):
             score_text = Text(str(player_score[i]), 36, pg.Color('white'))
             score_text.blit(screen, topleft=(text_start + i*text_interval, text_top))
 
+
+class View_Score_Playing(__Object_base):
+    score_bg = (
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'score', 'score_background-{:02d}.png'.format(_i))),
+            Const.SCORE_PLAYING_SIZE[0], Const.SCORE_PLAYING_SIZE[1]
+        ) for _i in range(1,12)
+    )
+    
+    @classmethod
+    def init_convert(cls):
+        cls.score_bg = tuple( bg.convert_alpha() for bg in cls.score_bg)
+
+    def draw(self, screen):
+        c = 1
+        for player in self.model.players :
+            #print(player.color_index)
+            score_str = 'P{:d} {:8d}'.format(c,int(player.score))
+            score_text = Text( score_str , 36, pg.Color('white'))
+            screen.blit(
+                self.score_bg[ player.color_index  ] ,
+                self.score_bg[ player.color_index  ].get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-60 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1] ) )
+            )
+            score_text.blit(
+                screen,
+                topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-60 + 50 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1] + Const.SCORE_PLAYING_SIZE[1]//3 )
+            )
+            c += 1
+
 def init_staticobjects():
     View_stage.init_convert()
     View_platform.init_convert()
@@ -190,3 +235,4 @@ def init_staticobjects():
     View_Item.init_convert()
     View_Pause.init_convert()
     View_Scoreboard.init_convert()
+    View_Score_Playing.init_convert()

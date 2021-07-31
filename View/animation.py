@@ -10,7 +10,7 @@ class Animation_base():
         self._timer = 0
         self.expired = False
 
-class Animation_hello_world(Animation_base):
+class Greeting_from_audience(Animation_base):
     
     pg.font.init()
     fonts = [ pg.font.Font(None, 24+12* _i ) for _i in range(1,4)]
@@ -57,12 +57,19 @@ class Animation_hello_world(Animation_base):
     '''
 
 class Greeting_from_prog(Animation_base):
+    _how_many = 0
+    @classmethod
+    def new_obj(cls):
+        cls._how_many += 1
+        return cls._how_many
+    
     def __init__(self,delay_of_frames):
         super().__init__(delay_of_frames)
         self.expired_time = 160
         head_font = pg.font.SysFont(None, 200)
         self.text_surface = head_font.render('Hello World!', True, (0, 0, 0))
         self.text_surface = self.text_surface.convert_alpha()
+        self.num = self.new_obj()
 
     def rolling(self,source_arr):
         return np.roll(source_arr,self._timer*-10,axis=1)
@@ -108,6 +115,9 @@ class Greeting_from_prog(Animation_base):
             self.expired = True
 
     def draw(self, screen, update):
+        if self.num != self._how_many:
+            self.expired = True
+            return
         if update: self.update()
         self.canvas_size = screen.get_size()
         self.scrollY(screen,(self._timer%80)*-10) # default to scroll -10 pixel
@@ -118,16 +128,27 @@ class Greeting_from_prog(Animation_base):
         self.shifting(source_arr)
 
 class Greeeting_from_player(Animation_base):
-    
+    _how_many = 0
     chatlog_img = tuple(
         load_image(os.path.join(Const.IMAGE_PATH, 'hello_world', f'hello_world3_{_i+1}.png'))
+        for _i in range(4)
+    )
+
+    fliped_chatlog_img = tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'hello_world', f'hello_world3_{_i+1}_mir.png'))
         for _i in range(4)
     )
 
     @classmethod
     def init_convert(cls):
         cls.chatlog_img = tuple(img.convert_alpha() for img in cls.chatlog_img)
+        cls.fliped_chatlog_img = tuple(img.convert_alpha() for img in cls.fliped_chatlog_img)
 
+    @classmethod
+    def new_obj(cls):
+        cls._how_many += 1
+        return cls._how_many
+    
     def __init__(self, model):
         self.expire_time = 10*Const.FPS
         self.refresh_time = 2*Const.FPS
@@ -135,6 +156,7 @@ class Greeeting_from_player(Animation_base):
         self._timer = 0
         self.model = model
         self.chatlogs = [0,1,2,3]
+        self.num = self.new_obj()
 
     def update(self):
         self._timer += 1
@@ -145,10 +167,18 @@ class Greeeting_from_player(Animation_base):
             self.expired = True
 
     def draw(self, screen,  update=True):
+        if self.num != self._how_many :
+            self.expired = True
+            return
         for player in self.model.players:
-            screen.blit(
-                self.chatlog_img[self.chatlogs[player.player_id]], self.chatlog_img[self.chatlogs[player.player_id]].get_rect(bottomright=player.rect.topleft)
-            )
+            if player.face == Const.DIRECTION_TO_VEC2['left']:
+                screen.blit(
+                    self.chatlog_img[self.chatlogs[player.player_id]], self.chatlog_img[self.chatlogs[player.player_id]].get_rect(bottomright=player.rect.topleft)
+                )
+            else:
+                screen.blit(
+                    self.fliped_chatlog_img[self.chatlogs[player.player_id]], self.fliped_chatlog_img[self.chatlogs[player.player_id]].get_rect(bottomleft=player.rect.topright)
+                )
         if update: self.update()
 
 def init_animation():

@@ -1,5 +1,8 @@
+from os import walk
 import pygame as pg
 import os.path
+
+from pygame.display import update
 
 from View.utils import scale_surface, load_image, resize_surface
 import Const
@@ -193,9 +196,100 @@ class View_Tornado(__Object_base):
             )
 
 
+class View_ColorPicker(__Object_base):
+    menu = resize_surface(load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'select_color.png')), 
+        Const.ARENA_SIZE[0], Const.ARENA_SIZE[1])
+
+    walk_frames = [tuple(
+        load_image(os.path.join(Const.IMAGE_PATH, 'players', 'right_move', 'right_move-{:02d}.png'.format(_i+1)))
+        for _i in range(8)
+    )]*Const.COLOR_TABLE_SIZE
+
+    def fill_color(self,player_img, color):
+        "get a pygame Surface of player image return the colored Surface"
+        result_img = player_img.convert_alpha()
+        px_arr = pg.surfarray.pixels2d(result_img)
+        px_arr[px_arr==4288534508] = result_img.map_rgb(color)
+        return result_img
+    
+    
+    @classmethod
+    def init_convert(cls):
+        cls.menu = cls.menu.convert_alpha()
+	
+    def __init__(self, model, delay_of_frames):
+        self.model = model
+        self.delay_of_frames = delay_of_frames
+        self._timer = [0,0,0,0]
+        self.frame_index_to_draw = [0,0,0,0]
+        self.color_center = [(470+80*_i,450) for _i in range((Const.COLOR_TABLE_SIZE+1)//2)] + [(505+80*_i,535) for _i in range(Const.COLOR_TABLE_SIZE//2)]
+        self.player_center = [(473+145*_i,300) for _i in range(4)]
+        
+        for _i in range(Const.COLOR_TABLE_SIZE):
+            self.walk_frames[_i] = tuple(
+                resize_surface(
+                    self.fill_color(img, pg.Color(Const.COLOR_TABLE[_i])), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
+                )  for img in self.walk_frames[_i]
+            )
+        
+        
+        if Const.COLOR_PICKER_TYPE == 0:
+            COLOR_PICKER_NAME = 'selection_icon0-{:02d}.png'
+            self.selection_icon = tuple(
+                resize_surface(
+                    load_image(
+                        os.path.join(Const.IMAGE_PATH, 'selection_icon' , COLOR_PICKER_NAME.format(_i+1))
+                    ),40, 40
+                )for _i in range(4)
+            )
+        else:
+            COLOR_PICKER_NAME = 'selection_icon-{:02d}.png'
+            self.selection_icon = tuple(
+                resize_surface(
+                    load_image(
+                        os.path.join(Const.IMAGE_PATH, 'selection_icon' , COLOR_PICKER_NAME.format(_i+1))
+                    ),60, 60
+                )for _i in range(4)
+            )
+
+    def update(self):
+        
+        for _i in range(4):
+            self._timer[_i] += 1
+        
+            if self._timer[_i] % self.delay_of_frames == 0:
+                self.frame_index_to_draw[_i] = (self.frame_index_to_draw[_i] + 1) % len(self.walk_frames[_i])
+
+    @staticmethod
+    def tuple_plus(a,b):
+        return (a[0]+b[0],a[1]+b[1])
+
+    def draw(self, screen):
+        screen.blit(self.menu, (0,0))
+
+        for _i in range(Const.COLOR_TABLE_SIZE):
+            pg.draw.circle(screen, pg.Color(Const.COLOR_TABLE[_i]), self.color_center[_i], 28)
+        
+        for player, _i in zip(self.model.players, range(4)):
+            screen.blit(
+                self.walk_frames[player.color_index][self.frame_index_to_draw[_i]],
+                self.walk_frames[player.color_index][self.frame_index_to_draw[_i]].get_rect(center=self.player_center[_i])
+            )
+            if Const.COLOR_PICKER_TYPE == 0:
+                screen.blit(
+                    self.selection_icon[_i],
+                    self.tuple_plus(self.color_center[player.color_index],(5,5))
+                )
+            else:
+                screen.blit(
+                    self.selection_icon[_i],
+                    self.selection_icon[_i].get_rect(center=self.color_center[player.color_index])
+                )
+        self.update()
 
 def init_activeobjects():
     View_Bug.init_convert()
     View_Coffee.init_convert()
     View_Fireball.init_convert()
     View_Tornado.init_convert()
+    View_ColorPicker.init_convert()
