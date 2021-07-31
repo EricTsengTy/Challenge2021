@@ -59,6 +59,13 @@ class TeamAI ():
             return None
         return self.helper.walk_to_specific_position(nearest_EXE)
 
+        ''' tonpon version
+        nearest_EXE = self.helper.get_nearest_specific_item_position("EXE")
+        if nearest_EXE == None:
+            return None
+        return self.helper.walk_to_specific_position(nearest_EXE)
+        '''
+
     def attack(self):
         if self.helper.get_can_common_attack() and self.helper.get_if_player_in_attack_range():
             return AI_DIR_ATTACK
