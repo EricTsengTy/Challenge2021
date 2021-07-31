@@ -142,7 +142,7 @@ class GameEngine:
             if self.pause: return
 
             attacker = self.players[event.player_id]
-            if attacker.common_attack_timer>0 or attacker.in_folder(): 
+            if attacker.can_common_attack(): 
                 print("Can not common attack")
                 return
 

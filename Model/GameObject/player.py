@@ -245,3 +245,7 @@ class Player(Basic_Game_Object):
     
     def change_color(self, color):
         self.color = color
+
+    def can_common_attack(self):
+        if self.common_attack_timer > 0 or self.in_folder(): return False
+        else: return True
