@@ -11,9 +11,14 @@ if(SOUND_ENABLE):
             'attack': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'attack.wav')),
             'jump':None,
             'fireball':pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'fireball.wav')),
+            'get_prop': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'pick_up.wav')),
             'lightning':pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'lightning.wav')),
             'tornado': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'fan.wav')),
-            'get_prop': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'pick_up.wav')),
+            'dos': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'dos.wav')),
+            'ddos': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'ddos.wav')),
+            'charge': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'charge.wav')),
+            'throw_coffee': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'throw_coffee.wav')),
+            'throw_bug': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'throw_bug.wav'))
         }
         
         def __init__(self, ev_manager: EventManager, model: GameEngine):
@@ -23,6 +28,11 @@ if(SOUND_ENABLE):
 
             self.sound_list['get_prop'].set_volume(0.5)
             self.sound_list['lightning'].set_volume(0.7)
+            self.sound_list['dos'].set_volume(0.4)
+            self.sound_list['ddos'].set_volume(0.4)
+            self.sound_list['charge'].set_volume(0.5)
+            self.sound_list['throw_coffee'].set_volume(0.5)
+            self.sound_list['throw_bug'].set_volume(0.7)
 
         def notify(self, event):
             if isinstance(event, EventPlayerAttack):
@@ -30,12 +40,25 @@ if(SOUND_ENABLE):
             if isinstance(event, EventSpecialAttackMovement):
                 if event.attack_type == '':
                     self.sound_list['fireball'].play()
-                if event.attack_type == 'LIGHTNING':
+                elif event.attack_type == 'LIGHTNING':
                     self.sound_list['lightning'].play()
-                if event.attack_type == 'FAN':
+                elif event.attack_type == 'FAN':
                     self.sound_list['tornado'].play()
+                elif event.attack_type == 'DOS':
+                    self.sound_list['dos'].play()
+                elif event.attack_type == 'DDOS':
+                    self.sound_list['ddos'].play()
+                elif event.attack_type == 'THROW_COFFEE':
+                    self.sound_list['throw_coffee'].play()
+                elif event.attack_type == 'THROW_BUG':
+                    self.sound_list['throw_bug'].play()
+                
+
             if isinstance(event, EventGetProp):
                 self.sound_list['get_prop'].play()
+                
+                if event.item_type == 'CHARGE':
+                    self.sound_list['charge'].play()
 else:
     class Audio():
         def __init__(self, ev_manager: EventManager, model: GameEngine):
