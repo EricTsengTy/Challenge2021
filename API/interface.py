@@ -49,10 +49,10 @@ class Interface(object):
                 elif AI_dir == 5:
                     self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
                     self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
-                elif AI_dir == 6 and player.can_attack():
-                    self.ev_manager.post(EventPlayerAttack(player.player_id))
+                elif AI_dir == 6:
+                    self.ev_manager.post(EventPlayerAttack(tuple((player.player_id, 'attack'))))
                 elif AI_dir == 7:
-                    self.ev_manager.post(EventPlayerSpecialAttack(player.player_id))
+                    self.ev_manager.post(EventPlayerSpecialAttack(tuple((player.player_id, 'special_attack'))))
 
     def initialize(self):
         if self.is_init_AI:
@@ -62,6 +62,7 @@ class Interface(object):
         for player in self.model.players:
             if player.player_name == "manual":
                 continue
+            
             # load TeamAI .py file
             # TODO: change the path
             try:
@@ -71,6 +72,7 @@ class Interface(object):
                 player.player_name, player.is_AI = "Error", False
                 continue
             self.load_msg(str(player.player_id), player.player_name, "Loading")
+            
             # init TeamAI class
             try:
                 self.player_AI[player.player_id] = loadtmp.TeamAI(Helper(self.model, player.player_id))
