@@ -231,6 +231,19 @@ class Helper(object):
         pass
     
     def double_jump(self):
-        if self.model.players[self.player_id].speed.y >= 0:
+        me = self.model.players[self.player_id]
+        if me.speed.y >= 0 and me.jump_count < me.max_jump:
             return AI_DIR_JUMP
         return None
+
+    def right_double_jump(self):
+        me = self.model.players[self.player_id]
+        if me.speed.y >= 0 and me.jump_count < me.max_jump:
+            return AI_DIR_JUMP
+        return AI_DIR_RIGHT
+
+    def left_double_jump(self):
+        me = self.model.players[self.player_id]
+        if me.speed.y >= 0 and me.jump_count < me.max_jump:
+            return AI_DIR_JUMP
+        return AI_DIR_LEFT
