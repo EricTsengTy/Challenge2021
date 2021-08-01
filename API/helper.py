@@ -247,3 +247,13 @@ class Helper(object):
         if me.speed.y >= 0 and me.jump_count < me.max_jump:
             return AI_DIR_JUMP
         return AI_DIR_LEFT
+
+    def get_region(self, pos):
+        if pos[1] < Const.GROUND_POSITION[0][1]:
+            return 0
+        if pos[1] < Const.GROUND_POSITION[1][1]:
+            return 1
+        if pos[1] < Const.GROUND_POSITION[3][1]:
+            return 2
+        return 3
+        
