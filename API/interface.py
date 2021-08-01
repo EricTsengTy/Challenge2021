@@ -34,6 +34,7 @@ class Interface(object):
         for player in self.model.players:
             if player.is_AI:
                 AI_dir = self.player_AI[player.player_id].decide()
+                '''
                 if AI_dir == 0:
                     self.ev_manager.post(EventPlayerMove(player.player_id, 'left'))
                 elif AI_dir == 1:
@@ -52,6 +53,18 @@ class Interface(object):
                 elif AI_dir == 6:
                     self.ev_manager.post(EventPlayerAttack(player.player_id))
                 elif AI_dir == 7:
+                    self.ev_manager.post(EventPlayerSpecialAttack(player.player_id))
+                '''
+
+                if AI_dir['left']:
+                    self.ev_manager.post(EventPlayerMove(player.player_id, 'left'))
+                if AI_dir['right']:
+                    self.ev_manager.post(EventPlayerMove(player.player_id, 'right'))
+                if AI_dir['jump']:
+                    self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
+                if AI_dir['attack']:
+                    self.ev_manager.post(EventPlayerAttack(player.player_id))
+                if AI_dir['special_attack']:
                     self.ev_manager.post(EventPlayerSpecialAttack(player.player_id))
 
     def initialize(self):
