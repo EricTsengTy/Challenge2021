@@ -148,7 +148,8 @@ class GraphicalView:
             if event.state == Const.STATE_PLAY:
                 #players
                 self.players = View.players.View_players(self.model, 7)
-            
+        elif isinstance(event, EventRestart):
+            self.initialize()
         
     def display_fps(self):
         '''
