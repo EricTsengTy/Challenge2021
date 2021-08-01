@@ -30,7 +30,8 @@ class TeamAI ():
     def decide (self):
         decision = None
         if decision is None:
-            decision = self.helper.double_jump()     
+            decision = self.helper.double_jump()       
+        '''
         if decision is None:
             decision = self.special_attack()
         if decision is None:
@@ -39,6 +40,7 @@ class TeamAI ():
             decision = self.attack()
         if decision is None:
             decision = self.walk_to_nearest_player()
+        '''
         return decision
 
     def special_attack(self):
