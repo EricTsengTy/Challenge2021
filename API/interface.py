@@ -34,38 +34,38 @@ class Interface(object):
         for player in self.model.players:
             if player.is_AI:
                 AI_dir = self.player_AI[player.player_id].decide()
-                '''
-                if AI_dir == 0:
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'left'))
-                elif AI_dir == 1:
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'right'))
-                elif AI_dir == 2:
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
-                elif AI_dir == 3:
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'left'))
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
-                elif AI_dir == 4:
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'right'))
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
-                elif AI_dir == 5:
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
-                elif AI_dir == 6:
-                    self.ev_manager.post(EventPlayerAttack(player.player_id))
-                elif AI_dir == 7:
-                    self.ev_manager.post(EventPlayerSpecialAttack(player.player_id))
-                '''
+                if isinstance(AI_dir, int):
+                    if AI_dir == 0:
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'left'))
+                    elif AI_dir == 1:
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'right'))
+                    elif AI_dir == 2:
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
+                    elif AI_dir == 3:
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'left'))
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
+                    elif AI_dir == 4:
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'right'))
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
+                    elif AI_dir == 5:
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
+                    elif AI_dir == 6:
+                        self.ev_manager.post(EventPlayerAttack(player.player_id))
+                    elif AI_dir == 7:
+                        self.ev_manager.post(EventPlayerSpecialAttack(player.player_id))
 
-                if AI_dir['left']:
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'left'))
-                if AI_dir['right']:
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'right'))
-                if AI_dir['jump']:
-                    self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
-                if AI_dir['attack']:
-                    self.ev_manager.post(EventPlayerAttack(player.player_id))
-                if AI_dir['special_attack']:
-                    self.ev_manager.post(EventPlayerSpecialAttack(player.player_id))
+                elif isinstance(AI_dir, dict):
+                    if AI_dir['left']:
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'left'))
+                    if AI_dir['right']:
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'right'))
+                    if AI_dir['jump']:
+                        self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
+                    if AI_dir['attack']:
+                        self.ev_manager.post(EventPlayerAttack(player.player_id))
+                    if AI_dir['special_attack']:
+                        self.ev_manager.post(EventPlayerSpecialAttack(player.player_id))
 
     def initialize(self):
         if self.is_init_AI:
