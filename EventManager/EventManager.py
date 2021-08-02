@@ -136,6 +136,15 @@ class EventBeAttacked(BaseEvent):
     def __init__(self, player_id):
         self.player_id = player_id
 
+class EventNormalAttackMovement(BaseEvent):
+    name = 'player normal attack success and show movement'
+    '''
+    notify view player normal attack
+    '''
+
+    def __init__(self, player_id):
+        self.player_id = player_id
+
 class EventSpecialAttackMovement(BaseEvent):
     name = 'player special attack success and show movement'
     '''
