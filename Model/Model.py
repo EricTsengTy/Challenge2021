@@ -141,8 +141,21 @@ class GameEngine:
         elif isinstance(event, EventPlayerAttack):
             if self.pause: return
 
+           # player do common attack
             attacker = self.players[event.player_id]
-            if not attacker.can_common_attack(): 
+            if attacker.can_common_attack(): 
+                self.ev_manager.post(EventNormalAttackMovement(event.player_id))
+                do_attack = False
+                attack_range = attacker.common_attack_range
+                for player in self.players:
+                    if attacker.player_id != player.player_id and\
+                       player.can_be_common_attacked() and attack_range.colliderect(player.rect):
+                        player.be_common_attacked(attacker)
+                        do_attack = True
+                if do_attack:
+                    attacker.common_attack_timer = Const.PLAYER_COMMON_ATTACK_TIMER
+
+            else:
                 print("Can not common attack")
                 return
 

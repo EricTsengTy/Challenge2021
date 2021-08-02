@@ -24,6 +24,7 @@ class Player(Basic_Game_Object):
         self.state = State.init()
         self.obey_gravity = True
         self.keep_item_type = ''
+        self.tmp_keep_item_type = ''
         self.can_leave_screen = False
         self.face = Const.DIRECTION_TO_VEC2['right']
         self.death = 0
@@ -142,29 +143,31 @@ class Player(Basic_Game_Object):
         if self.special_attack_timer > 0: return
         if self.special_attack_delay == -1:
             self.special_attack_delay = Const.PLAYER_SPECIAL_ATTACK_DELAY
-            if self.keep_item_type != 'THROW_COFFEE' and self.keep_item_type != 'THROW_BUG':
-                self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type)) 
+            self.tmp_keep_item_type = self.keep_item_type
+            self.keep_item_type = ''
+            if self.tmp_keep_item_type != 'THROW_COFFEE' and self.tmp_keep_item_type != 'THROW_BUG':
+                self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.tmp_keep_item_type)) 
             return
         if self.special_attack_delay > 0: return
-        if self.keep_item_type == 'THROW_COFFEE' or self.keep_item_type == 'THROW_BUG':
-            self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type)) 
+        if self.tmp_keep_item_type == 'THROW_COFFEE' or self.tmp_keep_item_type == 'THROW_BUG':
+            self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.tmp_keep_item_type)) 
             
 
-        if(self.keep_item_type == 'DOS'):
+        if(self.tmp_keep_item_type == 'DOS'):
             self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
-        elif(self.keep_item_type == 'DDOS'):
+        elif(self.tmp_keep_item_type == 'DDOS'):
             self.model.attacks.append(Ddos(self.model, self, self.model.players[self.__random_target()]))
-        elif(self.keep_item_type == 'THROW_COFFEE'):
+        elif(self.tmp_keep_item_type == 'THROW_COFFEE'):
             self.model.attacks.append(Throw_Coffee(self.model, self, self.model.players[(self.player_id+1)%4]))
-        elif(self.keep_item_type == 'THROW_BUG'):
+        elif(self.tmp_keep_item_type == 'THROW_BUG'):
             self.model.attacks.append(Throw_Bug(self.model, self, self.model.players[(self.player_id+1)%4]))
-        elif(self.keep_item_type == ''):
+        elif(self.tmp_keep_item_type == ''):
             self.model.attacks.append(Cast_Fireball(self.model, self))
-        elif(self.keep_item_type == 'FAN'):
+        elif(self.tmp_keep_item_type == 'FAN'):
             self.model.attacks.append(Cast_Tornado(self.model, self))
-        elif(self.keep_item_type == 'LIGHTNING'):
+        elif(self.tmp_keep_item_type == 'LIGHTNING'):
             self.model.attacks.append(Cast_Lightning(self.model, self))
-        self.keep_item_type = ''
+        self.tmp_keep_item_type = ''
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
         self.special_attack_delay = -1
 
