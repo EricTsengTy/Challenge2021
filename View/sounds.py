@@ -22,7 +22,7 @@ if(SOUND_ENABLE):
             'hello_world1': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world_barrage.wav')),
             'hello_world2': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world2.wav')),
             'hello_world3': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world_chat.wav')),
-            'damaged': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'damaged.mp3')),
+            'damaged': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'damaged.wav')),
         }
         
         def __init__(self, ev_manager: EventManager, model: GameEngine):

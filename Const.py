@@ -216,8 +216,6 @@ COLOR_TABLE = (
     (153, 255, 204)
 )
 
-COLOR_PICKER_TYPE = 1
-
 PLAYER_PICKER_COLOR = (
     pg.Color('orange'),
     pg.Color('red'),

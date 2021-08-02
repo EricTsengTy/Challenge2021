@@ -231,26 +231,14 @@ class View_ColorPicker(__Object_base):
                     self.fill_color(img, pg.Color(Const.COLOR_TABLE[_i])), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
                 )  for img in self.walk_frames[_i]
             )
-        
-        
-        if Const.COLOR_PICKER_TYPE == 0:
-            COLOR_PICKER_NAME = 'selection_icon0-{:02d}.png'
-            self.selection_icon = tuple(
-                resize_surface(
-                    load_image(
-                        os.path.join(Const.IMAGE_PATH, 'selection_icon' , COLOR_PICKER_NAME.format(_i+1))
-                    ),40, 40
-                )for _i in range(4)
-            )
-        else:
-            COLOR_PICKER_NAME = 'selection_icon-{:02d}.png'
-            self.selection_icon = tuple(
-                resize_surface(
-                    load_image(
-                        os.path.join(Const.IMAGE_PATH, 'selection_icon' , COLOR_PICKER_NAME.format(_i+1))
-                    ),60, 60
-                )for _i in range(4)
-            )
+              
+        self.selection_icon = tuple(
+            resize_surface(
+                load_image(
+                    os.path.join(Const.IMAGE_PATH, 'selection_icon' , 'selection_icon-{:02d}.png'.format(_i+1))
+                ),60, 60
+            )for _i in range(4)
+        )
 
     def update(self):
         
@@ -275,16 +263,10 @@ class View_ColorPicker(__Object_base):
                 self.walk_frames[player.color_index][self.frame_index_to_draw[_i]],
                 self.walk_frames[player.color_index][self.frame_index_to_draw[_i]].get_rect(center=self.player_center[_i])
             )
-            if Const.COLOR_PICKER_TYPE == 0:
-                screen.blit(
-                    self.selection_icon[_i],
-                    self.tuple_plus(self.color_center[player.color_index],(5,5))
-                )
-            else:
-                screen.blit(
-                    self.selection_icon[_i],
-                    self.selection_icon[_i].get_rect(center=self.color_center[player.color_index])
-                )
+            screen.blit(
+                self.selection_icon[_i],
+                self.selection_icon[_i].get_rect(center=self.color_center[player.color_index])
+            )
         self.update()
 
 def init_activeobjects():
