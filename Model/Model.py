@@ -143,7 +143,7 @@ class GameEngine:
 
            # player do common attack
             attacker = self.players[event.player_id]
-            if not attacker.can_common_attack(): 
+            if attacker.can_common_attack(): 
                 self.ev_manager.post(EventNormalAttackMovement(event.player_id))
                 do_attack = False
                 attack_range = attacker.common_attack_range
