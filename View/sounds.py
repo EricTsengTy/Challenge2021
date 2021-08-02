@@ -22,6 +22,7 @@ if(SOUND_ENABLE):
             'hello_world1': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world_barrage.wav')),
             'hello_world2': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world2.wav')),
             'hello_world3': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world_chat.wav')),
+            'damaged': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'damaged.mp3')),
         }
         
         def __init__(self, ev_manager: EventManager, model: GameEngine):
@@ -31,7 +32,8 @@ if(SOUND_ENABLE):
 
             self.sound_list['jump'].set_volume(0.3)
             self.sound_list['get_prop'].set_volume(0.5)
-            self.sound_list['fireball'].set_volume(0.5)
+            self.sound_list['fireball'].set_volume(0.3)
+            self.sound_list['tornado'].set_volume(0.4)
             self.sound_list['lightning'].set_volume(0.7)
             self.sound_list['dos'].set_volume(0.4)
             self.sound_list['ddos'].set_volume(0.4)
@@ -41,6 +43,7 @@ if(SOUND_ENABLE):
             self.sound_list['hello_world1'].set_volume(0.3)
             self.sound_list['hello_world2'].set_volume(0.4)
             self.sound_list['hello_world3'].set_volume(0.3)
+            self.sound_list['damaged'].set_volume(0.05)
 
         def notify(self, event):
             if isinstance(event, EventPlayerAttack):
@@ -84,6 +87,10 @@ if(SOUND_ENABLE):
                     self.sound_list['hello_world2'].play()
                 else:
                     self.sound_list['hello_world3'].play()
+
+            elif isinstance(event, EventBeAttacked):
+                if self.model.players[event.player_id].state['immune'] == 0:
+                    self.sound_list['damaged'].play()
 
 else:
     class Audio():
