@@ -178,7 +178,7 @@ ARROW_COLOR = pg.Color("red")
 COFFEE_COLOR = pg.Color("brown")
 BUG_COLOR = pg.Color("DarkOliveGreen")
 HP_BAR_COLOR = [pg.Color('white'), pg.Color('green')]
-ENERGY_BAR_COLOR = [pg.Color('white'), pg.Color('orange')]
+ENERGY_BAR_COLOR = [pg.Color('white'), pg.Color('orange'), pg.Color('gray')]
 ITEM_BOX_COLOR = pg.Color('brown')
 ITEM_BOX_SIZE = 15
 # controller
@@ -244,3 +244,4 @@ PLAYER_PICKER_COLOR = (
 )
 
 SCORE_PLAYING_SIZE = (200,48)
+SCORE_PLAYING_STATE_SIZE = (40,40)

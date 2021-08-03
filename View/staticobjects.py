@@ -206,7 +206,26 @@ class View_Score_Playing(__Object_base):
             Const.SCORE_PLAYING_SIZE[0], Const.SCORE_PLAYING_SIZE[1]
         ) for _i in range(1,12)
     )
-    
+    no_special = (
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'state', 'state_no_special.png')),
+            Const.SCORE_PLAYING_STATE_SIZE[0], Const.SCORE_PLAYING_STATE_SIZE[1]
+        )
+    )
+    effective = (
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'state', 'state_effective.png')),
+            Const.SCORE_PLAYING_STATE_SIZE[0], Const.SCORE_PLAYING_STATE_SIZE[1]
+        )
+    )
+    in_folder = (
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'state', 'state_in_folder.png')),
+            Const.SCORE_PLAYING_STATE_SIZE[0], Const.SCORE_PLAYING_STATE_SIZE[1]
+        )
+    )
+
+
     @classmethod
     def init_convert(cls):
         cls.score_bg = tuple( bg.convert_alpha() for bg in cls.score_bg)
@@ -217,10 +236,27 @@ class View_Score_Playing(__Object_base):
             #print(player.color_index)
             score_str = 'P{:d} {:8d}'.format(c,int(player.score))
             score_text = Text( score_str , 36, pg.Color('white'))
+            
             screen.blit(
                 self.score_bg[ player.color_index  ] ,
                 self.score_bg[ player.color_index  ].get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-60 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1] ) )
             )
+            if player.in_folder():
+                screen.blit(
+                    self.in_folder,
+                    self.in_folder.get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-53 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1]+5 ) )
+                )
+            elif player.state['infection']:
+                screen.blit(
+                    self.effective,
+                    self.effective.get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-55 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1]+5 ) )
+                )
+            elif not player.can_special_attack():
+                screen.blit(
+                    self.no_special,
+                    self.no_special.get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-55 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1]+5 ) )
+                )
+
             score_text.blit(
                 screen,
                 topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-60 + 50 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1] + Const.SCORE_PLAYING_SIZE[1]//3 )
