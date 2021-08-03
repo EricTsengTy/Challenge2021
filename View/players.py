@@ -376,9 +376,22 @@ class View_players():
             player_id = player.player_id
 
             if player.is_invisible():
+                pass
+                '''  testing the invisble palyer. 
+                test = player_frame.flipped_standing_frames[0].copy()
+                # this works on images with per pixel alpha too
+                alpha = 128
+                test.fill((255, 255, 255, alpha), None, pg.BLEND_RGBA_MULT)
+                screen.blit(test,
+                    test.get_rect(center=player.center))
                 continue
+                '''
             if player.in_folder():
-                screen.blit(self.directory_occupied_frame, self.directory_occupied_frame.get_rect(center=player.center))
+                if player.state['in_folder'] < 10 or player.state['in_folder'] > Const.IN_FOLDER_TIME - 10:
+                    screen.blit(self.directory_occupied_frame, self.directory_occupied_frame.get_rect(center= (player.center[0] + (player.state['in_folder']//2%2)*10 ,player.center[1])) )                  
+                else:
+                    screen.blit(self.directory_occupied_frame, self.directory_occupied_frame.get_rect(center=player.center))
+                
                 continue
 
             # blood
