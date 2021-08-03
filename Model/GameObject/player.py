@@ -134,7 +134,7 @@ class Player(Basic_Game_Object):
             self.center = item.center
             State.folder(self.state)
         elif item_type == 'CHARGE':
-            self.blood = min(self.blood+100, Const.PLAYER_FULL_BLOOD)
+            self.blood = min(self.blood+Const.CHARGE_BLOOD, Const.PLAYER_FULL_BLOOD)
 
         self.model.ev_manager.post(EventGetProp(self.player_id, item_type))
 
