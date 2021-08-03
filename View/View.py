@@ -104,7 +104,7 @@ class GraphicalView:
         elif isinstance(event, EventHelloWorld):
             event.style = random.randint(1,3)
             if event.style == 1:
-                self.animation_list.append(View.animation.Greeting_from_audience(3,4)) #delay_of_frames, speed
+                self.animation_list.append(View.animation.Greeting_from_audience(3,40)) #delay_of_frames, num
             elif event.style == 2:
                 self.animation_list.append(View.animation.Greeting_from_prog(0))
             elif event.style == 3:

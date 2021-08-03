@@ -16,20 +16,29 @@ class Greeting_from_audience(Animation_base):
     fonts = [ pg.font.Font(None, 24+12* _i ) for _i in range(1,4)]
     monospace_font = [pg.font.SysFont("monospace", 24+12*_i) for _i in range(1,4)]
     subtitles = [
-        'printf("Hello World!");', 'console.log("Hello World!")', 'System.out.println("Hello World!");','print("Hello World!")','cout<<"Hello World!"<<endl;', 
+        'printf("Hello World!");',
+        'console.log("Hello World!")',
+        'System.out.println("Hello World!");',
+        'print("Hello World!")',
+        'cout<<"Hello World!"<<endl;',
+        #'++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.',# brainfxxk
+        #'印出 "哈囉，世界"',
+        'fmt.Println("Hello, World")',
+        "msg db 'Hello world!$'",
     ]
     colors = [pg.Color('white'), pg.Color('yellow'), pg.Color('red'), pg.Color('blue'), pg.Color('green'), pg.Color('pink'), pg.Color('black')]
     positions = [Const.ARENA_SIZE[1] // 20 * _i for _i in range(20)]
 
-    def __init__(self, delay_of_frames, speed):
+    def __init__(self, delay_of_frames, num):
         self._timer = 0
         self.delay_of_frames = delay_of_frames
-        self.speed = speed
+        self.num = num
         self.expire_time = 10*Const.FPS
         self.expired = False
-        self.text_surfaces = tuple(random.choice(self.fonts).render(random.choice(self.subtitles), 1, random.choice(self.colors)) for _i in range(40))
+        self.text_surfaces = tuple(random.choice(self.fonts).render(random.choice(self.subtitles), 1, random.choice(self.colors)) for _i in range(num))
         self.text_surfaces = tuple(surface.convert_alpha() for surface in self.text_surfaces)
-        self.text_center = [ [random.randint(Const.ARENA_SIZE[0], 2*Const.ARENA_SIZE[0]), random.choice(self.positions)] for _i in range(40)]
+        self.text_center = [ [random.randint(Const.ARENA_SIZE[0], 2*Const.ARENA_SIZE[0]), random.choice(self.positions)] for _i in range(num)]
+        self.speed = [random.randint(4,10) for _i in range(num)]
     
     def update(self):
         self._timer += 1
@@ -38,12 +47,12 @@ class Greeting_from_audience(Animation_base):
             self.expired = True
         
         if self._timer % self.delay_of_frames == 0:
-            for i in range(40):
-                self.text_center[i][0] -= self.speed * self.delay_of_frames
+            for i in range(self.num):
+                self.text_center[i][0] -= self.speed[i] * self.delay_of_frames
 
     
     def draw(self, screen, update=True):
-        for i in range(40):
+        for i in range(self.num):
             screen.blit(self.text_surfaces[i], (self.text_center[i][0], self.text_center[i][1]))
         
         if update: self.update()
