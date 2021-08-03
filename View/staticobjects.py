@@ -127,13 +127,13 @@ class View_Lightning(__Object_base):
 class View_Item(__Object_base):
     images = tuple(
         resize_surface(
-            load_image(os.path.join(Const.IMAGE_PATH, 'prop', Const.PROP_PICS[_i])),
+            load_image(os.path.join(Const.IMAGE_PATH, 'prop', Const.PROP_PICS[_item])),
             Const.ITEM_WIDTH, Const.ITEM_HEIGHT
         )
-        for _i in range(13)
+        for _item in Const.ITEM_TYPE_LIST
     )
     prop_image = resize_surface(
-        load_image(os.path.join(Const.IMAGE_PATH, 'prop', 'prop.png')),
+        load_image(os.path.join(Const.IMAGE_PATH, 'prop', Const.PROP_PICS['PROP'])),
         Const.ITEM_WIDTH//5, Const.ITEM_HEIGHT//5
     )
     @classmethod

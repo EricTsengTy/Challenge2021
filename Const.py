@@ -47,6 +47,14 @@ GROUND_SIZE = 40
 
 ITEM_WIDTH = 40
 ITEM_HEIGHT = 40
+ITEM_KEEP_LIST = [
+                'FAN',
+                'LIGHTNING',
+                'THROW_COFFEE',
+                'THROW_BUG',
+                'DOS',
+                'DDOS'
+]
 ITEM_TYPE_LIST=['FAN',
                 'LIGHTNING',
                 'THROW_COFFEE',
@@ -59,7 +67,8 @@ ITEM_TYPE_LIST=['FAN',
                 'GRAPHIC_CARD',
                 'FORMAT',
                 'FOLDER_UNUSED',
-                'CHARGE']
+                'CHARGE'
+                ]
 MAX_ITEM_NUMBER = 10
 
 ITEM_GENERATOR_COOLDOWN = 5 * FPS
@@ -138,11 +147,22 @@ SPECIAL_ATTACK_KEEP_TO_NUM = {
     'THROW_BUG': 0, 'THROW_COFFEE': 1, 'DDOS': 2, 'DOS': 3, 'FAN': 4, 'LIGHTNING': 5
 }
 
-PROP_PICS = [
-    'prop_fan.png', 'prop_lightning.png', 'prop_coffee.png', 'prop_bug.png', 
-    'prop_dos.png', 'prop_ddos.png', 'prop_hello_world.png', 'prop_usb.png', 'prop_firewall.png', 
-    'prop_graphic_card.png', 'prop_format.png', 'prop_directory.png', 'prop_charge_line.png', 'prop.png'       
-]
+PROP_PICS = {
+    'FAN':'prop_fan.png',
+    'LIGHTNING':'prop_lightning.png',
+    'THROW_COFFEE':'prop_coffee.png',
+    'THROW_BUG':'prop_bug.png', 
+    'DOS':'prop_dos.png',
+    'DDOS':'prop_ddos.png',
+    'EXE':'prop_hello_world.png',
+    'USB':'prop_usb.png',
+    'FIREWALL':'prop_firewall.png', 
+    'GRAPHIC_CARD':'prop_graphic_card.png',
+    'FORMAT':'prop_format.png',
+    'FOLDER_UNUSED':'prop_directory.png',
+    'CHARGE':'prop_charge_line.png',
+    'PROP':'prop.png'       
+}
 # view
 WINDOW_CAPTION = 'Challenge 2021'
 WINDOW_SIZE = (1200, 800)
