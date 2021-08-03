@@ -1,3 +1,5 @@
+from AI.team_controller import AI_DIR_DOUBLE_JUMP
+from AI.team_controller import AI_DIR
 import pygame as pg
 import Const
 from Model.GameObject.basic_game_object import *
@@ -62,6 +64,9 @@ class Helper(object):
     
     def get_can_jump(self):
         return self.model.players[self.player_id].jump_count < self.model.players[self.player_id].max_jump
+
+    def get_is_jumping(self):
+        return self.model.players[self.player_id].speed.y < 0
 
     def get_infection(self):
         return self.model.players[self.player_id].infection()
@@ -207,10 +212,7 @@ class Helper(object):
     
     def get_nearest_player_position(self):
         nearest_player = self.get_nearest_player_id()     
-        return self.get_other_position(nearest_player)
-
-    def get_nearest_platform_position(self):
-        pass    
+        return self.get_other_position(nearest_player)  
 
 
     def get_highest_score_player(self):
@@ -227,9 +229,6 @@ class Helper(object):
         return (pos2[0] - pos1[0], pos2[1] - pos1[1])
 
     ###新手友善專區
-    def walk_to_specific_position(self,pos):
-        pass
-    
     def double_jump(self):
         me = self.model.players[self.player_id]
         if me.speed.y >= 0 and me.jump_count < me.max_jump:
@@ -244,16 +243,72 @@ class Helper(object):
 
     def left_double_jump(self):
         me = self.model.players[self.player_id]
+        if me.jump_count == me.max_jump:
+            return AI_DIR_JUMP
         if me.speed.y >= 0 and me.jump_count < me.max_jump:
             return AI_DIR_JUMP
         return AI_DIR_LEFT
 
     def get_region(self, pos):
-        if pos[1] < Const.GROUND_POSITION[0][1]:
+        if pos is None:
+            return None
+        if pos[1] + 15 < Const.GROUND_POSITION[0][1]:
             return 0
-        if pos[1] < Const.GROUND_POSITION[1][1]:
+        if pos[1] + 15 < Const.GROUND_POSITION[1][1]:
             return 1
-        if pos[1] < Const.GROUND_POSITION[3][1]:
+        if pos[1] + 15  < Const.GROUND_POSITION[3][1]:
             return 2
         return 3
-        
+
+    def walk_to_specific_position(self,pos1,pos2):###pos1: player, pos2: 指定位置
+        playerplatform = self.get_region(pos1)
+        specificPlatform = self.get_region(pos2)
+        if playerplatform is None or specificPlatform is None:
+            return None
+        if playerplatform == specificPlatform:
+            if self.get_is_jumping():
+                return None
+            if pos1[0]>pos2[0]:
+                return AI_DIR_LEFT
+            elif pos1[0]<pos2[0]:
+                return AI_DIR_RIGHT
+            return AI_DIR_JUMP
+        elif playerplatform < specificPlatform:
+            if playerplatform == 1:
+                if pos1[0]<=400:
+                    return AI_DIR_RIGHT
+                elif pos1[0]>=800:
+                    return AI_DIR_LEFT
+            return AI_DIR_LEFT
+        else:
+            if pos1[0] <= 820:
+                return AI_DIR_RIGHT
+            elif pos1[0]>=900:
+                return AI_DIR_LEFT
+            else:
+                return self.double_jump()
+            '''
+            if playerplatform == 1:
+                if pos1[0] >= 980:
+                    return AI_DIR_LEFT
+                elif pos1[0] <= 980 and pos1[0]>=800:
+                    return self.left_double_jump()
+                elif pos1[0] <= 750:
+                    return self.right_double_jump()
+            elif playerplatform == 2:
+                if pos1[0] <= 750:
+                    return AI_DIR_RIGHT
+                elif pos1[0] >= 750 and pos1[0] <= 1000:
+                    return self.right_double_jump()
+                elif pos1[0] >= 1000:
+                    return self.left_double_jump()
+            elif playerplatform == 3:
+                if pos1[0] <= 700:
+                    return AI_DIR_RIGHT
+                if pos1[0] <= 800:
+                    return self.right_double_jump()
+                if pos1[0] <= 980:
+                    return self.left_double_jump()
+                if pos1[1] >= 980:
+                    return AI_DIR_LEFT
+            '''

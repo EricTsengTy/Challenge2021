@@ -35,8 +35,7 @@ class TeamAI ():
             AI_DIR[dir] = False   
         self.special_attack()
         self.attack()
-        #self.walk_to_EXE()
-        #self.walk_to_nearest_player() # if no walk_to_EXE
+        self.walk_to_nearest_player() # if no walk_to_EXE
         return AI_DIR
         '''
         decision = None
@@ -54,22 +53,21 @@ class TeamAI ():
     def special_attack(self):
         if self.helper.get_can_use_special_attack() :
             AI_DIR['special_attack'] = True
+        return
 
     def attack(self):
         if self.helper.get_can_common_attack() and self.helper.get_if_player_in_attack_range():
             AI_DIR['attack'] = True
+        return
 
     def walk_to_EXE(self):
     
         if self.helper.get_nearest_specific_item_position("EXE") == None:
             return None
-        ###if self.helper.get_keep_item_type() != "" and  self.helper.get_can_use_special_attack() == True:
-        ###    return AI_DIR_ATTACK
         nearest_player = self.helper.get_nearest_player_position()
         nearest_EXE = self.helper.get_nearest_specific_item_position("EXE")
         if self.helper.get_distance(self.helper.get_self_position(),nearest_player) < self.helper.get_distance(self.helper.get_self_position(),nearest_EXE):
             return self.helper.walk_to_specific_position(nearest_EXE)
-        
         if self.helper.get_can_be_common_attacked() == True or self.helper.get_can_be_special_attacked():
             return None
         return self.helper.walk_to_specific_position(nearest_EXE)
@@ -81,26 +79,30 @@ class TeamAI ():
         return self.helper.walk_to_specific_position(nearest_EXE)
         '''
 
-
-
     def walk_to_nearest_player(self):
         pos_y = self.helper.get_self_position()[1]
         nearest_y = self.helper.get_nearest_player_position()[1]
         if pos_y == nearest_y or pos_y < nearest_y:
             if self.helper.get_vector(self.helper.get_self_position(),self.helper.get_nearest_player_position())[0] > 0:
-                return AI_DIR_RIGHT
+                AI_DIR['RIGHT'] = True
             else:
-                return AI_DIR_LEFT
+                AI_DIR['LEFT'] = True
+            return
         else:
             if self.helper.get_self_position()[0]<=0:
-                return AI_DIR_RIGHT_JUMP
+                AI_DIR['RIGHT'] = True
+                AI_DIR['JUMP'] = True
             elif self.helper.get_self_position()[0] >= self.helper.get_game_arena_boundary()[1][0]:
-                return AI_DIR_LEFT_JUMP
+                AI_DIR['LEFT'] = True
+                AI_DIR['JUMP'] = True
             if abs(self.helper.get_vector(self.helper.get_self_position(),self.helper.get_nearest_player_position())[0]) <= 100:
-                return AI_DIR_DOUBLE_JUMP
+                AI_DIR['JUMP'] = True
             elif self.helper.get_vector(self.helper.get_self_position(),self.helper.get_nearest_player_position())[0] > 0:
-                return AI_DIR_RIGHT_JUMP
+                AI_DIR['RIGHT'] = True
+                AI_DIR['JUMP'] = True
             else:
-                return AI_DIR_LEFT_JUMP
+                AI_DIR['LEFT'] = True
+                AI_DIR['JUMP'] = True
+            return
            
 
