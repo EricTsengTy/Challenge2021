@@ -246,7 +246,6 @@ class Throw_Bug(Basic_Game_Object):
     def __init__(self, model, attacker, target):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = 'Throw_Bug'
-        Vector2(1, 0)
         for deg in range(0, 360, 60): 
             self.model.attacks.append(Bug(model,attacker.player_id, self.position, 
                                       Vector2(1, 0).rotate(deg) * Const.BUG_THROW_SPEED))
