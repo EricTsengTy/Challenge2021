@@ -154,9 +154,9 @@ class Player(Basic_Game_Object):
             
 
         if(self.tmp_keep_item_type == 'DOS'):
-            self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
+            self.model.attacks.append(Dos(self.model, self, self.model.players[self.__nearest_target()]))
         elif(self.tmp_keep_item_type == 'DDOS'):
-            self.model.attacks.append(Ddos(self.model, self, self.model.players[self.__random_target()]))
+            self.model.attacks.append(Ddos(self.model, self, self.model.players[self.__nearest_target()]))
         elif(self.tmp_keep_item_type == 'THROW_COFFEE'):
             self.model.attacks.append(Throw_Coffee(self.model, self, self.model.players[(self.player_id+1)%4]))
         elif(self.tmp_keep_item_type == 'THROW_BUG'):
@@ -206,6 +206,24 @@ class Player(Basic_Game_Object):
         player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
         player_id_list.remove(self.player_id)
         return random.choice(player_id_list)
+
+    def __nearest_target(self):
+        player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
+        player_id_list.remove(self.player_id)
+        for player_id in player_id_list:
+            if not self.model.players[player_id].can_be_special_attacked():
+                player_id_list.remove(player_id)
+        if len(player_id_list) == 0:
+            player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
+            player_id_list.remove(self.player_id)
+
+        ret_player_id = player_id_list[0]    
+        min_dis = (self.position - self.model.players[ret_player_id].position).length()
+        for player_id in player_id_list[1:]:
+            if (self.position - self.model.players[player_id].position).length() < min_dis:
+                ret_player_id = player_id
+                min_dis = (self.position - self.model.players[player_id].position).length()
+        return ret_player_id
 
     def can_be_common_attacked(self):
         if self.state['be_common_attacked'] == 0: return True
