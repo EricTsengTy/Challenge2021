@@ -96,8 +96,6 @@ class Bug(Basic_Attack_Object):
                self.speed = self.speed.rotate(random.randint(0, 360))
             if self.state_timer == Const.BUG_RANDOM_TIMER:
                 self.kill()
-        if self.x > Const.ARENA_SIZE[0] or self.x < 0: 
-            self.kill()
 
     def tick(self):
         self.basic_tick()    
