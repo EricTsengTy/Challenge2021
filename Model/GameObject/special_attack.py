@@ -5,6 +5,7 @@ from pygame.math import Vector2
 from math import sqrt
 from Model.GameObject.basic_game_object import Basic_Game_Object
 from EventManager.EventManager import *
+import random
 
 class Basic_Attack_Object(Basic_Game_Object):
     def __init__(self, model, attacker_id, position, width, height, speed):
@@ -79,8 +80,35 @@ class Bug(Basic_Attack_Object):
         self.name = 'Bug'
         self.damage = Const.BUG_DAMAGE
         self.disappear_hit_player = True
-        self.obey_gravity = True
-        self.gravity = Const.BUG_GRAVITY
+        self.obey_gravity = False
+        self.state_timer = 0
+        self.state = 'straight'
+
+    def basic_tick(self):
+        self.state_timer += 1
+        if self.state == 'straight':
+            self.position += self.speed
+            if self.state_timer == Const.BUG_STRAIGHT_TIMER:
+                self.state = 'random'
+        elif self.state == 'random':
+            self.position += self.speed
+            if self.state_timer % Const.BUG_RANDOM_PERIOD == 0:
+               self.speed = self.speed.rotate(random.randint(0, 360))
+            if self.state_timer == Const.BUG_RANDOM_TIMER:
+                self.kill()
+        if self.x > Const.ARENA_SIZE[0] or self.x < 0: 
+            self.kill()
+
+    def tick(self):
+        self.basic_tick()    
+        for player in self.model.players:
+            if (not self.immune[player.player_id]) and player.can_be_special_attacked() and self.collide_player(player):
+                player.be_special_attacked(self)
+                self.immune[player.player_id] = True
+                if self.disappear_hit_player:
+                    self.kill()
+            if self.attacker.player_id != player.player_id and self.collide_player(player):
+                self.model.ev_manager.post(EventBeAttacked(player.player_id))
 
     def collide_player(self, player):
         return player.rect.collidepoint(self.center.x, self.center.y)
@@ -218,8 +246,10 @@ class Throw_Bug(Basic_Game_Object):
     def __init__(self, model, attacker, target):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = 'Throw_Bug'
-        self.model.attacks.append(Bug(model,attacker.player_id, self.position, 
-                                      (attacker.face + Vector2(0,-1)).normalize() * Const.BUG_THROW_SPEED))
+        Vector2(1, 0)
+        for deg in range(0, 360, 60): 
+            self.model.attacks.append(Bug(model,attacker.player_id, self.position, 
+                                      Vector2(1, 0).rotate(deg) * Const.BUG_THROW_SPEED))
         self.kill()
 
 class Throw_Coffee(Basic_Game_Object):
