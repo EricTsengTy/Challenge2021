@@ -149,18 +149,12 @@ class GameEngine:
                        player.can_be_common_attacked() and attack_range.colliderect(player.rect):
                         player.be_common_attacked(attacker)
                 attacker.common_attack_timer = Const.PLAYER_COMMON_ATTACK_TIMER
-
-            else:
-                print("Can not common attack")
-                return
     
         elif isinstance(event, EventPlayerSpecialAttack):
 
             attacker = self.players[event.player_id]
             if attacker.can_special_attack():
                 attacker.special_attack()
-            else:
-                print("Can not special attack")
 
         elif isinstance(event, EventPreviousColor):
             self.color_selector.previous_color(self.players[event.player_id])

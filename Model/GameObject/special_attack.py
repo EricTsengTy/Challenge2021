@@ -203,6 +203,7 @@ class Dos(Basic_Game_Object):
         self.name = 'Dos'
         self.attacker = attacker
         self.direction = target.center-self.position
+        if self.direction.length() == 0: self.direction = pg.Vector2(1, 0)
         self.timer = 0
         self.rounds = Const.DOS_ACTIVE_LIMIT
 
