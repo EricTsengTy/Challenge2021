@@ -392,6 +392,15 @@ class View_players():
         for _i in range(6)
     )
 
+    keep_item_default = resize_surface(
+                            load_image(os.path.join(Const.IMAGE_PATH, 'special_attack_keep', 'prop_fireball.png')),
+                            Const.ITEM_BOX_SIZE, Const.ITEM_BOX_SIZE
+                        )
+    keep_item_locked = resize_surface(
+                            load_image(os.path.join(Const.IMAGE_PATH, 'special_attack_keep', 'prop_locked.png')),
+                            Const.ITEM_BOX_SIZE, Const.ITEM_BOX_SIZE
+                        ) 
+
     charging_frames = tuple(
         resize_surface(
             load_image(os.path.join(Const.IMAGE_PATH, 'players', 'prop', 'charging-{:02d}.png'.format(_i+1))),
@@ -484,20 +493,20 @@ class View_players():
                 continue
 
             # blood
-            pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left, player.top-15, player.rect.width*player.blood/Const.PLAYER_FULL_BLOOD, 5])
+            pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left+10, player.top-15, player.rect.width*player.blood/Const.PLAYER_FULL_BLOOD, 5])
             
             # empty hp bar
-            pg.draw.rect(screen, Const.HP_BAR_COLOR[0], [player.left, player.top-15, player.rect.width, 5], 2)
+            pg.draw.rect(screen, Const.HP_BAR_COLOR[0], [player.left+10, player.top-15, player.rect.width, 5], 2)
             
             # energy
             if player.can_special_attack():
-                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[1], [player.left, player.top-10, player.rect.width*(1-player.special_attack_timer/Const.PLAYER_SPECIAL_ATTACK_TIMER), 5])
+                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[1], [player.left+10, player.top-10, player.rect.width*(1-player.special_attack_timer/Const.PLAYER_SPECIAL_ATTACK_TIMER), 5])
                 # empty energy bar
-                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[0], [player.left, player.top-10, player.rect.width, 5], 2)
+                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[0], [player.left+10, player.top-10, player.rect.width, 5], 2)
             else:
-                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[2], [player.left, player.top-10, player.rect.width*(1-player.special_attack_timer/Const.PLAYER_SPECIAL_ATTACK_TIMER), 5])
+                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[2], [player.left+10, player.top-10, player.rect.width*(1-player.special_attack_timer/Const.PLAYER_SPECIAL_ATTACK_TIMER), 5])
                 # empty energy bar
-                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[2], [player.left, player.top-10, player.rect.width, 5], 2)
+                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[2], [player.left+10, player.top-10, player.rect.width, 5], 2)
             
             # item frame
             # pg.draw.rect(screen, Const.ITEM_BOX_COLOR, [player.left-20, player.top-15, Const.ITEM_BOX_SIZE, Const.ITEM_BOX_SIZE], 2)
@@ -505,7 +514,15 @@ class View_players():
             # item
             if player.keep_item_type != '':
                 screen.blit(self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]],
-                    self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-15)))
+                    self.keep_item_images[Const.SPECIAL_ATTACK_KEEP_TO_NUM[player.keep_item_type]].get_rect(topleft=(player.left-20, player.top-25)))
+            else:
+                screen.blit(self.keep_item_default,
+                    self.keep_item_default.get_rect(topleft=(player.left-20, player.top-25)))
+            
+            if not player.can_special_attack():
+                screen.blit(self.keep_item_locked,
+                    self.keep_item_locked.get_rect(topleft=(player.left-20, player.top-25)))
+            
             
 
 
@@ -527,9 +544,8 @@ class View_players():
                         screen.blit(player_frame.flipped_attack_fireball_frames[self.frame_index_to_draw],
                             player_frame.flipped_attack_fireball_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 self.timer[player_id] += 1
-                continue
 
-            if self.status[player_id] == 'special_attack_THROW_BUG' and self.timer[player_id] < ( len(player_frame.attack_bug_frames) * self.quicker_delay_of_frames):
+            elif self.status[player_id] == 'special_attack_THROW_BUG' and self.timer[player_id] < ( len(player_frame.attack_bug_frames) * self.quicker_delay_of_frames):
                 self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.is_invisible():    
                     if player.face == Const.DIRECTION_TO_VEC2['right']:
@@ -546,9 +562,8 @@ class View_players():
                         screen.blit(player_frame.flipped_attack_bug_frames[self.frame_index_to_draw],
                             player_frame.flipped_attack_bug_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 self.timer[player_id] += 1
-                continue
 
-            if self.status[player_id] == 'special_attack_THROW_COFFEE' and self.timer[player_id] < ( len(player_frame.attack_coffee_frames) * self.quicker_delay_of_frames):
+            elif self.status[player_id] == 'special_attack_THROW_COFFEE' and self.timer[player_id] < ( len(player_frame.attack_coffee_frames) * self.quicker_delay_of_frames):
                 self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.is_invisible():
                     if player.face == Const.DIRECTION_TO_VEC2['right']:
@@ -566,9 +581,8 @@ class View_players():
                             player_frame.flipped_attack_coffee_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 
                 self.timer[player_id] += 1
-                continue
 
-            if (self.status[player_id] == 'special_attack_DOS' or self.status[player_id] == 'special_attack_DDOS') and self.timer[player_id] < ( len(player_frame.attack_ddos_frames) * self.quicker_delay_of_frames):
+            elif (self.status[player_id] == 'special_attack_DOS' or self.status[player_id] == 'special_attack_DDOS') and self.timer[player_id] < ( len(player_frame.attack_ddos_frames) * self.quicker_delay_of_frames):
                 self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.is_invisible():
                     if player.face == Const.DIRECTION_TO_VEC2['right']:
@@ -585,9 +599,8 @@ class View_players():
                         screen.blit(player_frame.flipped_attack_ddos_frames[self.frame_index_to_draw],
                             player_frame.flipped_attack_ddos_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 self.timer[player_id] += 1
-                continue
 
-            if self.status[player_id] == 'special_attack_FAN' and self.timer[player_id] < ( len(player_frame.attack_fan_frames) * self.quicker_delay_of_frames):
+            elif self.status[player_id] == 'special_attack_FAN' and self.timer[player_id] < ( len(player_frame.attack_fan_frames) * self.quicker_delay_of_frames):
                 self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.is_invisible():
                     if player.face == Const.DIRECTION_TO_VEC2['right']:
@@ -605,9 +618,8 @@ class View_players():
                             player_frame.flipped_attack_fan_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 
                 self.timer[player_id] += 1
-                continue
 
-            if self.status[player_id] == 'special_attack_LIGHTNING' and self.timer[player_id] < ( len(player_frame.attack_lightning_frames) * self.quicker_delay_of_frames):
+            elif self.status[player_id] == 'special_attack_LIGHTNING' and self.timer[player_id] < ( len(player_frame.attack_lightning_frames) * self.quicker_delay_of_frames):
                 self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.is_invisible():
                     if player.face == Const.DIRECTION_TO_VEC2['right']:
@@ -624,9 +636,8 @@ class View_players():
                         screen.blit(player_frame.flipped_attack_lightning_frames[self.frame_index_to_draw],
                             player_frame.flipped_attack_lightning_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 self.timer[player_id] += 1
-                continue
 
-            if self.status[player_id] == 'common_attack' and self.timer[player_id] < ( len(player_frame.common_attack_frames) * self.quicker_delay_of_frames):
+            elif self.status[player_id] == 'common_attack' and self.timer[player_id] < ( len(player_frame.common_attack_frames) * self.quicker_delay_of_frames):
                 
                 self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 
@@ -661,9 +672,8 @@ class View_players():
                             screen.blit(player_frame.flipped_common_attack_frames[self.frame_index_to_draw],
                                 player_frame.flipped_common_attack_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 self.timer[player_id] += 1
-                continue
             
-            if self.status[player_id] == 'be_attacked' and self.timer[player_id] < ( len(player_frame.be_attacked_frames) * self.delay_of_frames):
+            elif self.status[player_id] == 'be_attacked' and self.timer[player_id] < ( len(player_frame.be_attacked_frames) * self.delay_of_frames):
                 
                 self.frame_index_to_draw = (self.timer[player_id] // self.delay_of_frames)
                 if player.is_invisible():
@@ -697,9 +707,8 @@ class View_players():
                             screen.blit(player_frame.flipped_be_attacked_frames[self.frame_index_to_draw],
                                 player_frame.flipped_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
                 self.timer[player_id] += 1
-                continue
             
-            if player.is_standing():
+            elif player.is_standing():
                 self.status[player_id] = 'standing'
                 self.timer[player_id] = 0
                 if player.is_invisible():

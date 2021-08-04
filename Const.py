@@ -180,7 +180,7 @@ BUG_COLOR = pg.Color("DarkOliveGreen")
 HP_BAR_COLOR = [pg.Color('white'), pg.Color('green')]
 ENERGY_BAR_COLOR = [pg.Color('white'), pg.Color('orange'), pg.Color('gray')]
 ITEM_BOX_COLOR = pg.Color('brown')
-ITEM_BOX_SIZE = 15
+ITEM_BOX_SIZE = 25
 # controller
 PLAYER_MOVE_KEYS = {
     pg.K_a: (0, 'left'),
