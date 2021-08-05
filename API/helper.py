@@ -24,7 +24,11 @@ class Helper(object):
 
     def get_game_arena_boundary(self):
         return ((0,0), Const.ARENA_SIZE)
-
+    
+    def get_all_special_attack(self):
+        return tuple((special_attack.name,\
+                    (special_attack.position[0], special_attack.position[1]),\
+                    (special_attack.speed[0], special_attack.speed[1])) for special_attack in self.model.attacks)
     #獲取個人資訊專區
     def get_self_id(self):
         return self.player_id
