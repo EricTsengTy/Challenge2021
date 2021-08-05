@@ -141,9 +141,7 @@ class GraphicalView:
                 self.players.atmosphere[event.player_id]['get_prop'] = 0
 
         elif isinstance(event, EventPlayerDie):
-
             self.players.reset(event.player_id)
-
         elif isinstance(event, EventStateChange):
             if event.state == Const.STATE_PLAY:
                 #players

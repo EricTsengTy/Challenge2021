@@ -193,8 +193,8 @@ class Player(Basic_Game_Object):
         if attacker.infection():
             State.infect(self.state)
         self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust()
-        self.count_score(attacker, Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust())
         self.model.ev_manager.post(EventBeAttacked(self.player_id))
+        self.count_score(attacker, Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust())
     
     def __random_target(self):
         player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
