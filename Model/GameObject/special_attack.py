@@ -22,6 +22,14 @@ class Basic_Attack_Object(Basic_Game_Object):
     def collide_player(self, player):
         pass
 
+    def basic_tick(self):
+        if self.obey_gravity:
+            self.speed.y += Const.PLAYER_GRAVITY/Const.FPS
+        self.position += self.speed / Const.FPS
+        if self.x > Const.ARENA_SIZE[0] or self.x < 0: 
+            self.kill()
+        
+
     def tick(self):
         self.basic_tick()
         self.timer += 1
