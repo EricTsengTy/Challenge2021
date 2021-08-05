@@ -1,14 +1,15 @@
-from AI.team_controller import AI_DIR_DOUBLE_JUMP
 from AI.team_controller import AI_DIR
 import pygame as pg
 import Const
 from Model.GameObject.basic_game_object import *
 
-AI_DIR_LEFT        = 0
-AI_DIR_RIGHT       = 1
-AI_DIR_JUMP        = 2
-AI_DIR_ATTACK      = 3
-AI_DIR_USE_ITEM    = 4
+AI_DIR_LEFT              = 0
+AI_DIR_RIGHT             = 1
+AI_DIR_JUMP              = 2
+AI_DIR_LEFT_JUMP         = 3
+AI_DIR_RIGHT_JUMP        = 4
+AI_DIR_ATTACK            = 5
+AI_DIR_SPECIAL_ATTACK    = 6
 
 class Helper(object):
     def __init__(self, model, index):
@@ -229,22 +230,20 @@ class Helper(object):
         return (pos2[0] - pos1[0], pos2[1] - pos1[1])
 
     ###新手友善專區
-    def double_jump(self):
+    def jump(self):
         me = self.model.players[self.player_id]
         if me.speed.y >= 0 and me.jump_count < me.max_jump:
             return AI_DIR_JUMP
         return None
 
-    def right_double_jump(self):
+    def jump_or_right(self):
         me = self.model.players[self.player_id]
         if me.speed.y >= 0 and me.jump_count < me.max_jump:
             return AI_DIR_JUMP
         return AI_DIR_RIGHT
 
-    def left_double_jump(self):
+    def jump_or_left(self):
         me = self.model.players[self.player_id]
-        if me.jump_count == me.max_jump:
-            return AI_DIR_JUMP
         if me.speed.y >= 0 and me.jump_count < me.max_jump:
             return AI_DIR_JUMP
         return AI_DIR_LEFT
@@ -286,7 +285,7 @@ class Helper(object):
             elif pos1[0]>=900:
                 return AI_DIR_LEFT
             else:
-                return self.double_jump()
+                return self.jump()
             '''
             if playerplatform == 1:
                 if pos1[0] >= 980:

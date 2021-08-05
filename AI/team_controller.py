@@ -1,14 +1,3 @@
-AI_DIR_LEFT              = 0
-AI_DIR_RIGHT             = 1
-AI_DIR_JUMP              = 2
-AI_DIR_LEFT_JUMP         = 3
-AI_DIR_RIGHT_JUMP        = 4
-AI_DIR_DOUBLE_JUMP       = 5
-AI_DIR_ATTACK            = 6
-AI_DIR_SPECIAL_ATTACK    = 7
-
-
-
 '''
 FAN,
 LIGHTNING,
