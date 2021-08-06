@@ -42,22 +42,32 @@ class View_Bug(__Object_base):
         )
         for _i in range(5)
     )
-
+    
     @classmethod
     def init_convert(cls):
         cls.frames = tuple(_frame.convert_alpha() for _frame in cls.frames)
     
     def __init__(self, delay_of_frames):
         self.delay_of_frames = delay_of_frames
+    
+    @staticmethod
+    def mid_point(a,b):
+        return ((a[0]+b[0])/2,(a[1]+b[1])/2)
 
-    def draw(self, screen, pos, timer):
+    def draw(self, screen, pos, timer, track):
         self.frame_index_to_draw = (timer // self.delay_of_frames) % len(self.frames)
         
         screen.blit(
             self.frames[self.frame_index_to_draw],
             self.frames[self.frame_index_to_draw].get_rect(center=pos),
         )
-
+        track_timer = timer-1
+        tmp = 0
+        for _i in range( track_timer+5, track_timer+50 ,5 ):
+            start_point = track[  _i%50 ]
+            end_point = self.mid_point( track[(_i+5)%50], track[_i%50])
+            pg.draw.line(screen, (180,0,0), start_point, end_point, width=4)
+            tmp += 1
 
 class View_Coffee(__Object_base):
     frames = tuple(

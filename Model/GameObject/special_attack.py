@@ -91,6 +91,7 @@ class Bug(Basic_Attack_Object):
         self.obey_gravity = False
         self.state_timer = 0
         self.state = 'straight'
+        self.track = []
 
     def basic_tick(self):
         self.state_timer += 1
@@ -101,12 +102,16 @@ class Bug(Basic_Attack_Object):
         elif self.state == 'random':
             self.position += self.speed
             if self.state_timer % Const.BUG_RANDOM_PERIOD == 0:
-               self.speed = self.speed.rotate(random.randint(0, 360))
+               self.speed = self.speed.rotate(random.randint(-90, 90))
             if self.state_timer == Const.BUG_RANDOM_TIMER:
                 self.kill()
 
     def tick(self):
-        self.basic_tick()    
+        self.basic_tick()
+        
+        if( (self.state_timer-1) == 0 ): self.track = [self.position]*50
+        else: self.track[ (self.state_timer-1) %50 ] = self.position
+        
         for player in self.model.players:
             if (not self.immune[player.player_id]) and player.can_be_special_attacked() and self.collide_player(player):
                 player.be_special_attacked(self)

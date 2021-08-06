@@ -229,7 +229,7 @@ class GraphicalView:
             if attack.name == 'Arrow':
                 self.arrow.draw(target, attack.position, attack.speed)
             elif attack.name == 'Bug':
-                self.bug.draw(target, attack.position, attack.timer)
+                self.bug.draw(target, attack.position, attack.state_timer, attack.track)
             elif attack.name == 'Coffee':
                 self.coffee.draw(target, attack.position, attack.timer)
             elif attack.name == 'Fireball':
