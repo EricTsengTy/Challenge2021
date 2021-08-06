@@ -132,6 +132,22 @@ class Coffee(Basic_Attack_Object):
         self.disappear_hit_player = True
         self.obey_gravity = True
         self.gravity = Const.COFFEE_GRAVITY
+        self.track = []
+
+    def tick(self):
+        self.basic_tick()
+        if( (self.timer) == 0 ): self.track = [self.position]*20
+        else: self.track[ (self.timer) %20 ] = self.position
+
+        self.timer += 1
+        for player in self.model.players:
+            if (not self.immune[player.player_id]) and player.can_be_special_attacked() and self.collide_player(player):
+                player.be_special_attacked(self)
+                self.immune[player.player_id] = True
+                if self.disappear_hit_player:
+                    self.kill()
+            if self.attacker.player_id != player.player_id and self.collide_player(player):
+                self.model.ev_manager.post(EventBeAttacked(player.player_id))
 
     def collide_player(self, player):
         return player.rect.collidepoint(self.center.x, self.center.y)

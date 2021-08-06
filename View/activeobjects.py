@@ -70,7 +70,7 @@ class View_Bug(__Object_base):
             tmp += 1
 
 class View_Coffee(__Object_base):
-    frames = tuple(
+    Frames = tuple(
                 pg.transform.rotate(
                     scale_surface(
                         load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_coffee{_i+1}.png'))
@@ -79,7 +79,7 @@ class View_Coffee(__Object_base):
                 )
                 for _i in range(5)
             )
-    last_frames = tuple(
+    Last_Frames = tuple(
                 pg.transform.rotate(
                     scale_surface(
                         load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_coffee5.png'))
@@ -88,26 +88,49 @@ class View_Coffee(__Object_base):
                 )
                 for _i in range(5)
             )
+    
+    @staticmethod
+    def translucent(img,alpha):
+        "change player's opacity (img will be use as invisible player)"
+        result_img = img.convert_alpha()
+        result_img.fill((255, 255, 255, alpha), None, pg.BLEND_RGBA_MULT)
+        return result_img
 
     @classmethod
     def init_convert(cls):
-        cls.frames = tuple(_frame.convert_alpha() for _frame in cls.frames)
-    
+        cls.frames = []
+        cls.last_frames = []
+        for i in range(1,6):
+            cls.frames.append( 
+                tuple(
+                    cls.translucent( _frame, 255*i//5 ) for _frame in cls.Frames
+                )
+            )
+            cls.last_frames.append( 
+                tuple(
+                    cls.translucent( _frame, 255*i//5 ) for _frame in cls.Last_Frames
+                )
+            )
     def __init__(self, delay_of_frames):
         self.delay_of_frames = delay_of_frames
 
-    def draw(self, screen, pos, timer):
-        self.frame_index_to_draw = timer // self.delay_of_frames
-        if self.frame_index_to_draw >= len(self.frames):
-            screen.blit(
-                self.last_frames[self.frame_index_to_draw % len(self.frames)],
-                self.last_frames[self.frame_index_to_draw % len(self.frames)].get_rect(center=pos)
-            )
-        else:
-            screen.blit(
-                self.frames[self.frame_index_to_draw],
-                self.frames[self.frame_index_to_draw].get_rect(center=pos)
-            )
+    def draw(self, screen, pos, timer,track):
+        gaps = [0,5,10,15,19]
+        self.frame_index_to_draw = (timer+19) // self.delay_of_frames
+        for (idx,gap) in enumerate(gaps):
+            
+            pos = track[(timer+gap)%20]
+            if self.frame_index_to_draw >= len(self.Frames):
+                screen.blit(
+                    self.last_frames[idx][self.frame_index_to_draw % len(self.Frames)],
+                    self.last_frames[idx][self.frame_index_to_draw % len(self.Frames)].get_rect(center=pos)
+                )
+            else:
+                screen.blit(
+                    self.frames[idx][self.frame_index_to_draw],
+                    self.frames[idx][self.frame_index_to_draw].get_rect(center=pos)
+                )
+            
     
 class View_Fireball(__Object_base):
     frames = tuple(
