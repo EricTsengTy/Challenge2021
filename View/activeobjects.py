@@ -102,20 +102,16 @@ class View_Coffee(__Object_base):
         cls.last_frames = []
         for i in range(1,6):
             cls.frames.append( 
-                tuple(
-                    cls.translucent( _frame, 255*i//5 ) for _frame in cls.Frames
-                )
+                tuple( cls.translucent( _frame, 255*i//5 ) for _frame in cls.Frames )
             )
             cls.last_frames.append( 
-                tuple(
-                    cls.translucent( _frame, 255*i//5 ) for _frame in cls.Last_Frames
-                )
+                tuple( cls.translucent( _frame, 255*i//5 ) for _frame in cls.Last_Frames )
             )
     def __init__(self, delay_of_frames):
         self.delay_of_frames = delay_of_frames
 
     def draw(self, screen, pos, timer,track):
-        gaps = [0,5,10,15,19]
+        gaps = [5,9,13,16,19]
         self.frame_index_to_draw = (timer+19) // self.delay_of_frames
         for (idx,gap) in enumerate(gaps):
             
