@@ -12,7 +12,7 @@ import Model.GameObject.state as State
 from EventManager.EventManager import *
 
 class Player(Basic_Game_Object):
-    def __init__(self, model, player_id):
+    def __init__(self, model, player_id, name, is_AI):
         super().__init__(model,
                          Const.PLAYER_INIT_POSITION[player_id].x,
                          Const.PLAYER_INIT_POSITION[player_id].y,
@@ -24,6 +24,7 @@ class Player(Basic_Game_Object):
         self.state = State.init()
         self.obey_gravity = True
         self.keep_item_type = ''
+        self.tmp_keep_item_type = ''
         self.can_leave_screen = False
         self.face = Const.DIRECTION_TO_VEC2['right']
         self.death = 0
@@ -34,6 +35,8 @@ class Player(Basic_Game_Object):
         self.score = 0
         self.color = Const.COLOR_TABLE[player_id]
         self.color_index = player_id
+        self.player_name = name
+        self.is_AI = is_AI
 
     @property
     def common_attack_range(self):
@@ -117,6 +120,7 @@ class Player(Basic_Game_Object):
             self.keep_item_type = item_type
             self.special_attack_timer = 0
         elif item_type == 'EXE':
+            self.score += 300
             self.model.ev_manager.post(EventHelloWorld())
         elif item_type == 'USB':
             State.infect(self.state)
@@ -130,7 +134,7 @@ class Player(Basic_Game_Object):
             self.center = item.center
             State.folder(self.state)
         elif item_type == 'CHARGE':
-            self.blood = min(self.blood+100, Const.PLAYER_FULL_BLOOD)
+            self.blood = min(self.blood+Const.CHARGE_BLOOD, Const.PLAYER_FULL_BLOOD)
 
         self.model.ev_manager.post(EventGetProp(self.player_id, item_type))
 
@@ -139,29 +143,31 @@ class Player(Basic_Game_Object):
         if self.special_attack_timer > 0: return
         if self.special_attack_delay == -1:
             self.special_attack_delay = Const.PLAYER_SPECIAL_ATTACK_DELAY
-            if self.keep_item_type != 'THROW_COFFEE' and self.keep_item_type != 'THROW_BUG':
-                self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type)) 
+            self.tmp_keep_item_type = self.keep_item_type
+            self.keep_item_type = ''
+            if self.tmp_keep_item_type != 'THROW_COFFEE' and self.tmp_keep_item_type != 'THROW_BUG':
+                self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.tmp_keep_item_type)) 
             return
         if self.special_attack_delay > 0: return
-        if self.keep_item_type == 'THROW_COFFEE' or self.keep_item_type == 'THROW_BUG':
-            self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.keep_item_type)) 
+        if self.tmp_keep_item_type == 'THROW_COFFEE' or self.tmp_keep_item_type == 'THROW_BUG':
+            self.model.ev_manager.post(EventSpecialAttackMovement(self.player_id, self.tmp_keep_item_type)) 
             
 
-        if(self.keep_item_type == 'DOS'):
-            self.model.attacks.append(Dos(self.model, self, self.model.players[self.__random_target()]))
-        elif(self.keep_item_type == 'DDOS'):
-            self.model.attacks.append(Ddos(self.model, self, self.model.players[self.__random_target()]))
-        elif(self.keep_item_type == 'THROW_COFFEE'):
+        if(self.tmp_keep_item_type == 'DOS'):
+            self.model.attacks.append(Dos(self.model, self, self.model.players[self.__nearest_target()]))
+        elif(self.tmp_keep_item_type == 'DDOS'):
+            self.model.attacks.append(Ddos(self.model, self, self.model.players[self.__nearest_target()]))
+        elif(self.tmp_keep_item_type == 'THROW_COFFEE'):
             self.model.attacks.append(Throw_Coffee(self.model, self, self.model.players[(self.player_id+1)%4]))
-        elif(self.keep_item_type == 'THROW_BUG'):
+        elif(self.tmp_keep_item_type == 'THROW_BUG'):
             self.model.attacks.append(Throw_Bug(self.model, self, self.model.players[(self.player_id+1)%4]))
-        elif(self.keep_item_type == ''):
+        elif(self.tmp_keep_item_type == ''):
             self.model.attacks.append(Cast_Fireball(self.model, self))
-        elif(self.keep_item_type == 'FAN'):
+        elif(self.tmp_keep_item_type == 'FAN'):
             self.model.attacks.append(Cast_Tornado(self.model, self))
-        elif(self.keep_item_type == 'LIGHTNING'):
+        elif(self.tmp_keep_item_type == 'LIGHTNING'):
             self.model.attacks.append(Cast_Lightning(self.model, self))
-        self.keep_item_type = ''
+        self.tmp_keep_item_type = ''
         self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
         self.special_attack_delay = -1
 
@@ -200,6 +206,24 @@ class Player(Basic_Game_Object):
         player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
         player_id_list.remove(self.player_id)
         return random.choice(player_id_list)
+
+    def __nearest_target(self):
+        player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
+        player_id_list.remove(self.player_id)
+        for player_id in player_id_list:
+            if not self.model.players[player_id].can_be_special_attacked():
+                player_id_list.remove(player_id)
+        if len(player_id_list) == 0:
+            player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
+            player_id_list.remove(self.player_id)
+
+        ret_player_id = player_id_list[0]    
+        min_dis = (self.position - self.model.players[ret_player_id].position).length()
+        for player_id in player_id_list[1:]:
+            if (self.position - self.model.players[player_id].position).length() < min_dis:
+                ret_player_id = player_id
+                min_dis = (self.position - self.model.players[player_id].position).length()
+        return ret_player_id
 
     def can_be_common_attacked(self):
         if self.state['be_common_attacked'] == 0: return True
@@ -242,3 +266,7 @@ class Player(Basic_Game_Object):
     
     def change_color(self, color):
         self.color = color
+
+    def can_common_attack(self):
+        if self.common_attack_timer > 0 or self.in_folder(): return False
+        else: return True

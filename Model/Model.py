@@ -65,7 +65,7 @@ class GameEngine:
     The main game engine. The main loop of the game is in GameEngine.run()
     '''
 
-    def __init__(self, ev_manager: EventManager):
+    def __init__(self, ev_manager: EventManager, AI_names: list):
         '''
         This function is called when the GameEngine is created.
         For more specific objects related to a game instance
@@ -76,6 +76,10 @@ class GameEngine:
 
         self.state_machine = StateMachine()
 
+        self.AI_names = AI_names
+        while len(self.AI_names) < 4:
+            self.AI_names.append('m')
+
     def initialize(self):
         '''
         This method is called when a new game is instantiated.
@@ -83,8 +87,7 @@ class GameEngine:
         self.clock = pg.time.Clock()
         self.timer = Const.GAME_LENGTH
         self.state_machine.push(Const.STATE_MENU)
-        self.pause = False
-        self.players = [Player(self, i) for i in range(Const.PLAYER_NUMBER)]
+        self.players = [Player(self, i, 'manual', False) if self.AI_names[i] == 'm' else Player(self, i, self.AI_names[i], True) for i in range(Const.PLAYER_NUMBER)]
         self.grounds = [Ground(self, i[0], i[1], i[2], i[3]) for i in Const.GROUND_POSITION]
         self.items = []
         self.attacks = []
@@ -104,7 +107,6 @@ class GameEngine:
                 self.update_menu()
 
             elif cur_state == Const.STATE_PLAY:
-                if self.pause: return
                 self.update_objects()
                 self.timer -= 1
                 if self.timer == 0:
@@ -112,6 +114,9 @@ class GameEngine:
                         if player.death == 0:
                             player.add_score(Const.SCORE_NEVER_DIE)
                     self.ev_manager.post(EventTimesUp())
+
+            elif cur_state == Const.STATE_STOP:
+                return
 
             elif cur_state == Const.STATE_ENDGAME:
                 self.update_endgame()
@@ -127,41 +132,29 @@ class GameEngine:
             self.running = False
 
         elif isinstance(event, EventPlayerMove):
-            if self.pause: return
-
             # player move left / move right / jump
             if self.players[event.player_id].in_folder():
                 return
             self.players[event.player_id].move(event.direction)
 
         elif isinstance(event, EventPlayerAttack):
-            if self.pause: return
 
-            # player do common attack
-            attacker = self.players[event.player_id[0]]
-            if not attacker.in_folder() and attacker.common_attack_timer == 0:
-                self.ev_manager.post(EventNormalAttackMovement(event.player_id[0]))
-                do_attack = False
+           # player do common attack
+            attacker = self.players[event.player_id]
+            if attacker.can_common_attack(): 
+                self.ev_manager.post(EventNormalAttackMovement(event.player_id))
                 attack_range = attacker.common_attack_range
                 for player in self.players:
                     if attacker.player_id != player.player_id and\
                        player.can_be_common_attacked() and attack_range.colliderect(player.rect):
                         player.be_common_attacked(attacker)
-                        do_attack = True
-                if do_attack:
-                    attacker.common_attack_timer = Const.PLAYER_COMMON_ATTACK_TIMER
-
-            else:
-                print("Can not common attack")
+                attacker.common_attack_timer = Const.PLAYER_COMMON_ATTACK_TIMER
     
         elif isinstance(event, EventPlayerSpecialAttack):
-            if self.pause: return
 
-            attacker = self.players[event.player_id[0]]
+            attacker = self.players[event.player_id]
             if attacker.can_special_attack():
                 attacker.special_attack()
-            else:
-                print("Can not special attack")
 
         elif isinstance(event, EventPreviousColor):
             self.color_selector.previous_color(self.players[event.player_id])
@@ -171,12 +164,6 @@ class GameEngine:
             
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
-        
-        elif isinstance(event, EventStop):
-            self.pause = True
-        
-        elif isinstance(event, EventContinue):
-            self.pause = False
 
         elif isinstance(event, EventRestart):
             self.initialize()
