@@ -105,25 +105,6 @@ class View_Arrow(__Object_base):
             img = rotate_surface(self.images[0], -angle+90)
             screen.blit(img, img.get_rect(center=pos))
 
-class View_Lightning(__Object_base):
-    images = tuple(
-        rotate_surface(
-            resize_surface(
-                load_image(os.path.join(Const.IMAGE_PATH, 'attack', 'attack_lightning.png')),
-                Const.LIGHTNING_SIZE ,Const.LIGHTNING_SIZE
-            ), -90 - 45*_i
-        )
-        for _i in range(8)
-    )
-
-    @classmethod
-    def init_convert(cls):
-        cls.images = tuple( img.convert_alpha() for img in cls.images)
-    
-    def draw(self, screen, pos, dist):
-        for _i in range(8):
-            screen.blit(self.images[_i], self.images[_i].get_rect(center=(pos - dist * Vector2(1, 0).rotate(45 * _i))))
-
 class View_Item(__Object_base):
     images = tuple(
         resize_surface(
@@ -266,8 +247,7 @@ class View_Score_Playing(__Object_base):
 def init_staticobjects():
     View_stage.init_convert()
     View_platform.init_convert()
-    View_Arrow.init_convert()
-    View_Lightning.init_convert()
+    View_Arrow.init_convert() 
     View_Item.init_convert()
     View_Pause.init_convert()
     View_Scoreboard.init_convert()

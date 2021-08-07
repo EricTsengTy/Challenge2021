@@ -210,7 +210,7 @@ class Lightning(Basic_Attack_Object):
         self.name = 'Lightning'
         self.damage = Const.LIGHTNING_DAMAGE
         self.disappear_hit_player = False
-        self.destination = destination // the final y position
+        self.destination = destination # the final y position
         
     def collide_player(self, player):
         return player.rect.colliderect(self.rect)

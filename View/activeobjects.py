@@ -192,6 +192,35 @@ class View_Fireball(__Object_base):
                 self.fliped_frames[self.frame_index_to_draw].get_rect(center=pos),
             )
 
+class View_Lightning(__Object_base):
+    frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'lightning', 'lightning-{:02d}.png'.format(_i))),
+            150 ,800
+        ) for _i in range(1,10)
+    )
+    gray_bg = resize_surface(
+        load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'transparent_gray.png')),
+        Const.ARENA_SIZE[0], Const.ARENA_SIZE[1]
+    )
+
+    def __init__(self, delay_of_frames):
+        self.delay_of_frames = delay_of_frames
+
+    @classmethod
+    def init_convert(cls):
+        cls.frames = tuple( frame.convert_alpha() for frame in cls.frames)
+        cls.gray_bg = cls.gray_bg.convert_alpha()
+    def draw(self, screen, dest, timer, pos):
+        pos = (pos[0], dest+Const.LIGHTNING_HEIGHT)
+        self.frame_index_to_draw = (timer // self.delay_of_frames) % len(self.frames)
+        screen.blit(self.gray_bg, (0, 0))
+        screen.blit(
+            self.frames[self.frame_index_to_draw],
+            self.frames[self.frame_index_to_draw].get_rect(bottomleft=pos),
+        )
+        
+
 class View_Tornado(__Object_base):
     frames = tuple(
             resize_surface(
@@ -304,3 +333,4 @@ def init_activeobjects():
     View_Fireball.init_convert()
     View_Tornado.init_convert()
     View_ColorPicker.init_convert()
+    View_Lightning.init_convert()

@@ -62,7 +62,6 @@ class GraphicalView:
         self.stage =  View.staticobjects.View_stage(self.model)
         self.platform = View.staticobjects.View_platform(self.model)
         self.arrow = View.staticobjects.View_Arrow(self.model)
-        self.lightning = View.staticobjects.View_Lightning(self.model)
         self.item = View.staticobjects.View_Item(self.model)
         self.pause_window = View.staticobjects.View_Pause(self.model)
         self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
@@ -72,6 +71,7 @@ class GraphicalView:
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
+        self.lightning = View.activeobjects.View_Lightning(10)
         self.color_select = View.activeobjects.View_ColorPicker(self.model, 7)
 
         self.is_initialized = True
@@ -237,7 +237,7 @@ class GraphicalView:
             elif attack.name == 'Tornado':
                 self.tornado.draw(target, attack.rect.center, attack.timer, attack.speed)
             elif attack.name == 'Lightning':
-                self.lightning.draw(target, attack.rect.center, attack.range)
+                self.lightning.draw(target, attack.destination, attack.timer, attack.position)
         
         #animation
         for ani in self.animation_list:
