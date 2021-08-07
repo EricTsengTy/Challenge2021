@@ -2,7 +2,7 @@ import pygame as pg
 from pygame import transform
 import Const
 from pygame.math import Vector2
-from math import sqrt
+from math import pi, sqrt, tan
 from Model.GameObject.basic_game_object import Basic_Game_Object
 from EventManager.EventManager import *
 import random
@@ -286,8 +286,13 @@ class Throw_Coffee(Basic_Game_Object):
     def __init__(self, model, attacker, target):
         super().__init__(model, attacker.center.x, attacker.center.y, 1, 1)
         self.name = 'Throw_Coffee'
+        # 30, 40, 55 degree
         self.model.attacks.append(Coffee(model,attacker.player_id, self.position, 
-                                         (attacker.face + Vector2(0,-1)).normalize() * Const.COFFEE_THROW_SPEED))
+                                         (attacker.face + Vector2(0,-tan(30/180*pi))).normalize() * Const.COFFEE_THROW_SPEED))
+        self.model.attacks.append(Coffee(model,attacker.player_id, self.position, 
+                                         (attacker.face + Vector2(0,-tan(40/180*pi))).normalize() * Const.COFFEE_THROW_SPEED))
+        self.model.attacks.append(Coffee(model,attacker.player_id, self.position, 
+                                         (attacker.face + Vector2(0,-tan(55/180*pi))).normalize() * Const.COFFEE_THROW_SPEED))
         self.kill()
         
 class Cast_Fireball(Basic_Game_Object):
