@@ -71,7 +71,7 @@ class GraphicalView:
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
-        self.lightning = View.activeobjects.View_Lightning(10)
+        self.lightning = View.activeobjects.View_Lightning(5)
         self.color_select = View.activeobjects.View_ColorPicker(self.model, 7)
 
         self.is_initialized = True
