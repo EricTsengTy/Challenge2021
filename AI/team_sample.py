@@ -35,15 +35,19 @@ class TeamAI ():
             decision = self.takeOtherItem()
         if decision is None:
             decision = self.challenge()
+        if decision is None:
+            return AI_DIR_ATTACK
         return decision
 
     def attack(self):
         if self.helper.get_is_jumping():
             return None
         if self.helper.get_can_use_special_attack():
+            if self.helper.get_keep_item_type() == 'DDOS' or self.helper.get_keep_item_type()=='DOS':
+                return AI_DIR_SPECIAL_ATTACK
             if self.helper.get_region(self.helper.get_self_position()) == self.helper.get_region(self.helper.get_nearest_player_position()):
                 return AI_DIR_SPECIAL_ATTACK
-        elif self.helper.get_if_player_in_attack_range():
+        elif self.helper.get_if_player_in_attack_range() and self.helper.get_can_common_attack():
             return AI_DIR_ATTACK
         return None
         ###return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_specific_item_position('EXE'))
@@ -55,6 +59,16 @@ class TeamAI ():
         
 
     def takeOtherItem(self):
+        target = None
+        if target is None:
+            target = self.helper.get_specific_item('CHARGE')
+        if target is None:
+            target = self.helper.get_specific_item('DDOS')
+        if target is None:
+            target = self.helper.get_specific_item('LIGHTNING')
+        return target
+        
+        '''
         if self.helper.get_nearest_specific_item_position('CHARGE') is not None and self.helper.get_region(self.helper.get_self_position()) == self.helper.get_region(self.helper.get_nearest_specific_item_position('CHARGE')):
             return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_specific_item_position('CHARGE'))
         if self.helper.get_nearest_specific_item_position('DOS') is not None and self.helper.get_region(self.helper.get_self_position()) == self.helper.get_region(self.helper.get_nearest_specific_item_position('DOS')):
@@ -63,6 +77,8 @@ class TeamAI ():
             return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_specific_item_position('DDOS'))
         if self.helper.get_nearest_specific_item_position('FOLDER_UNUSED') is not None and self.helper.get_region(self.helper.get_self_position()) == self.helper.get_region(self.helper.get_nearest_specific_item_position('FOLDER_UNUSED')):
             return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_specific_item_position('FOLDER_UNUSED'))
+        '''
+        
         return None
 
     def challenge(self):

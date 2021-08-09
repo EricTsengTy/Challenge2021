@@ -263,6 +263,7 @@ class Helper(object):
             return 2
         return 3
 
+
     def walk_to_specific_position(self,pos1,pos2):###pos1: player, pos2: 指定位置
         playerplatform = self.get_region(pos1)
         specificPlatform = self.get_region(pos2)
@@ -315,3 +316,8 @@ class Helper(object):
                 if pos1[1] >= 980:
                     return AI_DIR_LEFT
             '''
+
+    def get_specific_item(self,item):
+        if self.get_nearest_specific_item_position(item) is None:
+            return None
+        return self.walk_to_specific_position(self.get_self_position(),self.get_nearest_specific_item_position(item))

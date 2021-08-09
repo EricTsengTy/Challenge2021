@@ -50,9 +50,9 @@ class Interface(object):
                         AI_dir['right'] = True
                         AI_dir['jump'] = True
                     elif temp == 5:
-                        AI_dir['attack'] = True
+                        AI_dir['common attack'] = True
                     elif temp == 6:
-                        AI_dir['special_attack'] = True
+                        AI_dir['special attack'] = True
 
                 if AI_dir['left']:
                     self.ev_manager.post(EventPlayerMove(player.player_id, 'left'))
@@ -60,9 +60,9 @@ class Interface(object):
                     self.ev_manager.post(EventPlayerMove(player.player_id, 'right'))
                 if AI_dir['jump']:
                      self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
-                if AI_dir['attack']:
+                if AI_dir['common attack']:
                     self.ev_manager.post(EventPlayerAttack(player.player_id))
-                if AI_dir['special_attack']:
+                if AI_dir['special attack']:
                     self.ev_manager.post(EventPlayerSpecialAttack(player.player_id))
 
     def initialize(self):
