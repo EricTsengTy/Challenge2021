@@ -30,13 +30,14 @@ class TeamAI ():
         if decision is None:
             decision = self.attack()
         if decision is None:
-            decision = self.goto()    
+            if self.goto():
+                return None
         if decision is None:
-            decision = self.takeOtherItem()
+            if self.takeOtherItem():
+                return None
         if decision is None:
-            decision = self.challenge()
-        if decision is None:
-            return AI_DIR_ATTACK
+            self.challenge()
+            return None
         return decision
 
     def attack(self):
@@ -54,8 +55,9 @@ class TeamAI ():
 
     def goto(self):
         if self.helper.get_nearest_specific_item_position('EXE') is not None:
-            return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_specific_item_position('EXE'))
-        return None
+            self.helper.walk_to_specific_position(self.helper.get_nearest_specific_item_position('EXE'))
+            return True
+        return False
         
 
     def takeOtherItem(self):
@@ -70,19 +72,18 @@ class TeamAI ():
         
         '''
         if self.helper.get_nearest_specific_item_position('CHARGE') is not None and self.helper.get_region(self.helper.get_self_position()) == self.helper.get_region(self.helper.get_nearest_specific_item_position('CHARGE')):
-            return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_specific_item_position('CHARGE'))
+            return self.helper.walk_to_specific_position(self.helper.get_nearest_specific_item_position('CHARGE'))
         if self.helper.get_nearest_specific_item_position('DOS') is not None and self.helper.get_region(self.helper.get_self_position()) == self.helper.get_region(self.helper.get_nearest_specific_item_position('DOS')):
-            return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_specific_item_position('DOS'))
+            return self.helper.walk_to_specific_position(self.helper.get_nearest_specific_item_position('DOS'))
         if self.helper.get_nearest_specific_item_position('DDOS') is not None and self.helper.get_region(self.helper.get_self_position()) == self.helper.get_region(self.helper.get_nearest_specific_item_position('DDOS')):
-            return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_specific_item_position('DDOS'))
+            return self.helper.walk_to_specific_position(self.helper.get_nearest_specific_item_position('DDOS'))
         if self.helper.get_nearest_specific_item_position('FOLDER_UNUSED') is not None and self.helper.get_region(self.helper.get_self_position()) == self.helper.get_region(self.helper.get_nearest_specific_item_position('FOLDER_UNUSED')):
             return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_specific_item_position('FOLDER_UNUSED'))
         '''
-        
-        return None
 
     def challenge(self):
         if self.helper.get_highest_score_player() != self.helper.get_self_id():
-            return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_other_position(self.helper.get_highest_score_player()))
-        return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_player_position())
+            self.helper.walk_to_specific_position(self.helper.get_other_position(self.helper.get_highest_score_player()))
+        else:
+            self.helper.walk_to_specific_position(self.helper.get_nearest_player_position())
 

@@ -263,13 +263,25 @@ class Helper(object):
             return 2
         return 3
 
+    def walk_to_specific_position(self,pos):
+        me = self.model.players[self.player_id]
+        me.walk_to['walking'] = True
+        me.walk_to['end'] = pos
 
-    def walk_to_specific_position(self,pos1,pos2):###pos1: player, pos2: 指定位置
+    def stop_to_walk(self):
+        me = self.model.players[self.player_id]
+        me.walk_to['walking'] = False
+        
+    def walk_to_position(self,pos1,pos2):###pos1: player, pos2: 指定位置
         playerplatform = self.get_region(pos1)
         specificPlatform = self.get_region(pos2)
+        me = self.model.players[self.player_id]
         if playerplatform is None or specificPlatform is None:
             return None
         if playerplatform == specificPlatform:
+            if me.rect.collidepoint(pos2):
+                me.walk_to['walking'] = False
+                return None
             if self.get_is_jumping():
                 return None
             if pos1[0]>pos2[0]:
@@ -319,5 +331,6 @@ class Helper(object):
 
     def get_specific_item(self,item):
         if self.get_nearest_specific_item_position(item) is None:
-            return None
-        return self.walk_to_specific_position(self.get_self_position(),self.get_nearest_specific_item_position(item))
+            return False
+        self.walk_to_specific_position(self.get_nearest_specific_item_position(item))
+        return True
