@@ -3,7 +3,6 @@ import os.path
 
 from View.utils import load_image, resize_surface
 import Const
-import numpy as np
 
 class player_frames():
     # frames uncolored in cls (is the same between players)
@@ -475,15 +474,7 @@ class View_players():
 
             if player.is_invisible():
                 pass
-                '''  testing the invisble palyer. 
-                test = player_frame.flipped_standing_frames[0].copy()
-                # this works on images with per pixel alpha too
-                alpha = 128
-                test.fill((255, 255, 255, alpha), None, pg.BLEND_RGBA_MULT)
-                screen.blit(test,
-                    test.get_rect(center=player.center))
-                continue
-                '''
+            
             if player.in_folder():
                 if player.state['in_folder'] < 10 or player.state['in_folder'] > Const.IN_FOLDER_TIME - 10:
                     screen.blit(self.directory_occupied_frame, self.directory_occupied_frame.get_rect(center= (player.center[0] + (player.state['in_folder']//2%2)*10 ,player.center[1])) )                  

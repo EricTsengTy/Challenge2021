@@ -1,4 +1,3 @@
-from View.players import player_frames
 import pygame as pg
 import os.path
 
@@ -214,7 +213,7 @@ class View_Score_Playing(__Object_base):
     def draw(self, screen):
         c = 1
         for player in self.model.players :
-            #print(player.color_index)
+
             score_str = 'P{:d} {:8d}'.format(c,int(player.score))
             score_text = Text( score_str , 36, pg.Color('white'))
             
