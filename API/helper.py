@@ -25,10 +25,6 @@ class Helper(object):
     def get_game_arena_boundary(self):
         return ((0,0), Const.ARENA_SIZE)
     
-    def get_all_special_attack(self):
-        return tuple((special_attack.name,\
-                    (special_attack.position[0], special_attack.position[1]),\
-                    (special_attack.speed[0], special_attack.speed[1])) for special_attack in self.model.attacks)
     #獲取個人資訊專區
     def get_self_id(self):
         return self.player_id
@@ -36,7 +32,7 @@ class Helper(object):
     def get_self_position(self):
         return tuple(self.model.players[self.player_id].position)
     
-    def get_self_velocity(self):
+    def get_self_speed(self):
         return tuple(self.model.players[self.player_id].speed)
 
     def get_self_blood(self):
@@ -63,9 +59,8 @@ class Helper(object):
     def get_is_invisible(self):
         return self.model.players[self.player_id].is_invisible()
 
-    def get_can_special_attack(self):
-        return self.model.players[self.player_id].can_special_attack() and\
-            self.model.players[self.player_id].special_attack_timer == 0 
+    def get_can_use_special_attack(self):
+        return self.model.players[self.player_id].special_attack_timer == 0 and self.model.players[self.player_id].can_special_attack()
     
     def get_can_jump(self):
         return self.model.players[self.player_id].jump_count < self.model.players[self.player_id].max_jump
@@ -85,14 +80,13 @@ class Helper(object):
     def get_can_common_attack(self):
         return self.model.players[self.player_id].can_common_attack()
     
-    def get_can_use_special_attack(self):
-        return self.model.players[self.player_id].special_attack_timer == 0 and self.model.players[self.player_id].can_special_attack()
+    
 
     #獲取所有玩家資訊專區
     def get_all_position(self):
         return [tuple(player.position) for player in self.model.players]
 
-    def get_all_velocity(self):
+    def get_all_speed(self):
         return [tuple(player.speed) for player in self.model.players]
 
     def get_all_face(self):
@@ -136,6 +130,11 @@ class Helper(object):
             return ((vec[0])**2 + (vec[1])**2) ** (1/2)
         return [dist_cal(vect) for vect in all_vec]
 
+    def get_all_special_attack(self):
+        return tuple((special_attack.name,\
+                    (special_attack.position[0], special_attack.position[1]),\
+                    (special_attack.speed[0], special_attack.speed[1])) for special_attack in self.model.attacks)
+
     def get_if_player_in_attack_range(self):
         attacker = self.model.players[self.player_id]
         attack_range = attacker.common_attack_range
@@ -151,10 +150,10 @@ class Helper(object):
     def get_other_position(self,index):
         return tuple(self.model.players[index].position)
 
-    def get_other_velocity(self,index):
+    def get_other_speed(self,index):
         return tuple(self.model.players[index].speed)
     
-    def get_other_direction(self,index):
+    def get_other_face(self,index):
         return tuple(self.model.players[index].face)
     
     def get_other_keep_item(self,index):
@@ -320,7 +319,9 @@ class Helper(object):
                     return self.left_double_jump()
             elif playerplatform == 3:
                 if pos1[0] <= 700:
-                    return AI_DIR_RIGHT
+                    return AI_DIR_RIGHT     
+
+                     
                 if pos1[0] <= 800:
                     return self.right_double_jump()
                 if pos1[0] <= 980:
@@ -329,7 +330,7 @@ class Helper(object):
                     return AI_DIR_LEFT
             '''
 
-    def get_specific_item(self,item):
+    def walk_to_specific_item(self,item):
         if self.get_nearest_specific_item_position(item) is None:
             return False
         self.walk_to_specific_position(self.get_nearest_specific_item_position(item))

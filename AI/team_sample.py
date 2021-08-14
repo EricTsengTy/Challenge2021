@@ -63,11 +63,11 @@ class TeamAI ():
     def takeOtherItem(self):
         target = None
         if target is None:
-            target = self.helper.get_specific_item('CHARGE')
+            target = self.helper.walk_to_specific_item('CHARGE')
         if target is None:
-            target = self.helper.get_specific_item('DDOS')
+            target = self.helper.walk_to_specific_item('DDOS')
         if target is None:
-            target = self.helper.get_specific_item('LIGHTNING')
+            target = self.helper.walk_to_specific_item('LIGHTNING')
         return target
         
         '''
