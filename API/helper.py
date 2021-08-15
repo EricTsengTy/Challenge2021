@@ -335,3 +335,6 @@ class Helper(object):
             return False
         self.walk_to_specific_position(self.get_nearest_specific_item_position(item))
         return True
+    
+    def get_attack_items(self):
+        return [(attack.name, tuple(attack.position)) for attack in self.model.attacks]
