@@ -1,4 +1,4 @@
-import imp, traceback
+import imp, traceback, signal
 import pygame as pg
 import Const
 from API.helper import Helper
@@ -18,6 +18,11 @@ class Interface(object):
         self.model = model
         self.player_AI = {}
         self.is_init_AI = False
+        # handle timeout signal
+        def handler(signo, frame):
+            print(signo)
+            raise TimeoutError
+        signal.signal(signal.SIGALRM, handler)
 
     def notify(self, event: BaseEvent):
         """
@@ -37,7 +42,9 @@ class Interface(object):
         for player in self.model.players:
             if player.is_AI:
                 try:
+                    signal.setitimer(signal.ITIMER_REAL, 0.005)
                     AI_dir = self.player_AI[player.player_id].decide()
+                    signal.sigwait([signal.SIGALRM])
                 except:
                     return
 
