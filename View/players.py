@@ -540,7 +540,7 @@ class View_players():
                 self.frame_index_to_draw = (self.timer[player_id] // self.quicker_delay_of_frames)
                 if player.is_invisible():    
                     if player.face == Const.DIRECTION_TO_VEC2['right']:
-                        screen.blit(player_frame.invisble_attack_bug_frames[self.frame_index_to_draw],
+                        screen.blit(player_frame.invisible_attack_bug_frames[self.frame_index_to_draw],
                             player_frame.invisible_attack_bug_frames[self.frame_index_to_draw].get_rect(center=player.center))
                     else:
                         screen.blit(player_frame.invisible_flipped_attack_bug_frames[self.frame_index_to_draw],
