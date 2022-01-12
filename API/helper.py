@@ -24,7 +24,7 @@ class Helper(object):
 
     def get_game_arena_boundary(self):
         return ((0,0), Const.ARENA_SIZE)
-    
+
     #獲取個人資訊專區
     def get_self_id(self):
         return self.player_id
@@ -80,6 +80,9 @@ class Helper(object):
     def get_can_common_attack(self):
         return self.model.players[self.player_id].can_common_attack()
     
+    def get_self_special_attack_delay(self):
+        return self.model.players[self.player_id].special_attack_delay
+
     
 
     #獲取所有玩家資訊專區
@@ -179,6 +182,9 @@ class Helper(object):
 
     def get_other_damage_adjust(self,index):
         return self.model.players[index].damage_adjust()
+
+    def get_other_special_attack_delay(self, index):
+        return self.model.players[index].special_attack_delay
 
     #獲取道具資訊專區
 
