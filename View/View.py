@@ -1,6 +1,4 @@
-from genericpath import samestat
 import pygame as pg
-from pygame import color
 
 from EventManager.EventManager import *
 from Model.Model import GameEngine
@@ -41,10 +39,10 @@ class GraphicalView:
 
         if not self.is_initialized:
             try:
-                self.screen = pg.display.set_mode(Const.WINDOW_SIZE, pg.FULLSCREEN)
-                self.low_resolution = False
-            except pg.error:
+                self.screen = pg.display.set_mode(Const.WINDOW_SIZE)
                 self.low_resolution = True
+            except pg.error:
+                self.low_resolution = False
                 self.real_window_size = (Const.WINDOW_SIZE[0] * 2 // 3, Const.WINDOW_SIZE[1] * 2 // 3)
                 self.real_screen = pg.display.set_mode(self.real_window_size, pg.FULLSCREEN)
                 self.screen = pg.Surface(Const.WINDOW_SIZE)
@@ -71,7 +69,7 @@ class GraphicalView:
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
-        self.lightning = View.activeobjects.View_Lightning(10)
+        self.lightning = View.activeobjects.View_Lightning(5)
         self.color_select = View.activeobjects.View_ColorPicker(self.model, 7)
 
         self.is_initialized = True
@@ -161,17 +159,6 @@ class GraphicalView:
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.menu.draw(target)
-        # draw text
-
-        '''
-        font = pg.font.Font(None, 36)
-        text_surface = font.render("Press [space] to start ...", 1, pg.Color('gray88'))
-        text_center = (Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2)
-        self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
-        
-        menu_text = Text("Press [space] to start ...", 36, pg.Color('gray88'))
-        menu_text.blit(self.screen, center=(Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2))
-        '''
 
         pg.display.flip()
 
@@ -193,37 +180,22 @@ class GraphicalView:
         self.color_select.draw(target)
         
         pg.display.flip()
-        '''
-        for player in self.model.players:
-            print(player.player_id, player.color, end = ', ')
-        print('')
-        '''
 
     def render_play(self, target=None, update=True):
         if target is None:
             target = self.screen
+        
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.stage.draw(target)
         self.platform.draw(target)
         self.score_playing.draw(target)
+
         # draw players
         self.players.draw(target)
-
-        # for player in self.model.players:
-        #     if player.is_invisible():
-        #         pg.draw.rect(self.screen, Const.INVISIBLE_COLOR,player.rect)
-        #     else:
-        #         pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
-        #         pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player.rect)
-        
-        '''for ground in self.model.grounds:
-            pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)'''
         
         for item in self.model.items:
             self.item.draw(self.screen, item.rect, item.item_type)
-        
-        # pg.draw.rect(self.screen, Const.ITEM_COLOR, item.rect)
 
         for attack in self.model.attacks:
             if attack.name == 'Arrow':

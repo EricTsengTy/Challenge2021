@@ -1,8 +1,5 @@
-from os import walk
 import pygame as pg
 import os.path
-
-from pygame.display import update
 
 from View.utils import scale_surface, load_image, resize_surface
 import Const
