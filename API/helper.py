@@ -101,7 +101,7 @@ class Helper(object):
     def get_all_can_be_common_attacked(self):
         return [player.can_be_common_attacked() for player in self.model.players]
 
-    def get_all_can_be_specail_attacked(self):
+    def get_all_can_be_special_attacked(self):
         return [player.can_be_special_attacked() for player in self.model.players]
 
     def get_all_is_invisible(self):
@@ -168,7 +168,7 @@ class Helper(object):
     def get_other_can_be_special_attack(self,index):
         return self.model.players[index].can_be_special_attacked()
 
-    def  get_other_can_special_attack(self,index):
+    def get_other_can_special_attack(self,index):
         return self.model.players[index].can_special_attack() and self.model.players[index].special_attack_timer == 0
 
     def get_other_is_invisible(self,index):
@@ -208,7 +208,7 @@ class Helper(object):
     def get_all_item_position(self):
         return [tuple(item.position) for item in self.model.items]
 
-    def get_all_specific_item_postion(self, items_type):
+    def get_all_specific_item_position(self, items_type):
         return [tuple(item.position) for item in self.model.items if item.item_type == items_type]
 
     #獲取特別資訊專區
