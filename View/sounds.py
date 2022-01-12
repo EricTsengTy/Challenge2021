@@ -9,7 +9,7 @@ if(SOUND_ENABLE):
     class Audio():
         sound_list = {
             'attack': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'attack.wav')),
-            'jump':None,
+            'jump': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'jump.wav')),
             'fireball':pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'fireball.wav')),
             'get_prop': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'pick_up.wav')),
             'lightning':pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'lightning.wav')),
@@ -22,6 +22,7 @@ if(SOUND_ENABLE):
             'hello_world1': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world_barrage.wav')),
             'hello_world2': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world2.wav')),
             'hello_world3': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world_chat.wav')),
+            'damaged': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'damaged.wav')),
         }
         
         def __init__(self, ev_manager: EventManager, model: GameEngine):
@@ -29,8 +30,10 @@ if(SOUND_ENABLE):
             self.model = model
             ev_manager.register_listener(self)
 
+            self.sound_list['jump'].set_volume(0.3)
             self.sound_list['get_prop'].set_volume(0.5)
-            self.sound_list['fireball'].set_volume(0.5)
+            self.sound_list['fireball'].set_volume(0.3)
+            self.sound_list['tornado'].set_volume(0.4)
             self.sound_list['lightning'].set_volume(0.7)
             self.sound_list['dos'].set_volume(0.4)
             self.sound_list['ddos'].set_volume(0.4)
@@ -40,10 +43,20 @@ if(SOUND_ENABLE):
             self.sound_list['hello_world1'].set_volume(0.3)
             self.sound_list['hello_world2'].set_volume(0.4)
             self.sound_list['hello_world3'].set_volume(0.3)
+            self.sound_list['damaged'].set_volume(0.05)
 
         def notify(self, event):
             if isinstance(event, EventPlayerAttack):
                 self.sound_list['attack'].play()
+
+            elif isinstance(event, EventPlayerMove):
+                if event.direction == "jump":
+                    player = self.model.players[event.player_id]
+                    if player.jump_count <= player.max_jump:    
+                        self.sound_list['jump'].play()
+                        if player.jump_count == player.max_jump:
+                            player.jump_count += 1
+
             elif isinstance(event, EventSpecialAttackMovement):
                 if event.attack_type == '':
                     self.sound_list['fireball'].play()
@@ -74,6 +87,10 @@ if(SOUND_ENABLE):
                     self.sound_list['hello_world2'].play()
                 else:
                     self.sound_list['hello_world3'].play()
+
+            elif isinstance(event, EventBeAttacked):
+                if self.model.players[event.player_id].state['immune'] == 0:
+                    self.sound_list['damaged'].play()
 
 else:
     class Audio():

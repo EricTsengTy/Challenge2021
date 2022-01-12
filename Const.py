@@ -48,6 +48,14 @@ GROUND_SIZE = 40
 
 ITEM_WIDTH = 40
 ITEM_HEIGHT = 40
+ITEM_KEEP_LIST = [
+                'FAN',
+                'LIGHTNING',
+                'THROW_COFFEE',
+                'THROW_BUG',
+                'DOS',
+                'DDOS'
+]
 ITEM_TYPE_LIST=['FAN',
                 'LIGHTNING',
                 'THROW_COFFEE',
@@ -60,7 +68,8 @@ ITEM_TYPE_LIST=['FAN',
                 'GRAPHIC_CARD',
                 'FORMAT',
                 'FOLDER_UNUSED',
-                'CHARGE']
+                'CHARGE'
+                ]
 MAX_ITEM_NUMBER = 10
 
 ITEM_GENERATOR_COOLDOWN = 5 * FPS
@@ -82,8 +91,8 @@ DDOS_RADIUS = 200
 COFFEE_WIDTH = 40
 COFFEE_HEIGHT = 40
 COFFEE_DAMAGE = 150
-COFFEE_GRAVITY = 200
-COFFEE_THROW_SPEED = 400
+COFFEE_GRAVITY = 500
+COFFEE_THROW_SPEED = 600
 
 BUG_WIDTH = 30
 BUG_HEIGHT = 30
@@ -97,16 +106,15 @@ FIREBALL_RADIUS = 30
 FIREBALL_SPEED = 300
 FIREBALL_DAMAGE = 150
 
-TORNADO_WIDTH = 45
-TORNADO_HEIGHT = 100
+TORNADO_WIDTH = 80
+TORNADO_HEIGHT = 250
 TORNADO_SPEED = 280
 TORNADO_DAMAGE = 150
 
-LIGHTNING_SPEED = 1100
+LIGHTNING_SPEED = 1300
 LIGHTNING_DAMAGE = 150
-LIGHTNING_INIT_RANGE = 40 
-LIGHTNING_TIME = 25
-LIGHTNING_SIZE = 30
+LIGHTNING_WIDTH = 70
+LIGHTNING_HEIGHT = 100
 
 # state time
 INFECTED_TIME = 3 * FPS
@@ -142,11 +150,22 @@ SPECIAL_ATTACK_KEEP_TO_NUM = {
     'THROW_BUG': 0, 'THROW_COFFEE': 1, 'DDOS': 2, 'DOS': 3, 'FAN': 4, 'LIGHTNING': 5
 }
 
-PROP_PICS = [
-    'prop_fan.png', 'prop_lightning.png', 'prop_coffee.png', 'prop_bug.png', 
-    'prop_dos.png', 'prop_ddos.png', 'prop_hello_world.png', 'prop_usb.png', 'prop_firewall.png', 
-    'prop_graphic_card.png', 'prop_format.png', 'prop_directory.png', 'prop_charge_line.png', 'prop.png'       
-]
+PROP_PICS = {
+    'FAN':'prop_fan.png',
+    'LIGHTNING':'prop_lightning.png',
+    'THROW_COFFEE':'prop_coffee.png',
+    'THROW_BUG':'prop_bug.png', 
+    'DOS':'prop_dos.png',
+    'DDOS':'prop_ddos.png',
+    'EXE':'prop_hello_world.png',
+    'USB':'prop_usb.png',
+    'FIREWALL':'prop_firewall.png', 
+    'GRAPHIC_CARD':'prop_graphic_card.png',
+    'FORMAT':'prop_format.png',
+    'FOLDER_UNUSED':'prop_directory.png',
+    'CHARGE':'prop_charge_line.png',
+    'PROP':'prop.png'       
+}
 # view
 WINDOW_CAPTION = 'Challenge 2021'
 WINDOW_SIZE = (1200, 800)
@@ -162,9 +181,9 @@ ARROW_COLOR = pg.Color("red")
 COFFEE_COLOR = pg.Color("brown")
 BUG_COLOR = pg.Color("DarkOliveGreen")
 HP_BAR_COLOR = [pg.Color('white'), pg.Color('green')]
-ENERGY_BAR_COLOR = [pg.Color('white'), pg.Color('orange')]
+ENERGY_BAR_COLOR = [pg.Color('white'), pg.Color('orange'), pg.Color('gray')]
 ITEM_BOX_COLOR = pg.Color('brown')
-ITEM_BOX_SIZE = 15
+ITEM_BOX_SIZE = 25
 # controller
 PLAYER_MOVE_KEYS = {
     pg.K_a: (0, 'left'),
@@ -220,8 +239,6 @@ COLOR_TABLE = (
     (153, 255, 204)
 )
 
-COLOR_PICKER_TYPE = 1
-
 PLAYER_PICKER_COLOR = (
     pg.Color('orange'),
     pg.Color('red'),
@@ -230,3 +247,4 @@ PLAYER_PICKER_COLOR = (
 )
 
 SCORE_PLAYING_SIZE = (200,48)
+SCORE_PLAYING_STATE_SIZE = (40,40)

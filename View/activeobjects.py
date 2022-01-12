@@ -1,8 +1,5 @@
-from os import walk
 import pygame as pg
 import os.path
-
-from pygame.display import update
 
 from View.utils import scale_surface, load_image, resize_surface
 import Const
@@ -42,25 +39,35 @@ class View_Bug(__Object_base):
         )
         for _i in range(5)
     )
-
+    
     @classmethod
     def init_convert(cls):
         cls.frames = tuple(_frame.convert_alpha() for _frame in cls.frames)
     
     def __init__(self, delay_of_frames):
         self.delay_of_frames = delay_of_frames
+    
+    @staticmethod
+    def mid_point(a,b):
+        return ((a[0]+b[0])/2,(a[1]+b[1])/2)
 
-    def draw(self, screen, pos, timer):
+    def draw(self, screen, pos, timer, track):
         self.frame_index_to_draw = (timer // self.delay_of_frames) % len(self.frames)
         
         screen.blit(
             self.frames[self.frame_index_to_draw],
             self.frames[self.frame_index_to_draw].get_rect(center=pos),
         )
-
+        track_timer = timer-1
+        tmp = 0
+        for _i in range( track_timer+5, track_timer+50 ,5 ):
+            start_point = track[  _i%50 ]
+            end_point = self.mid_point( track[(_i+5)%50], track[_i%50])
+            pg.draw.line(screen, (180,0,0), start_point, end_point, width=4)
+            tmp += 1
 
 class View_Coffee(__Object_base):
-    frames = tuple(
+    Frames = tuple(
                 pg.transform.rotate(
                     scale_surface(
                         load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_coffee{_i+1}.png'))
@@ -69,7 +76,7 @@ class View_Coffee(__Object_base):
                 )
                 for _i in range(5)
             )
-    last_frames = tuple(
+    Last_Frames = tuple(
                 pg.transform.rotate(
                     scale_surface(
                         load_image(os.path.join(Const.IMAGE_PATH, 'attack', f'attack_coffee5.png'))
@@ -78,26 +85,45 @@ class View_Coffee(__Object_base):
                 )
                 for _i in range(5)
             )
+    
+    @staticmethod
+    def translucent(img,alpha):
+        "change player's opacity (img will be use as invisible player)"
+        result_img = img.convert_alpha()
+        result_img.fill((255, 255, 255, alpha), None, pg.BLEND_RGBA_MULT)
+        return result_img
 
     @classmethod
     def init_convert(cls):
-        cls.frames = tuple(_frame.convert_alpha() for _frame in cls.frames)
-    
+        cls.frames = []
+        cls.last_frames = []
+        for i in range(1,6):
+            cls.frames.append( 
+                tuple( cls.translucent( _frame, 255*i//5 ) for _frame in cls.Frames )
+            )
+            cls.last_frames.append( 
+                tuple( cls.translucent( _frame, 255*i//5 ) for _frame in cls.Last_Frames )
+            )
     def __init__(self, delay_of_frames):
         self.delay_of_frames = delay_of_frames
 
-    def draw(self, screen, pos, timer):
-        self.frame_index_to_draw = timer // self.delay_of_frames
-        if self.frame_index_to_draw >= len(self.frames):
-            screen.blit(
-                self.last_frames[self.frame_index_to_draw % len(self.frames)],
-                self.last_frames[self.frame_index_to_draw % len(self.frames)].get_rect(center=pos)
-            )
-        else:
-            screen.blit(
-                self.frames[self.frame_index_to_draw],
-                self.frames[self.frame_index_to_draw].get_rect(center=pos)
-            )
+    def draw(self, screen, pos, timer,track):
+        gaps = [5,9,13,16,19]
+        self.frame_index_to_draw = (timer+19) // self.delay_of_frames
+        for (idx,gap) in enumerate(gaps):
+            
+            pos = track[(timer+gap)%20]
+            if self.frame_index_to_draw >= len(self.Frames):
+                screen.blit(
+                    self.last_frames[idx][self.frame_index_to_draw % len(self.Frames)],
+                    self.last_frames[idx][self.frame_index_to_draw % len(self.Frames)].get_rect(center=pos)
+                )
+            else:
+                screen.blit(
+                    self.frames[idx][self.frame_index_to_draw],
+                    self.frames[idx][self.frame_index_to_draw].get_rect(center=pos)
+                )
+            
     
 class View_Fireball(__Object_base):
     frames = tuple(
@@ -162,6 +188,35 @@ class View_Fireball(__Object_base):
                 self.fliped_frames[self.frame_index_to_draw],
                 self.fliped_frames[self.frame_index_to_draw].get_rect(center=pos),
             )
+
+class View_Lightning(__Object_base):
+    frames = tuple(
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'lightning', 'lightning-{:02d}.png'.format(_i))),
+            150 ,800
+        ) for _i in range(1,10)
+    )
+    gray_bg = resize_surface(
+        load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'transparent_gray.png')),
+        Const.ARENA_SIZE[0], Const.ARENA_SIZE[1]
+    )
+
+    def __init__(self, delay_of_frames):
+        self.delay_of_frames = delay_of_frames
+
+    @classmethod
+    def init_convert(cls):
+        cls.frames = tuple( frame.convert_alpha() for frame in cls.frames)
+        cls.gray_bg = cls.gray_bg.convert_alpha()
+    def draw(self, screen, dest, timer, pos):
+        pos = (pos[0], dest+Const.LIGHTNING_HEIGHT)
+        self.frame_index_to_draw = (timer // self.delay_of_frames) % len(self.frames)
+        screen.blit(self.gray_bg, (0, 0))
+        screen.blit(
+            self.frames[self.frame_index_to_draw],
+            self.frames[self.frame_index_to_draw].get_rect(bottomleft=pos),
+        )
+        
 
 class View_Tornado(__Object_base):
     frames = tuple(
@@ -231,26 +286,14 @@ class View_ColorPicker(__Object_base):
                     self.fill_color(img, pg.Color(Const.COLOR_TABLE[_i])), Const.PLAYER_WIDTH, Const.PLAYER_HEIGHT
                 )  for img in self.walk_frames[_i]
             )
-        
-        
-        if Const.COLOR_PICKER_TYPE == 0:
-            COLOR_PICKER_NAME = 'selection_icon0-{:02d}.png'
-            self.selection_icon = tuple(
-                resize_surface(
-                    load_image(
-                        os.path.join(Const.IMAGE_PATH, 'selection_icon' , COLOR_PICKER_NAME.format(_i+1))
-                    ),40, 40
-                )for _i in range(4)
-            )
-        else:
-            COLOR_PICKER_NAME = 'selection_icon-{:02d}.png'
-            self.selection_icon = tuple(
-                resize_surface(
-                    load_image(
-                        os.path.join(Const.IMAGE_PATH, 'selection_icon' , COLOR_PICKER_NAME.format(_i+1))
-                    ),60, 60
-                )for _i in range(4)
-            )
+              
+        self.selection_icon = tuple(
+            resize_surface(
+                load_image(
+                    os.path.join(Const.IMAGE_PATH, 'selection_icon' , 'selection_icon-{:02d}.png'.format(_i+1))
+                ),60, 60
+            )for _i in range(4)
+        )
 
     def update(self):
         
@@ -275,16 +318,10 @@ class View_ColorPicker(__Object_base):
                 self.walk_frames[player.color_index][self.frame_index_to_draw[_i]],
                 self.walk_frames[player.color_index][self.frame_index_to_draw[_i]].get_rect(center=self.player_center[_i])
             )
-            if Const.COLOR_PICKER_TYPE == 0:
-                screen.blit(
-                    self.selection_icon[_i],
-                    self.tuple_plus(self.color_center[player.color_index],(5,5))
-                )
-            else:
-                screen.blit(
-                    self.selection_icon[_i],
-                    self.selection_icon[_i].get_rect(center=self.color_center[player.color_index])
-                )
+            screen.blit(
+                self.selection_icon[_i],
+                self.selection_icon[_i].get_rect(center=self.color_center[player.color_index])
+            )
         self.update()
 
 def init_activeobjects():
@@ -293,3 +330,4 @@ def init_activeobjects():
     View_Fireball.init_convert()
     View_Tornado.init_convert()
     View_ColorPicker.init_convert()
+    View_Lightning.init_convert()

@@ -1,6 +1,4 @@
-from genericpath import samestat
 import pygame as pg
-from pygame import color
 
 from EventManager.EventManager import *
 from Model.Model import GameEngine
@@ -41,10 +39,10 @@ class GraphicalView:
 
         if not self.is_initialized:
             try:
-                self.screen = pg.display.set_mode(Const.WINDOW_SIZE, pg.FULLSCREEN)
-                self.low_resolution = False
-            except pg.error:
+                self.screen = pg.display.set_mode(Const.WINDOW_SIZE)
                 self.low_resolution = True
+            except pg.error:
+                self.low_resolution = False
                 self.real_window_size = (Const.WINDOW_SIZE[0] * 2 // 3, Const.WINDOW_SIZE[1] * 2 // 3)
                 self.real_screen = pg.display.set_mode(self.real_window_size, pg.FULLSCREEN)
                 self.screen = pg.Surface(Const.WINDOW_SIZE)
@@ -62,7 +60,6 @@ class GraphicalView:
         self.stage =  View.staticobjects.View_stage(self.model)
         self.platform = View.staticobjects.View_platform(self.model)
         self.arrow = View.staticobjects.View_Arrow(self.model)
-        self.lightning = View.staticobjects.View_Lightning(self.model)
         self.item = View.staticobjects.View_Item(self.model)
         self.pause_window = View.staticobjects.View_Pause(self.model)
         self.scoreboard = View.staticobjects.View_Scoreboard(self.model)
@@ -72,6 +69,7 @@ class GraphicalView:
         self.coffee = View.activeobjects.View_Coffee(10)
         self.fireball = View.activeobjects.View_Fireball(10)
         self.tornado = View.activeobjects.View_Tornado(10)
+        self.lightning = View.activeobjects.View_Lightning(5)
         self.color_select = View.activeobjects.View_ColorPicker(self.model, 7)
 
         self.is_initialized = True
@@ -104,7 +102,7 @@ class GraphicalView:
         elif isinstance(event, EventHelloWorld):
             event.style = random.randint(1,3)
             if event.style == 1:
-                self.animation_list.append(View.animation.Greeting_from_audience(3,4)) #delay_of_frames, speed
+                self.animation_list.append(View.animation.Greeting_from_audience(3,40)) #delay_of_frames, num
             elif event.style == 2:
                 self.animation_list.append(View.animation.Greeting_from_prog(0))
             elif event.style == 3:
@@ -126,7 +124,7 @@ class GraphicalView:
                 self.players.status[event.player_id] = f'special_attack_fireball'
             else:
                 self.players.status[event.player_id] = f'special_attack_{event.attack_type}'
-                print(f'special_attack_{event.attack_type}')
+                #print(f'special_attack_{event.attack_type}')
             self.players.timer[event.player_id] = 0
 
         elif isinstance(event, EventGetProp):
@@ -141,14 +139,13 @@ class GraphicalView:
                 self.players.atmosphere[event.player_id]['get_prop'] = 0
 
         elif isinstance(event, EventPlayerDie):
-
             self.players.reset(event.player_id)
-
         elif isinstance(event, EventStateChange):
             if event.state == Const.STATE_PLAY:
                 #players
                 self.players = View.players.View_players(self.model, 7)
-            
+        elif isinstance(event, EventRestart):
+            self.initialize()
         
     def display_fps(self):
         '''
@@ -162,17 +159,6 @@ class GraphicalView:
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.menu.draw(target)
-        # draw text
-
-        '''
-        font = pg.font.Font(None, 36)
-        text_surface = font.render("Press [space] to start ...", 1, pg.Color('gray88'))
-        text_center = (Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2)
-        self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
-        
-        menu_text = Text("Press [space] to start ...", 36, pg.Color('gray88'))
-        menu_text.blit(self.screen, center=(Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2))
-        '''
 
         pg.display.flip()
 
@@ -194,51 +180,36 @@ class GraphicalView:
         self.color_select.draw(target)
         
         pg.display.flip()
-        '''
-        for player in self.model.players:
-            print(player.player_id, player.color, end = ', ')
-        print('')
-        '''
 
     def render_play(self, target=None, update=True):
         if target is None:
             target = self.screen
+        
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.stage.draw(target)
         self.platform.draw(target)
         self.score_playing.draw(target)
+
         # draw players
         self.players.draw(target)
-
-        # for player in self.model.players:
-        #     if player.is_invisible():
-        #         pg.draw.rect(self.screen, Const.INVISIBLE_COLOR,player.rect)
-        #     else:
-        #         pg.draw.rect(self.screen, Const.ATTACK_RANGE_COLOR[player.player_id],player.common_attack_range)
-        #         pg.draw.rect(self.screen, Const.PLAYER_COLOR[player.player_id],player.rect)
-        
-        '''for ground in self.model.grounds:
-            pg.draw.rect(self.screen, Const.BLOCK_COLOR, ground.rect)'''
         
         for item in self.model.items:
             self.item.draw(self.screen, item.rect, item.item_type)
-        
-        # pg.draw.rect(self.screen, Const.ITEM_COLOR, item.rect)
 
         for attack in self.model.attacks:
             if attack.name == 'Arrow':
                 self.arrow.draw(target, attack.position, attack.speed)
             elif attack.name == 'Bug':
-                self.bug.draw(target, attack.position, attack.timer)
+                self.bug.draw(target, attack.position, attack.state_timer, attack.track)
             elif attack.name == 'Coffee':
-                self.coffee.draw(target, attack.position, attack.timer)
+                self.coffee.draw(target, attack.position, attack.timer, attack.track)
             elif attack.name == 'Fireball':
                 self.fireball.draw(target, attack.position, attack.timer, attack.speed)
             elif attack.name == 'Tornado':
                 self.tornado.draw(target, attack.rect.center, attack.timer, attack.speed)
             elif attack.name == 'Lightning':
-                self.lightning.draw(target, attack.rect.center, attack.range)
+                self.lightning.draw(target, attack.destination, attack.timer, attack.position)
         
         #animation
         for ani in self.animation_list:

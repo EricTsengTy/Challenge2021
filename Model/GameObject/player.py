@@ -117,7 +117,7 @@ class Player(Basic_Game_Object):
 
     def touch_item(self, item):
         item_type = item.item_type
-        if item_type in Const.ITEM_TYPE_LIST[0:6]:
+        if item_type in Const.ITEM_KEEP_LIST:
             self.keep_item_type = item_type
             self.special_attack_timer = 0
         elif item_type == 'EXE':

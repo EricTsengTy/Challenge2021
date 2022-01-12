@@ -1,4 +1,3 @@
-from View.players import player_frames
 import pygame as pg
 import os.path
 
@@ -105,35 +104,16 @@ class View_Arrow(__Object_base):
             img = rotate_surface(self.images[0], -angle+90)
             screen.blit(img, img.get_rect(center=pos))
 
-class View_Lightning(__Object_base):
-    images = tuple(
-        rotate_surface(
-            resize_surface(
-                load_image(os.path.join(Const.IMAGE_PATH, 'attack', 'attack_lightning.png')),
-                Const.LIGHTNING_SIZE ,Const.LIGHTNING_SIZE
-            ), -90 - 45*_i
-        )
-        for _i in range(8)
-    )
-
-    @classmethod
-    def init_convert(cls):
-        cls.images = tuple( img.convert_alpha() for img in cls.images)
-    
-    def draw(self, screen, pos, dist):
-        for _i in range(8):
-            screen.blit(self.images[_i], self.images[_i].get_rect(center=(pos - dist * Vector2(1, 0).rotate(45 * _i))))
-
 class View_Item(__Object_base):
     images = tuple(
         resize_surface(
-            load_image(os.path.join(Const.IMAGE_PATH, 'prop', Const.PROP_PICS[_i])),
+            load_image(os.path.join(Const.IMAGE_PATH, 'prop', Const.PROP_PICS[_item])),
             Const.ITEM_WIDTH, Const.ITEM_HEIGHT
         )
-        for _i in range(13)
+        for _item in Const.ITEM_TYPE_LIST
     )
     prop_image = resize_surface(
-        load_image(os.path.join(Const.IMAGE_PATH, 'prop', 'prop.png')),
+        load_image(os.path.join(Const.IMAGE_PATH, 'prop', Const.PROP_PICS['PROP'])),
         Const.ITEM_WIDTH//5, Const.ITEM_HEIGHT//5
     )
     @classmethod
@@ -206,7 +186,26 @@ class View_Score_Playing(__Object_base):
             Const.SCORE_PLAYING_SIZE[0], Const.SCORE_PLAYING_SIZE[1]
         ) for _i in range(1,12)
     )
-    
+    no_special = (
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'state', 'state_no_special.png')),
+            Const.SCORE_PLAYING_STATE_SIZE[0], Const.SCORE_PLAYING_STATE_SIZE[1]
+        )
+    )
+    effective = (
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'state', 'state_effective.png')),
+            Const.SCORE_PLAYING_STATE_SIZE[0], Const.SCORE_PLAYING_STATE_SIZE[1]
+        )
+    )
+    in_folder = (
+        resize_surface(
+            load_image(os.path.join(Const.IMAGE_PATH, 'state', 'state_in_folder.png')),
+            Const.SCORE_PLAYING_STATE_SIZE[0], Const.SCORE_PLAYING_STATE_SIZE[1]
+        )
+    )
+
+
     @classmethod
     def init_convert(cls):
         cls.score_bg = tuple( bg.convert_alpha() for bg in cls.score_bg)
@@ -214,13 +213,30 @@ class View_Score_Playing(__Object_base):
     def draw(self, screen):
         c = 1
         for player in self.model.players :
-            #print(player.color_index)
+
             score_str = 'P{:d} {:8d}'.format(c,int(player.score))
             score_text = Text( score_str , 36, pg.Color('white'))
+            
             screen.blit(
                 self.score_bg[ player.color_index  ] ,
                 self.score_bg[ player.color_index  ].get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-60 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1] ) )
             )
+            if player.in_folder():
+                screen.blit(
+                    self.in_folder,
+                    self.in_folder.get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-53 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1]+5 ) )
+                )
+            elif player.state['infection']:
+                screen.blit(
+                    self.effective,
+                    self.effective.get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-55 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1]+5 ) )
+                )
+            elif not player.can_special_attack():
+                screen.blit(
+                    self.no_special,
+                    self.no_special.get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-55 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1]+5 ) )
+                )
+
             score_text.blit(
                 screen,
                 topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-60 + 50 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1] + Const.SCORE_PLAYING_SIZE[1]//3 )
@@ -230,8 +246,7 @@ class View_Score_Playing(__Object_base):
 def init_staticobjects():
     View_stage.init_convert()
     View_platform.init_convert()
-    View_Arrow.init_convert()
-    View_Lightning.init_convert()
+    View_Arrow.init_convert() 
     View_Item.init_convert()
     View_Pause.init_convert()
     View_Scoreboard.init_convert()
