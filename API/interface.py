@@ -32,10 +32,15 @@ class Interface(object):
         elif isinstance(event, EventInitialize):
             self.initialize()
 
+
     def API_play(self):
         for player in self.model.players:
             if player.is_AI:
-                AI_dir = self.player_AI[player.player_id].decide()
+                try:
+                    AI_dir = self.player_AI[player.player_id].decide()
+                except:
+                    return
+
                 if AI_dir == None or AI_dir == AI_dir_none:
                     if player.walk_to['walking']:
                         AI_dir = self.player_AI[player.player_id].helper.walk_to_position(self.player_AI[player.player_id].helper.get_self_position(),player.walk_to['end'])
