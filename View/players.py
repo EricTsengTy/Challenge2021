@@ -670,7 +670,7 @@ class View_players():
                 if player.is_invisible():
                     if player.face == Const.DIRECTION_TO_VEC2['right']:
                         if player.infection():
-                            screen.blit(player_frame.invisible_epoison_be_attacked_frames[self.frame_index_to_draw],
+                            screen.blit(player_frame.invisible_poison_be_attacked_frames[self.frame_index_to_draw],
                                 player_frame.invisible_poison_be_attacked_frames[self.frame_index_to_draw].get_rect(center=player.center))
                         else:
                             screen.blit(player_frame.invisible_be_attacked_frames[self.frame_index_to_draw],
