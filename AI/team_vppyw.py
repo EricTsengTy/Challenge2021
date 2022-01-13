@@ -1,12 +1,10 @@
-from time import sleep
+import random
 
 class TeamAI():
     def __init__(self, helper):
         self.helper = helper
-
         self.player_id = self.helper.get_self_id()
         self.arena_boundary = self.helper.get_game_arena_boundary()
-
         self.key_dic = {'left':False, 'right':False, 'jump':False, 'attack':False, 'special_attack':False}
         self.position = self.helper.get_self_position()
         self.all_position = self.helper.get_all_position()
@@ -16,7 +14,9 @@ class TeamAI():
         self.keep_item_type = self.helper.get_keep_item_type()
         self.face = self.helper.get_self_face()
         self.route_mode = 0
-        self.block_pos = self.eval_block()
+        self.cool_timer = 0
+        self.block_pos = self.eval_block(self.position)
+        self.des_pos = self.block_pos
 
     def decide(self):
         self.update_data()
@@ -26,7 +26,6 @@ class TeamAI():
         return self.key_dic 
 
     def update_data(self):
-        # print(self.helper.get_all_special_attack())
         self.key_dic = {'left':False, 'right':False, 'jump':False, 'attack':False, 'special_attack':False}
         self.position = self.helper.get_self_position()
         self.all_position = self.helper.get_all_position()
@@ -35,11 +34,22 @@ class TeamAI():
         self.can_common_attack = self.helper.get_can_common_attack()
         self.keep_item_type = self.helper.get_keep_item_type()
         self.face = self.helper.get_self_face()
-        self.block_pos = self.eval_block()
+        self.block_pos = self.eval_block(self.position)
 
     def move(self):
-        pass
-
+        if self.cool_timer <= 0:
+            self.des_pos = self.eval_block(self.helper.get_nearest_player_position())
+            self.cool_timer = 100
+        if self.block_pos[0] > self.des_pos[0]:
+            self.key_dic['left'] = True
+            self.key_dic['right'] = False
+        elif self.block_pos[0] < self.des_pos[0]:
+            self.key_dic['left'] = False
+            self.key_dic['right'] = True
+        if self.block_pos[1]  + 10 > self.des_pos[1]:
+            self.key_dic['jump'] = True
+        self.cool_timer -= 1
+            
     def special_attack_decide(self):
         if not self.can_special_attack: return
         if self.keep_item_type in ('', 'FAN'):
@@ -81,5 +91,5 @@ class TeamAI():
             self.key_dic['left'] = False
             self.key_dic['right'] = True
 
-    def eval_block(self):
-        return [self.position[0] // 10, self.position[1] // 10]
+    def eval_block(self, pos):
+        return [int(pos[0] // 10), int(pos[1] // 10)]
