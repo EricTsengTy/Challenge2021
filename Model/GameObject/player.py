@@ -86,7 +86,7 @@ class Player(Basic_Game_Object):
         #landing
         landing_detector = pg.Rect(0,0,self.rect.width/3,5)
         landing_detector.center = self.rect.midbottom
-        collided = landing_detector.collidelist([ground.rect for ground in self.model.grounds])
+        collided = landing_detector.collidelist([ground.hitbox for ground in self.model.grounds])
         collided = self.model.grounds[collided] if collided!=-1 else None
         if self.speed.y>0 and collided!=None:
             self.bottom = collided.top
