@@ -18,11 +18,6 @@ class Interface(object):
         self.model = model
         self.player_AI = {}
         self.is_init_AI = False
-        # handle timeout signal
-        def handler(signo, frame):
-            print(signo)
-            raise TimeoutError
-        signal.signal(signal.SIGALRM, handler)
 
     def notify(self, event: BaseEvent):
         """
@@ -41,12 +36,11 @@ class Interface(object):
     def API_play(self):
         for player in self.model.players:
             if player.is_AI:
+                AI_dir = None
                 try:
-                    signal.setitimer(signal.ITIMER_REAL, 0.005)
                     AI_dir = self.player_AI[player.player_id].decide()
-                    signal.sigwait([signal.SIGALRM])
                 except:
-                    return
+                    pass
 
                 if AI_dir == None or AI_dir == AI_dir_none:
                     if player.walk_to['walking']:
