@@ -96,13 +96,31 @@ if(SOUND_ENABLE):
                 if self.model.players[event.player_id].state['immune'] == 0:
                     self.sound_list['damaged'].play()
             
-            elif isinstance(event, EventStateChange):
-                if event.state == Const.STATE_PLAY:
-                    self.sound_list['menu'].stop()
-                    self.sound_list['game'].play(-1)
-
             elif isinstance(event, EventInitialize):
-                self.sound_list['menu'].play(-1)
+                for sound in self.sound_list.values():
+                    sound.stop()
+                self.sound_list['menu'].play()
+            
+            elif isinstance(event, EventStop):
+                for sound in self.sound_list.values():
+                    sound.stop()
+                
+            elif isinstance(event, EventStateChange):
+                if event.state in {Const.STATE_MENU, Const.STATE_TUTORIAL} and\
+                    self.sound_list['menu'].get_num_channels() == 0:
+                    for sound in self.sound_list.values():
+                        sound.stop()
+                    self.sound_list['menu'].play()
+                elif event.state in {Const.STATE_PLAY} and\
+                    self.sound_list['game'].get_num_channels() == 0:
+                    for sound in self.sound_list.values():
+                        sound.stop()
+                    self.sound_list['game'].play()
+            elif isinstance(event, EventTimesUp):
+                for sound in self.sound_list.values():
+                    sound.stop()
+                self.sound_list['menu'].play()
+                
 else:
     class Audio():
         def __init__(self, ev_manager: EventManager, model: GameEngine):
