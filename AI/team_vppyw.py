@@ -36,7 +36,7 @@ class TeamAI():
         self.face = self.helper.get_self_face()
 
     def decide_des(self):
-        self.des_pos = [555, 660]
+        self.des_pos = [555, -1000]
 
     def move(self):
         if self.position[1] < self.des_pos[1]:
@@ -68,7 +68,42 @@ class TeamAI():
                 elif self.position[0] > self.des_pos[0]:
                     self.key_dic['left'] = True
                     self.key_dic['right'] = False
-            
+        elif self.position[1] > self.des_pos[1]:
+            if self.position[1] > self.des_pos[1] + 300:
+                if self.position[1] >= 150 and self.position[1] <= 440:
+                    if self.position[0] < 555 and self.position[0] >= 300:
+                        self.key_dic['left'] = True
+                        self.key_dic['right'] = False
+                    elif self.position[0] >= 555 and self.position[0] <= 800:
+                        self.key_dic['left'] = False
+                        self.key_dic['right'] = True
+                    else:
+                        if self.helper.get_can_jump() and not self.helper.get_is_jumping():
+                            self.key_dic['jump'] = True
+                else:
+                    if self.position[0] < 555:
+                        self.key_dic['left'] = False
+                        self.key_dic['right'] = True
+                    else:
+                        self.key_dic['left'] = True
+                        self.key_dic['right'] = False
+            else:
+                if self.position[0] < self.des_pos[0]:
+                    self.key_dic['left'] = False
+                    self.key_dic['right'] = True
+                elif self.position[0] > self.des_pos[0]:
+                    self.key_dic['left'] = True
+                    self.key_dic['right'] = False
+                if self.helper.get_can_jump() and not self.helper.get_is_jumping():
+                    self.key_dic['jump'] = True
+        else:
+            if self.position[0] < self.des_pos[0]:
+                self.key_dic['left'] = False
+                self.key_dic['right'] = True
+            elif self.position[0] > self.des_pos[0]:
+                self.key_dic['left'] = True
+                self.key_dic['right'] = False
+
     def special_attack_decide(self):
         if not self.can_special_attack: return
         if self.keep_item_type in ('', 'FAN'):
