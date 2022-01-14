@@ -99,7 +99,7 @@ if(SOUND_ENABLE):
             elif isinstance(event, EventInitialize):
                 for sound in self.sound_list.values():
                     sound.stop()
-                self.sound_list['menu'].play()
+                self.sound_list['menu'].play(-1)
             
             elif isinstance(event, EventStop):
                 for sound in self.sound_list.values():
@@ -110,16 +110,16 @@ if(SOUND_ENABLE):
                     self.sound_list['menu'].get_num_channels() == 0:
                     for sound in self.sound_list.values():
                         sound.stop()
-                    self.sound_list['menu'].play()
+                    self.sound_list['menu'].play(-1)
                 elif event.state in {Const.STATE_PLAY} and\
                     self.sound_list['game'].get_num_channels() == 0:
                     for sound in self.sound_list.values():
                         sound.stop()
-                    self.sound_list['game'].play()
+                    self.sound_list['game'].play(-1)
             elif isinstance(event, EventTimesUp):
                 for sound in self.sound_list.values():
                     sound.stop()
-                self.sound_list['menu'].play()
+                self.sound_list['menu'].play(-1)
                 
 else:
     class Audio():
