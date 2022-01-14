@@ -15,11 +15,11 @@ class TeamAI():
         self.face = self.helper.get_self_face()
         self.route_mode = 0
         self.cool_timer = 0
-        self.block_pos = self.eval_block(self.position)
-        self.des_pos = self.block_pos
+        self.des_pos = self.position
 
     def decide(self):
         self.update_data()
+        self.decide_des()
         self.move()
         self.special_attack_decide()
         self.common_attack_decide()
@@ -34,21 +34,40 @@ class TeamAI():
         self.can_common_attack = self.helper.get_can_common_attack()
         self.keep_item_type = self.helper.get_keep_item_type()
         self.face = self.helper.get_self_face()
-        self.block_pos = self.eval_block(self.position)
+
+    def decide_des(self):
+        self.des_pos = [555, 660]
 
     def move(self):
-        if self.cool_timer <= 0:
-            self.des_pos = self.eval_block(self.helper.get_nearest_player_position())
-            self.cool_timer = 100
-        if self.block_pos[0] > self.des_pos[0]:
-            self.key_dic['left'] = True
-            self.key_dic['right'] = False
-        elif self.block_pos[0] < self.des_pos[0]:
-            self.key_dic['left'] = False
-            self.key_dic['right'] = True
-        if self.block_pos[1]  + 10 > self.des_pos[1]:
-            self.key_dic['jump'] = True
-        self.cool_timer -= 1
+        if self.position[1] < self.des_pos[1]:
+            if self.position[1] <= 43: 
+                if self.position[0] < 555:
+                    self.key_dic['left'] = True
+                    self.key_dic['right'] = False
+                else:
+                    self.key_dic['left'] = False
+                    self.key_dic['right'] = True
+            elif self.position[1] <= 243:
+                if self.position[0] < 555:
+                    self.key_dic['left'] = False
+                    self.key_dic['right'] = True
+                else:
+                    self.key_dic['left'] = True
+                    self.key_dic['right'] = False
+            elif self.position[1] <= 443:
+                if self.position[0] < 555:
+                    self.key_dic['left'] = True
+                    self.key_dic['right'] = False
+                else:
+                    self.key_dic['left'] = False
+                    self.key_dic['right'] = True
+            else:
+                if self.position[0] < self.des_pos[0]:
+                    self.key_dic['left'] = False
+                    self.key_dic['right'] = True
+                elif self.position[0] > self.des_pos[0]:
+                    self.key_dic['left'] = True
+                    self.key_dic['right'] = False
             
     def special_attack_decide(self):
         if not self.can_special_attack: return
@@ -90,6 +109,3 @@ class TeamAI():
         elif left_count < right_count and self.face == (-1, 0):
             self.key_dic['left'] = False
             self.key_dic['right'] = True
-
-    def eval_block(self, pos):
-        return [int(pos[0] // 10), int(pos[1] // 10)]
