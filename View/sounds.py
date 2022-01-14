@@ -102,9 +102,11 @@ if(SOUND_ENABLE):
                 self.sound_list['menu'].play(-1)
             
             elif isinstance(event, EventStop):
-                for sound in self.sound_list.values():
-                    sound.stop()
+                pg.mixer.pause()
                 
+            elif isinstance(event, EventContinue):
+                pg.mixer.unpause()
+
             elif isinstance(event, EventStateChange):
                 if event.state in {Const.STATE_MENU, Const.STATE_TUTORIAL} and\
                     self.sound_list['menu'].get_num_channels() == 0:
@@ -116,6 +118,7 @@ if(SOUND_ENABLE):
                     for sound in self.sound_list.values():
                         sound.stop()
                     self.sound_list['game'].play(-1)
+
             elif isinstance(event, EventTimesUp):
                 for sound in self.sound_list.values():
                     sound.stop()
