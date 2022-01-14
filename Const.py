@@ -138,6 +138,7 @@ STATE_COLOR_SELECT = 6
 # Path
 IMAGE_PATH = os.path.join('View', 'assets')
 SOUND_PATH = os.path.join('View', 'sound_effects')
+BACKGROUND_MUSIC_PATH = os.path.join('View', 'background_music')
 
 # Images
 
