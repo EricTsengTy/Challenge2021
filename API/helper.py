@@ -65,6 +65,9 @@ class Helper(object):
     def get_can_jump(self):
         return self.model.players[self.player_id].jump_count < self.model.players[self.player_id].max_jump
 
+    def get_remaining_jumps(self): # note: I don't know why sometimes it outputs -1, so I added max(, 0)
+        return max(self.model.players[self.player_id].max_jump - self.model.players[self.player_id].jump_count, 0)
+
     def get_is_jumping(self):
         return self.model.players[self.player_id].speed.y < 0
 
