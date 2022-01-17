@@ -6,7 +6,7 @@ class attacker():
         self.AI = AI
         self.helper = AI.helper
         self.eps = 0.01
-        self.radius = 200
+        self.radius = 300
         self.id = self.helper.get_self_id()
         self.sp_delay = Const.PLAYER_SPECIAL_ATTACK_DELAY / Const.FPS
         self.thre = {'' : 0.25,

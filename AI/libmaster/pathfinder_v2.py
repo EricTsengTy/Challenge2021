@@ -51,23 +51,23 @@ class pathfinder():
 
         self.want = ['FAN', 'THROW_COFFEE', 'THROW_BUG', 'DOS', 'DDOS', 'EXE', 'FIREWALL']
         self.item_value = {
-            'FAN'          : 0,
-            'LIGHTNING'    : -500,
-            'THROW_COFFEE' : 0,
-            'THROW_BUG'    : 150,
-            'DOS'          : 50,
-            'DDOS'         : 400,
-            'EXE'          : 300,
-            'USB'          : -700,
-            'FIREWALL'     : 0,
-            'GRAPHIC_CARD' : -200,
-            'FORMAT'       : -700,
-            'FOLDER_UNUSED': -500,
-            'CHARGE'       : -400
+            'FAN'          : (1.0, 130),
+            'LIGHTNING'    : (0.1,-250),
+            'THROW_COFFEE' : (1.0, 130),
+            'THROW_BUG'    : (1.3, 300),
+            'DOS'          : (1.1, 200),
+            'DDOS'         : (1.8, 500),
+            'EXE'          : (1.5, 400),
+            'USB'          : (0.1,-250),
+            'FIREWALL'     : (1.1, 200),
+            'GRAPHIC_CARD' : (0.5,-250),
+            'FORMAT'       : (0.1,-250),
+            'FOLDER_UNUSED': (0.1,-250),
+            'CHARGE'       : (0.2,-250)
         }
 
     def _metric(self, pos1, pos2):
-        return sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2 * 4)
+        return sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2 * 2)
 
     def _move(self, tmp):
         if tmp[1] > 0:
@@ -81,22 +81,26 @@ class pathfinder():
         return (pos[0], pos[1] + Const.PLAYER_HEIGHT - 1)
 
     def find_most_wanted_item_position(self):
-        ans, d = None, 200000.
+        ans, d, best_item = None, 200000., None
         for item, item_value in self.item_value.items():
+            coef, offset = item_value
             for tar in self.helper.get_all_specific_item_position(item):
-                tmp = self._metric(self.pos, tar) - item_value
+                tmp = self._metric(self.pos, tar) / coef - offset
+                # print(item, ":", tmp)
                 if tmp < d:
-                    ans, d = tar, tmp
+                    ans, d, best_item = tuple(tar), tmp, item
                 tmp_tar = self._downshift(tar)
-                tmp = self._metric(self.pos, tmp_tar) - item_value
+                tmp = self._metric(self.pos, tmp_tar) / coef - offset
+                # print(item, ":", tmp)
                 if tmp < d:
-                    ans, d = tar, tmp
-        return tar
+                    ans, d, best_item = tuple(tar), tmp, item
+        # print("best_item:", best_item)
+        return ans
 
     def move(self):
         # find nearest want item
         tar = self.find_most_wanted_item_position()
-        print("pos: ", self.pos, ", tar:", tar)
+        # print("pos: ", self.pos, ", tar:", tar)
         if tar is not None:
             speed = self.helper.get_self_speed()[1]
             jmp = self.helper.get_remaining_jumps()
@@ -235,7 +239,7 @@ class pathfinder():
         '''
         if jmp > 0: # check if we need to jump
             if self._walking(pos, jmp):
-                print("walking")
+                # print("walking")
                 if tmp_y > tmp_x and pos[1] > tar[1]:
                     dir_y = 1
             else:

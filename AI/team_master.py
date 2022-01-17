@@ -1,5 +1,5 @@
-from libmaster.pathfinder_v2 import pathfinder
-from libmaster.attacker import attacker
+from AI.libmaster.pathfinder_v2 import pathfinder
+from AI.libmaster.attacker import attacker
 import Const
 
 class TeamAI():
@@ -34,5 +34,5 @@ class TeamAI():
             # pathfinder
             self.pathfinder.update()
             self.pathfinder.move()
-        print("done")
+        # print("done")
         return self.actionset
