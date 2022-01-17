@@ -21,9 +21,6 @@ class pathfinder():
         self.actionset = AI.actionset
         self.id = self.helper.get_self_id()
 
-        self.jump_speed = Const.PLAYER_JUMP_SPEED
-        self.shift_speed = Const.PLAYER_SHIFT_SPEED
-
         self.n_layers = 4
         self.landing_points = [[] for _ in range(self.n_layers)]
         self.linking_points = [[] for _ in range(self.n_layers)]
@@ -50,24 +47,7 @@ class pathfinder():
                         self.edge_points[i].append((x, y))
 
         self.want = ['FAN', 'THROW_COFFEE', 'THROW_BUG', 'DOS', 'DDOS', 'EXE', 'FIREWALL']
-        self.item_value = {
-            'FAN'          : 0,
-            'LIGHTNING'    : -200,
-            'THROW_COFFEE' : 0,
-            'THROW_BUG'    : 150,
-            'DOS'          : 50,
-            'DDOS'         : 400,
-            'EXE'          : 300,
-            'USB'          : -400,
-            'FIREWALL'     : 100,
-            'GRAPHIC_CARD' : -50,
-            'FORMAT'       : -400,
-            'FOLDER_UNUSED': -200,
-            'CHARGE'       : -200
-        }
-
-    def _metric(self, pos1, pos2):
-        return sqrt(pos1 ** 2 + pos2 ** 2 * 2)
+        # print(self._walking((954.0, 499.0), 2))
 
     def _move(self, tmp):
         if tmp[1] > 0:
@@ -77,31 +57,21 @@ class pathfinder():
         elif tmp[0] < 0:
             self.actionset['left'] = True
 
-    def find_most_wanted_item_position():
-        ans, d = None, 200000.
-        for item, item_value in self.item_value.items():
-            for tar in self.helper.get_all_specific_item_position(item):
-                tmp = self._metric(self.pos, tar) - item_value
-                if tmp < d:
-                    ans, d = tar, tmp
-        return tar
-
     def move(self):
         # find nearest want item
         print(self.pos)
-        tar = self.find_most_wanted_item_position()
-        if tar is not None:
-            speed = self.helper.get_self_speed()[1]
-            jmp = self.helper.get_remaining_jumps()
-            d, action = self.find(self.pos, self.item_center(tar), speed, jmp)
-            if action is not None:
-                self._move(action)
+        tmp = self.find_nearest_item()
+        if tmp is not None:
+            self._move(tmp)
+        else: # find people
+            tmp = self.find_nearest_player()
+            if tmp is not None:
+                self._move(tmp)
         
 
     def item_center(self, pos):
         return (pos[0] + Const.ITEM_WIDTH / 2, pos[1] + Const.ITEM_HEIGHT / 2)
 
-    '''
     def find_nearest_player(self):
         d, best_move = 200000., None
         speed, jmp = self.helper.get_self_speed()[1], self.helper.get_remaining_jumps()
@@ -122,16 +92,13 @@ class pathfinder():
                 tmp_d, tmp_move = self.find(self.pos, self.item_center(tar), speed, jmp)
                 if tmp_d < d:
                     d, best_move, best_tar = tmp_d, tmp_move, tar
-                print("est time:", d, ", tar: ", tar)
         print(best_move, best_tar)
+        print("est time:", d)
         return best_move
-    '''
 
     def update(self):
         self.pos = self._feet(self.helper.get_self_position())
         self.actionset = self.AI.actionset ## not sure if nessesary
-        self.speed = Const.PLAYER_JUMP_SPEED * self.helper.get_self_speed_adjust()
-        self.shift_speed = Const.PLAYER_SHIFT_SPEED * self.helper.get_self_speed_adjust()   
 
     def find(self, pos, tar, speed, jmp):
         # print("pos:", pos, "tar:", tar, "speed:", speed, "jmp:", jmp)
@@ -233,7 +200,7 @@ class pathfinder():
                     dir_y = 1
             else:
                 tmp_ynj = self.tick + self._diff_y(pos[1] + self.tick * (speed + .5 * Const.PLAYER_GRAVITY * self.tick), tar[1], speed + Const.PLAYER_GRAVITY * self.tick, jmp, tar)
-                tmp_yj = self._diff_y(pos[1], tar[1], -self.jump_speed, jmp - 1, tar)
+                tmp_yj = self._diff_y(pos[1], tar[1], -Const.PLAYER_JUMP_SPEED, jmp - 1, tar)
                 if tmp_y > self.tick * 2 and (tmp_ynj is None or tmp_ynj > d + self.eps) and\
                     (tmp_yj is not None and tmp_ynj > tmp_yj - self.eps): # lazy jumps
                     dir_y = 1
@@ -249,7 +216,7 @@ class pathfinder():
         return d, (dir_x, dir_y), speed
 
     def _stat_jump(self, stat):
-        return (stat[0], stat[1], - self.jump_speed, stat[3] - 1, stat[4], stat[5])
+        return (stat[0], stat[1], - Const.PLAYER_JUMP_SPEED, stat[3] - 1, stat[4], stat[5])
 
     def _walkto(self, pos, tar):
         d = self._diff_x(pos[0], tar[0])
@@ -318,15 +285,15 @@ class pathfinder():
         tar_y must < pos_y'''
         # print("hi")
         if speed > 0 and jmp > 0:
-            speed, jmp = -self.jump_speed, jmp - 1
+            speed, jmp = -Const.PLAYER_JUMP_SPEED, jmp - 1
         for i in range(jmp + 1):
             if self._diff_y_upwards(pos_y, tar_y, speed, i) is not None:
-                leaked_gt_sqr = 0 if i == 0 else max(0, (speed ** 2 + self.jump_speed ** 2 * jmp - Const.PLAYER_GRAVITY * 2 * (pos_y - tar_y)) / i)
-                return (-speed + i * self.jump_speed - sqrt(leaked_gt_sqr)) / Const.PLAYER_GRAVITY
+                leaked_gt_sqr = 0 if i == 0 else max(0, (speed ** 2 + Const.PLAYER_JUMP_SPEED ** 2 * jmp - Const.PLAYER_GRAVITY * 2 * (pos_y - tar_y)) / i)
+                return (-speed + i * Const.PLAYER_JUMP_SPEED - sqrt(leaked_gt_sqr)) / Const.PLAYER_GRAVITY
         return None
 
     def _diff_x(self, pos_x, tar_x):
-        return abs(pos_x - tar_x) / self.shift_speed
+        return abs(pos_x - tar_x) / Const.PLAYER_SHIFT_SPEED
 
     def _diff_y(self, pos_y, tar_y, speed, jmp = 0, ref = None):
         if ref is not None and ref in self.landing_point_set:
@@ -345,17 +312,17 @@ class pathfinder():
             else:
                 return (-speed - sqrt(tmp)) / Const.PLAYER_GRAVITY
         if speed > 0:
-            speed, jmp = -self.jump_speed, jmp - 1
+            speed, jmp = -Const.PLAYER_JUMP_SPEED, jmp - 1
         '''
-        leaked_t_sqr = (2 * (pos_y - tar_y) * Const.PLAYER_GRAVITY - speed ** 2 - jmp * (self.jump_speed ** 2)) / (jmp + 1)
+        leaked_t_sqr = (2 * (pos_y - tar_y) * Const.PLAYER_GRAVITY - speed ** 2 - jmp * (Const.PLAYER_JUMP_SPEED ** 2)) / (jmp + 1)
         print(leaked_t_sqr)
         '''
-        c_sqr = (-2 * Const.PLAYER_GRAVITY * (pos_y - tar_y) + speed ** 2 + self.jump_speed ** 2 * jmp) / (jmp + 1)
+        c_sqr = (-2 * Const.PLAYER_GRAVITY * (pos_y - tar_y) + speed ** 2 + Const.PLAYER_JUMP_SPEED ** 2 * jmp) / (jmp + 1)
         if c_sqr < 0:
             return None
         if -speed < sqrt(c_sqr):
-            return self._diff_y_upwards(pos_y, tar_y, -self.jump_speed, jmp - 1)
-        return ((-speed + self.jump_speed * jmp) - (jmp + 1) * sqrt(c_sqr)) / Const.PLAYER_GRAVITY
+            return self._diff_y_upwards(pos_y, tar_y, -Const.PLAYER_JUMP_SPEED, jmp - 1)
+        return ((-speed + Const.PLAYER_JUMP_SPEED * jmp) - (jmp + 1) * sqrt(c_sqr)) / Const.PLAYER_GRAVITY
 
 
 

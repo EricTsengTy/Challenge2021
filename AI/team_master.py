@@ -22,7 +22,6 @@ class TeamAI():
 
     def decide(self):
         # update info
-        print("calculating...")
         self.pos = self.helper.get_self_position()
         self.actionset = self.default_actionset.copy()
         self.attacker.update()
@@ -33,9 +32,7 @@ class TeamAI():
         # try redirect directed ability if needed
         if not self.attacker.redirect_sp_attack():
             # pathfinder
-            print("here")
             self.pathfinder.update()
-            self.pathfinder.move() 
-            print("here")
+            self.pathfinder.move()
         print("done")
         return self.actionset
