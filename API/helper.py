@@ -137,11 +137,6 @@ class Helper(object):
             return ((vec[0])**2 + (vec[1])**2) ** (1/2)
         return [dist_cal(vect) for vect in all_vec]
 
-    def get_all_special_attack(self):
-        return tuple((special_attack.name,\
-                    (special_attack.position[0], special_attack.position[1]),\
-                    (special_attack.speed[0], special_attack.speed[1])) for special_attack in self.model.attacks)
-
     def get_if_player_in_attack_range(self):
         attacker = self.model.players[self.player_id]
         attack_range = attacker.common_attack_range
@@ -215,7 +210,23 @@ class Helper(object):
 
     #獲取特殊攻擊資訊專區
     def get_all_special_attack(self):
-        return [[atk.name, atk.attacker.player_id, atk.position, atk.speed] for atk in self.model.attacks]
+        return [[atk.name,\
+                atk.attacker.player_id,\
+                [atk.position[0], atk.position[1]],\
+                [atk.speed[0], atk.speed[1]]] for atk in self.model.attacks]
+
+    def get_specific_special_attack(self, name):
+        return [[atk.name,\
+                atk.attacker.player_id,\
+                tuple(atk.position),\
+                tuple(atk.speed)] for atk in self.model.attacks if atk.name == name]
+    
+    def get_ddos(self):
+        return [[atk.attacker.player_id, tuple(atk.position), atk.rounds] for atk in self.model.attacks if atk.name == 'Ddos']
+
+    def get_dos(self):
+        return [[atk.attacker.player_id, tuple(atk.position), tuple(atk.direction), atk.rounds] for atk in self.model.attacks if atk.name == 'Dos']
+        
 
     #獲取特別資訊專區
     def get_nearest_player_id(self):
