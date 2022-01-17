@@ -86,6 +86,9 @@ class Helper(object):
     def get_self_special_attack_delay(self):
         return self.model.players[self.player_id].special_attack_delay
 
+    def get_self_speed_adjust(self):
+        return self.model.players[self.player_id].speed_adjust()
+
     
 
     #獲取所有玩家資訊專區

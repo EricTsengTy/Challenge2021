@@ -1,5 +1,4 @@
 from libmaster.pathfinder_v2 import pathfinder
-from libmaster.attacker import attacker
 import Const
 
 class TeamAI():
@@ -7,12 +6,8 @@ class TeamAI():
         self.helper = helper
         self.default_actionset = {'left' : False, 'right' : False, 'jump' : False, 'attack' : False, 'special_attack' : False}
         self.actionset = self.default_actionset.copy()
-
-        self.attacker = attacker(self)
         self.pathfinder = pathfinder(self)
-
-        self.time = 0
-        self.pos = self.helper.get_self_position()
+        self.pos = (0, 0)
 
     def feet(self):
         return (self.pos[0] + Const.PLAYER_WIDTH / 2, self.pos[1] + Const.PLAYER_HEIGHT)
@@ -21,21 +16,27 @@ class TeamAI():
         return (pos[0] + Const.ITEM_HEIGHT / 2, pos[1] + Const.ITEM_WIDTH / 2)
 
     def decide(self):
-        # update info
-        print("calculating...")
         self.pos = self.helper.get_self_position()
+        #print(self.feet())
+        
+        tar = self.helper.get_nearest_item_position()
         self.actionset = self.default_actionset.copy()
-        self.attacker.update()
-        # if auto attack can hit, land the hit
-        self.attacker.check_melee()
-        # if directed ability's land probability is good, do it
-        self.attacker.check_sp_attack()
-        # try redirect directed ability if needed
-        if not self.attacker.redirect_sp_attack():
-            # pathfinder
-            print("here")
-            self.pathfinder.update()
-            self.pathfinder.move() 
-            print("here")
+        if tar is not None:
+            print("working...")
+            speed = self.helper.get_self_speed()[1]
+            jmp = self.helper.get_remaining_jumps()
+            # print("jmp = ", jmp)
+            d, action = self.pathfinder.find(self.feet(), self.item_center(tar), speed, jmp)
+            if action is not None:
+                print(action)
+                if action[0] > 0:
+                    self.actionset['right'] = True
+                elif action[0] < 0:
+                    self.actionset['left'] = True
+                if action[1] > 0:
+                    self.actionset['jump'] = True
         print("done")
         return self.actionset
+        
+        
+
