@@ -89,8 +89,6 @@ class Helper(object):
     def get_self_speed_adjust(self):
         return self.model.players[self.player_id].speed_adjust()
 
-    
-
     #獲取所有玩家資訊專區
     def get_all_position(self):
         return [tuple(player.position) for player in self.model.players]
@@ -153,7 +151,6 @@ class Helper(object):
                 return True
         return False
 
-        
 
     #獲取特定玩家資訊專區
     def get_other_position(self,index):
@@ -193,7 +190,6 @@ class Helper(object):
         return self.model.players[index].special_attack_delay
 
     #獲取道具資訊專區
-
     def get_nearest_item_position(self):
         nearest_pos, minimum_distance = None, 10000
         for item in self.model.items:
@@ -216,6 +212,10 @@ class Helper(object):
 
     def get_all_specific_item_position(self, items_type):
         return [tuple(item.position) for item in self.model.items if item.item_type == items_type]
+
+    #獲取特殊攻擊資訊專區
+    def get_all_special_attack(self):
+        return [[atk.name, atk.attacker.player_id, atk.position, atk.speed] for atk in self.model.attacks]
 
     #獲取特別資訊專區
     def get_nearest_player_id(self):
