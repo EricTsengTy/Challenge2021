@@ -206,18 +206,18 @@ class Tornado(Basic_Attack_Object):
 
 class Lightning(Basic_Attack_Object):
     def __init__(self, model, attacker_id, position, speed, destination):
-        super().__init__(model, attacker_id, position, Const.LIGHTNING_WIDTH, Const.LIGHTNING_HEIGHT, speed)
+        super().__init__(model, attacker_id, position, Const.LIGHTNING_WIDTH, destination + 100, speed)
         self.name = 'Lightning'
         self.damage = Const.LIGHTNING_DAMAGE
         self.disappear_hit_player = False
         self.destination = destination # the final y position
+        self.timer = Const.LIGHTNING_TIMER
         
     def collide_player(self, player):
         return player.rect.colliderect(self.rect)
 
     def tick(self):
-        self.basic_tick()
-        self.timer += 1
+        self.timer -= 1
         for player in self.model.players:
             if (not self.immune[player.player_id]) and player.can_be_special_attacked() and self.collide_player(player):
                 player.be_special_attacked(self)
@@ -226,7 +226,7 @@ class Lightning(Basic_Attack_Object):
                     self.kill()
             if self.attacker.player_id != player.player_id and self.collide_player(player):
                 self.model.ev_manager.post(EventBeAttacked(player.player_id))
-        if self.y > self.destination: ## I added these two lines only
+        if self.timer <= 0:
             self.kill()
 
 class Dos(Basic_Game_Object):
@@ -314,7 +314,7 @@ class Cast_Tornado(Basic_Game_Object):
 class Cast_Lightning(Basic_Game_Object):
     def __init__(self, model, attacker):
         super().__init__(model, attacker.rect.x + Const.PLAYER_WIDTH / 2 - Const.LIGHTNING_WIDTH / 2, -100, 1, 1)
-        self.name = 'Cast_Tornado'
-        self.model.attacks.append(Lightning(model,attacker.player_id, self.position, 
-                                          Vector2(0,1) * Const.TORNADO_SPEED, attacker.rect.y + Const.PLAYER_HEIGHT - Const.LIGHTNING_HEIGHT))
+        self.name = 'Cast_Lightning'
+        self.model.attacks.append(Lightning(model, attacker.player_id, self.position, Vector2(0,0),
+                                            attacker.rect.y + Const.PLAYER_HEIGHT - Const.LIGHTNING_HEIGHT))
         self.kill()
