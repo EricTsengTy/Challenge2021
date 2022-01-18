@@ -18,6 +18,7 @@ AI_DIR = {'left': False, 'right': False, 'jump': False, 'attack': False, 'specia
 class TeamAI ():
     def __init__ (self, helper):
         self.helper = helper
+        self.enhancement = [0,0,0,0]
 
     def decide (self):
         for dir in AI_DIR:

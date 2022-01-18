@@ -4,6 +4,7 @@ import Const
 class TeamAI():
     def __init__(self, helper):
         self.helper = helper
+        self.enhancement = [0,0,0,0]
         self.default_actionset = {'left' : False, 'right' : False, 'jump' : False, 'attack' : False, 'special_attack' : False}
         self.actionset = self.default_actionset.copy()
         self.pathfinder = pathfinder(self)

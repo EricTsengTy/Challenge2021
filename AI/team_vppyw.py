@@ -3,6 +3,7 @@ import random
 class TeamAI():
     def __init__(self, helper):
         self.helper = helper
+        self.enhancement = [0,0,0,0]
         self.player_id = self.helper.get_self_id()
         self.arena_boundary = self.helper.get_game_arena_boundary()
         self.key_dic = {'left':False, 'right':False, 'jump':False, 'attack':False, 'special_attack':False}
