@@ -20,7 +20,14 @@ class Player(Basic_Game_Object):
         self.player_id = player_id
         self.max_jump = 2
         self.jump_count = self.max_jump
-        self.blood = Const.PLAYER_FULL_BLOOD
+
+        self.enhance_blood = Const.PLAYER_FULL_BLOOD
+        self.enhance_common_attack_damage = Const.PLAYER_COMMON_ATTACK_DAMAGE
+        self.enhance_fireball_damage = Const.FIREBALL_DAMAGE
+        self.enhance_special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
+        self.blood = self.enhance_blood
+        self.special_attack_timer = self.enhance_special_attack_timer
+
         self.state = State.init()
         self.obey_gravity = True
         self.keep_item_type = ''
@@ -28,7 +35,6 @@ class Player(Basic_Game_Object):
         self.can_leave_screen = False
         self.face = Const.DIRECTION_TO_VEC2['right']
         self.death = 0
-        self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
         self.common_attack_timer = 0
         self.special_attack_delay = -1 # -1 for no special attack
         self.standing_tick = 0
@@ -98,7 +104,7 @@ class Player(Basic_Game_Object):
         self.state = State.init()
         State.invisible(self.state)
         self.position = Const.PLAYER_INIT_POSITION[self.player_id]
-        self.blood = Const.PLAYER_FULL_BLOOD
+        self.blood = self.enhance_blood
         self.death += 1
         self.keep_item_type = ''
         self.face = Const.DIRECTION_TO_VEC2['right']
@@ -135,7 +141,7 @@ class Player(Basic_Game_Object):
             self.center = item.center
             State.folder(self.state)
         elif item_type == 'CHARGE':
-            self.blood = min(self.blood+Const.CHARGE_BLOOD, Const.PLAYER_FULL_BLOOD)
+            self.blood = min(self.blood+Const.CHARGE_BLOOD, self.enhance_blood)
 
         self.model.ev_manager.post(EventGetProp(self.player_id, item_type))
 
@@ -169,7 +175,7 @@ class Player(Basic_Game_Object):
         elif(self.tmp_keep_item_type == 'LIGHTNING'):
             self.model.attacks.append(Cast_Lightning(self.model, self))
         self.tmp_keep_item_type = ''
-        self.special_attack_timer = Const.PLAYER_SPECIAL_ATTACK_TIMER
+        self.special_attack_timer = self.enhance_special_attack_timer
         self.special_attack_delay = -1
 
 
@@ -188,8 +194,8 @@ class Player(Basic_Game_Object):
         elif attack.name == 'Lightning':
             pass
             
-        # damage of spcail attack
-        self.blood-=attack.damage
+        # damage of special attack
+        self.blood -= attack.damage
 
         self.count_score(attack.attacker, attack.damage)
         # self.model.ev_manager.post(EventBeAttacked(self.player_id))
@@ -199,9 +205,10 @@ class Player(Basic_Game_Object):
     def be_common_attacked(self, attacker):
         if attacker.infection():
             State.infect(self.state)
-        self.blood -= Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust()
+        damage = attacker.enhance_common_attack_damage * attacker.damage_adjust()
+        self.blood -= damage
         self.model.ev_manager.post(EventBeAttacked(self.player_id))
-        self.count_score(attacker, Const.PLAYER_COMMON_ATTACK_DAMAGE * self.damage_adjust())
+        self.count_score(attacker, damage)
     
     def __random_target(self):
         player_id_list = [_ for _ in range(Const.PLAYER_NUMBER)]
@@ -226,6 +233,14 @@ class Player(Basic_Game_Object):
                 min_dis = (self.position - self.model.players[player_id].position).length()
         return ret_player_id
 
+    def enhance(self, enhancement):
+        self.enhance_blood *= (1 + 0.01 * enhancement[0])
+        self.blood = self.enhance_blood
+        self.enhance_common_attack_damage += enhancement[1]
+        self.enhance_fireball_damage *= (1 + 0.01 * enhancement[2])
+        self.enhance_special_attack_timer *= (1 - 0.01 * enhancement[3])
+        self.special_attack_timer = self.enhance_special_attack_timer
+    
     def can_be_common_attacked(self):
         if self.state['be_common_attacked'] == 0: return True
         else: return False
