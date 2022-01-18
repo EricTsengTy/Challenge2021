@@ -484,18 +484,18 @@ class View_players():
                 continue
 
             # blood
-            pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left+10, player.top-15, player.rect.width*player.blood/Const.PLAYER_FULL_BLOOD, 5])
+            pg.draw.rect(screen, Const.HP_BAR_COLOR[1], [player.left+10, player.top-15, player.rect.width*player.blood/player.enhance_blood, 5])
             
             # empty hp bar
             pg.draw.rect(screen, Const.HP_BAR_COLOR[0], [player.left+10, player.top-15, player.rect.width, 5], 2)
             
             # energy
             if player.can_special_attack():
-                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[1], [player.left+10, player.top-10, player.rect.width*(1-player.special_attack_timer/Const.PLAYER_SPECIAL_ATTACK_TIMER), 5])
+                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[1], [player.left+10, player.top-10, player.rect.width*(1-player.special_attack_timer/player.enhance_special_attack_timer), 5])
                 # empty energy bar
                 pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[0], [player.left+10, player.top-10, player.rect.width, 5], 2)
             else:
-                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[2], [player.left+10, player.top-10, player.rect.width*(1-player.special_attack_timer/Const.PLAYER_SPECIAL_ATTACK_TIMER), 5])
+                pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[2], [player.left+10, player.top-10, player.rect.width*(1-player.special_attack_timer/player.enhance_special_attack_timer), 5])
                 # empty energy bar
                 pg.draw.rect(screen, Const.ENERGY_BAR_COLOR[2], [player.left+10, player.top-10, player.rect.width, 5], 2)
             

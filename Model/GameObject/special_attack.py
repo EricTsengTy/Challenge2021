@@ -157,7 +157,7 @@ class Fireball(Basic_Attack_Object):
     def __init__(self, model, attacker_id, position, speed):
         super().__init__(model, attacker_id, position, 1, 1, speed)
         self.name = 'Fireball'
-        self.damage = Const.FIREBALL_DAMAGE
+        self.damage = self.attacker.enhance_fireball_damage
         self.radius = Const.FIREBALL_RADIUS
         self.disappear_hit_player = False
         self.immune = [False for _ in range(Const.PLAYER_NUMBER)]
