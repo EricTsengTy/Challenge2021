@@ -9,13 +9,13 @@ class attacker():
         self.radius = 300
         self.id = self.helper.get_self_id()
         self.sp_delay = Const.PLAYER_SPECIAL_ATTACK_DELAY / Const.FPS
-        self.thre = {'' : 0.25,
-                     'FAN' : 0.1, 
-                     'LIGHTNING' : -1, 
+        self.thre = {''             : 0.25,
+                     'FAN'          : 0.1, 
+                     'LIGHTNING'    : 0.1, 
                      'THROW_COFFEE' : 0.3,
-                     'THROW_BUG' : 0.3,
-                     'DOS' : -1,
-                     'DDOS' : -1,
+                     'THROW_BUG'    : 0.3,
+                     'DOS'          : -1,# 1.2,
+                     'DDOS'         : -1# 1.7
                     }
         self.refresh = ['FAN', 'THROW_COFFEE', 'THROW_BUG', 'DOS', 'DDOS', 'LIGHTNING']
         self.pos = self.center(self.helper.get_self_position())
@@ -106,4 +106,15 @@ class attacker():
                 land_prob += min(1, 500 / max(1, self.dist(p, self.pos)))
         else:
             return 0
+        '''
+        elif ability == 'DOS' or ability == 'DDOS':
+            l = len(pos)
+            for i in range(l):
+                for j in range(l):
+                    if i != j:
+                        land_prob += min(1, 150 / max(1, self.dist(pos[i], pos[j])))
+            land_prob /= l
+            land_prob += 1
+        '''
+        
         return land_prob

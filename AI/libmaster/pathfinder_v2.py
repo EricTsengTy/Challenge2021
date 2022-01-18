@@ -14,7 +14,7 @@ GROUND_POSITION = [
 '''
 
 class pathfinder():
-    def __init__(self, AI):
+    def __init__(self, AI, item_value = None, item_value_v2 = None):
         self.AI = AI
         self.helper = AI.helper
         self.pos = self._feet(self.helper.get_self_position())
@@ -65,6 +65,26 @@ class pathfinder():
             'FOLDER_UNUSED': (0.1,-250),
             'CHARGE'       : (0.2,-250)
         }
+        self.item_value_v2 = {
+            'FAN'          : (1.0, 0.05),
+            'LIGHTNING'    : (0.6, 0.00),
+            'THROW_COFFEE' : (1.0, 0.10),
+            'THROW_BUG'    : (2.5, 0.40),
+            'DOS'          : (1.3, 0.40),
+            'DDOS'         : (4.0, 2.25),
+            'EXE'          : (3.3, 2.25),
+            'USB'          : (0.1,-6.25),
+            'FIREWALL'     : (3.3, 0.00),
+            'GRAPHIC_CARD' : (0.5, 0.10),
+            'FORMAT'       : (0.1,-0.50),
+            'FOLDER_UNUSED': (0.1,-6.25),
+            'CHARGE'       : (0.5,-0.30)
+        }
+
+        if item_value is not None:
+            self.item_value = item_value
+        if item_value_v2 is not None:
+            self.item_value_v2 = item_value_v2
 
     def _metric(self, pos1, pos2):
         return sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2 * 2)
@@ -101,13 +121,38 @@ class pathfinder():
         # find nearest want item
         tar = self.find_most_wanted_item_position()
         # print("pos: ", self.pos, ", tar:", tar)
+        ans, d, best_item = None, 200000., None
         if tar is not None:
             speed = self.helper.get_self_speed()[1]
             jmp = self.helper.get_remaining_jumps()
             d, action = self.find(self.pos, self.item_center(tar), speed, jmp)
             if action is not None:
                 self._move(action)
-        
+
+    def move_v2(self):
+        d, best_action, best_item = 200000., None, None
+        speed = self.helper.get_self_speed()[1]
+        jmp = self.helper.get_remaining_jumps()
+        for item, item_value in self.item_value_v2.items():
+            coef, offset = item_value
+            for tar in self.helper.get_all_specific_item_position(item):
+                tmp = self.find(self.pos, self.item_center(tar), speed, jmp)
+                if tmp is not None:
+                    tmp_d, action = tmp
+                    tmp_d = tmp_d / coef - offset
+                    if tmp_d < d:
+                        d, best_action, best_item = d, tuple(action), item
+                tar = self._downshift(tar)
+                tmp = self.find(self.pos, self.item_center(tar), speed, jmp)
+                if tmp is not None:
+                    tmp_d, action = tmp
+                    tmp_d = tmp_d / coef - offset
+                    if tmp_d < d:
+                        d, best_action, best_item = d, tuple(action), item
+        if best_action is not None:
+            self._move(best_action)
+
+
 
     def item_center(self, pos):
         return (pos[0] + Const.ITEM_WIDTH / 2, pos[1] + Const.ITEM_HEIGHT / 2)
@@ -381,4 +426,10 @@ p.find(test_pos, test_tar, 0.0, 2)
 
 #(776, 366)
 #print(p._diff_y(360, 366, 0.0, 2, (776, 366)))
+'''
+
+'''
+p = pathfinder()
+test_pos, test_tar = (0.0, 800.0), (776.0, 0.0)# (1168.0, 379.0)
+print(p.find(test_pos, test_tar, 0.0, 2))
 '''

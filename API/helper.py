@@ -241,7 +241,6 @@ class Helper(object):
         nearest_player = self.get_nearest_player_id()     
         return self.get_other_position(nearest_player)  
 
-
     def get_highest_score_player(self):
         index, highest_score = None, -1
         for player in self.model.players:

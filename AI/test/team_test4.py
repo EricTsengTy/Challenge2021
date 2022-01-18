@@ -4,12 +4,27 @@ import Const
 
 class TeamAI():
     def __init__(self, helper):
+        self.item_value_v2 = {
+            'FAN'          : (1.0, 0.05),
+            'LIGHTNING'    : (0.6, 0.00),
+            'THROW_COFFEE' : (1.0, 0.10),
+            'THROW_BUG'    : (2.5, 0.40),
+            'DOS'          : (1.3, 0.40),
+            'DDOS'         : (4.0, 3.00),
+            'EXE'          : (3.3, 3.25),
+            'USB'          : (0.1,-6.25),
+            'FIREWALL'     : (3.3, 0.00),
+            'GRAPHIC_CARD' : (0.5, 0.10),
+            'FORMAT'       : (0.1,-0.50),
+            'FOLDER_UNUSED': (0.1,-6.25),
+            'CHARGE'       : (0.5,-0.30)
+        }
         self.helper = helper
         self.default_actionset = {'left' : False, 'right' : False, 'jump' : False, 'attack' : False, 'special_attack' : False}
         self.actionset = self.default_actionset.copy()
 
         self.attacker = attacker(self)
-        self.pathfinder = pathfinder(self)
+        self.pathfinder = pathfinder(self, item_value_v2 = self.item_value_v2)
 
         self.time = 0
         self.pos = self.helper.get_self_position()
@@ -34,6 +49,6 @@ class TeamAI():
         if not self.attacker.redirect_sp_attack():
             # pathfinder
             self.pathfinder.update()
-            self.pathfinder.move()
+            self.pathfinder.move_v2()
         # print("done")
         return self.actionset

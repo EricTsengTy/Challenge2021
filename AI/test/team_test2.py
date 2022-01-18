@@ -34,6 +34,6 @@ class TeamAI():
         if not self.attacker.redirect_sp_attack():
             # pathfinder
             self.pathfinder.update()
-            self.pathfinder.move()
+            self.pathfinder.move_v2()
         # print("done")
         return self.actionset
