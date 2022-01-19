@@ -105,7 +105,7 @@ class Helper(object):
         return [tuple(player.speed) for player in self.model.players]
 
     def get_all_face(self):
-        return [tuple(player.face) for player in self.model.players]
+        return [player.face[0] for player in self.model.players]
 
     def get_all_keep_item_type(self):
         return [player.keep_item_type for player in self.model.players]
@@ -220,8 +220,8 @@ class Helper(object):
     def get_all_special_attack(self):
         return [[atk.name,\
                 atk.attacker.player_id,\
-                [atk.position[0], atk.position[1]],\
-                [atk.speed[0], atk.speed[1]]] for atk in self.model.attacks]
+                tuple(atk.position[0], atk.position[1]),\
+                tuple(atk.speed[0], atk.speed[1])] for atk in self.model.attacks]
 
     def get_specific_special_attack(self, name):
         return [[atk.name,\
