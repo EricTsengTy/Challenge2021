@@ -26,23 +26,13 @@ class Helper(object):
         return ((0,0), Const.ARENA_SIZE)
 
     #獲取個人資訊專區
+
+    #一般
     def get_self_id(self):
         return self.player_id
 
-    def get_self_position(self):
-        return tuple(self.model.players[self.player_id].position)
-    
-    def get_self_speed(self):
-        return tuple(self.model.players[self.player_id].speed)
-
     def get_self_blood(self):
         return self.model.players[self.player_id].blood
-    
-    def get_keep_item_type(self):
-        return self.model.players[self.player_id].keep_item_type
-
-    def get_self_face(self):
-        return tuple(self.model.players[self.player_id].face)
     
     def get_self_death(self):
         return self.model.players[self.player_id].death
@@ -50,47 +40,62 @@ class Helper(object):
     def get_self_score(self):
         return self.model.players[self.player_id].score
 
-    def get_can_be_common_attacked(self):
-        return self.model.players[self.player_id].can_be_common_attacked()
+    #移動
+    def get_self_position(self):
+        return tuple(self.model.players[self.player_id].position)
 
-    def get_can_be_special_attacked(self):
-        return self.model.players[self.player_id].can_be_special_attacked()
+    def get_self_face(self):
+        return self.model.players[self.player_id].face[0]
     
-    def get_is_invisible(self):
-        return self.model.players[self.player_id].is_invisible()
+    def get_self_velocity(self):
+        return tuple(self.model.players[self.player_id].speed)
 
-    def get_can_use_special_attack(self):
-        return self.model.players[self.player_id].special_attack_timer == 0 and self.model.players[self.player_id].can_special_attack()
+    def get_self_speed_adjust(self):
+        return self.model.players[self.player_id].speed_adjust()
     
-    def get_can_jump(self):
+    def get_self_can_jump(self):
         return self.model.players[self.player_id].jump_count < self.model.players[self.player_id].max_jump
 
-    def get_remaining_jumps(self): # note: I don't know why sometimes it outputs -1, so I added max(, 0)
-        return max(self.model.players[self.player_id].max_jump - self.model.players[self.player_id].jump_count, 0)
-
-    def get_is_jumping(self):
+    def get_self_is_jumping(self):
         return self.model.players[self.player_id].speed.y < 0
     
-    def get_is_falling(self):
+    def get_self_is_falling(self):
         return self.model.players[self.player_id].speed.y > 0
 
-    def get_infection(self):
-        return self.model.players[self.player_id].infection()
+    def get_self_remaining_jumps(self): # note: I don't know why sometimes it outputs -1, so I added max(, 0)
+        return max(self.model.players[self.player_id].max_jump - self.model.players[self.player_id].jump_count, 0)
 
-    def get_in_folder(self):
-        return self.model.players[self.player_id].in_folder()
+    #攻擊
+    def get_self_can_use_common_attack(self):
+        return self.model.players[self.player_id].common_attack_timer == 0 and self.model.players[self.player_id].can_common_attack()
 
-    def get_damage_adjust(self):
-        return self.model.players[self.player_id].damage_adjust()
-    
-    def get_can_common_attack(self):
-        return self.model.players[self.player_id].can_common_attack()
+    def get_self_common_attack_damage(self):
+        return self.model.players[self.player_id].enhance_common_attack_damage * self.model.players[self.player_id].damage_adjust()
+
+    def get_self_keep_item_type(self):
+        return self.model.players[self.player_id].keep_item_type
+
+    def get_self_can_use_special_attack(self):
+        return self.model.players[self.player_id].special_attack_timer == 0 and self.model.players[self.player_id].can_special_attack()
     
     def get_self_special_attack_delay(self):
         return self.model.players[self.player_id].special_attack_delay
 
-    def get_self_speed_adjust(self):
-        return self.model.players[self.player_id].speed_adjust()
+    def get_self_can_be_common_attacked(self):
+        return self.model.players[self.player_id].can_be_common_attacked()
+
+    def get_self_can_be_special_attacked(self):
+        return self.model.players[self.player_id].can_be_special_attacked()
+
+    #狀態
+    def get_self_is_invisible(self):
+        return self.model.players[self.player_id].is_invisible()
+
+    def get_self_can_infect(self):
+        return self.model.players[self.player_id].infection()
+
+    def get_self_is_in_folder(self):
+        return self.model.players[self.player_id].in_folder()
 
     #獲取所有玩家資訊專區
     def get_all_position(self):

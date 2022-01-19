@@ -123,16 +123,16 @@ class pathfinder():
         # print("pos: ", self.pos, ", tar:", tar)
         ans, d, best_item = None, 200000., None
         if tar is not None:
-            speed = self.helper.get_self_speed()[1]
-            jmp = self.helper.get_remaining_jumps()
+            speed = self.helper.get_self_velocity()[1]
+            jmp = self.helper.get_self_remaining_jumps()
             d, action = self.find(self.pos, self.item_center(tar), speed, jmp)
             if action is not None:
                 self._move(action)
 
     def move_v2(self):
         d, best_action, best_item = 200000., None, None
-        speed = self.helper.get_self_speed()[1]
-        jmp = self.helper.get_remaining_jumps()
+        speed = self.helper.get_self_velocity()[1]
+        jmp = self.helper.get_self_remaining_jumps()
         for item, item_value in self.item_value_v2.items():
             coef, offset = item_value
             for tar in self.helper.get_all_specific_item_position(item):

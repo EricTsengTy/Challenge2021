@@ -42,17 +42,17 @@ class attacker():
         return False
 
     def check_going_to_get_item():
-        if self.helper.get_can_use_special_attack():
+        if self.helper.get_self_can_use_special_attack():
             for item in self.refresh:
                 pos_list = self.helper.get_all_specific_item_position(item)
                 for pos in pos_list:
                     if self.dist(self.center_item(pos), self.center(self.pos)) < self.radius:
                         self.actionset['special_attack'] = True
-                        self.stored_ability = self.helper.get_keep_item_type()
+                        self.stored_ability = self.helper.get_self_keep_item_type()
 
     def check_sp_attack(self):
-        if self.helper.get_can_use_special_attack():
-            my_item = self.helper.get_keep_item_type()
+        if self.helper.get_self_can_use_special_attack():
+            my_item = self.helper.get_self_keep_item_type()
             if self.ability_land_prob(my_item) > self.thre[my_item]:
                 self.actionset['special_attack'] = True
                 self.stored_ability = my_item
