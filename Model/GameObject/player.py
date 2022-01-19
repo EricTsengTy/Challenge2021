@@ -127,7 +127,7 @@ class Player(Basic_Game_Object):
             self.keep_item_type = item_type
             self.special_attack_timer = 0
         elif item_type == 'EXE':
-            self.score += 300
+            self.score += Const.SCORE_HELLO_WORLD
             self.model.ev_manager.post(EventHelloWorld())
         elif item_type == 'USB':
             State.infect(self.state)
