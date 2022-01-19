@@ -47,7 +47,7 @@ class Helper(object):
     def get_self_face(self):
         return self.model.players[self.player_id].face[0]
     
-    def get_self_velocity(self):
+    def get_self_speed(self):
         return tuple(self.model.players[self.player_id].speed)
 
     def get_self_speed_adjust(self):
