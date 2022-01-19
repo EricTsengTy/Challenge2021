@@ -41,12 +41,12 @@ class TeamAI ():
         '''
 
     def special_attack(self):
-        if self.helper.get_can_use_special_attack() :
+        if self.helper.get_self_can_use_special_attack() :
             AI_DIR['special_attack'] = True
         return
 
     def attack(self):
-        if self.helper.get_can_common_attack() and self.helper.get_if_any_player_in_attack_range():
+        if self.helper.get_self_can_use_common_attack() and self.helper.get_if_any_player_in_attack_range():
             AI_DIR['attack'] = True
         return
 
@@ -57,10 +57,10 @@ class TeamAI ():
         nearest_player = self.helper.get_nearest_player_position()
         nearest_EXE = self.helper.get_nearest_specific_item_position("EXE")
         if self.helper.get_distance(self.helper.get_self_position(),nearest_player) < self.helper.get_distance(self.helper.get_self_position(),nearest_EXE):
-            return self.helper.walk_to_specific_position(nearest_EXE)
+            return self.helper.walk_to_position(nearest_EXE)
         if self.helper.get_can_be_common_attacked() == True or self.helper.get_can_be_special_attacked():
             return None
-        return self.helper.walk_to_specific_position(nearest_EXE)
+        return self.helper.walk_to_position(nearest_EXE)
 
         ''' tonpon version
         nearest_EXE = self.helper.get_nearest_specific_item_position("EXE")

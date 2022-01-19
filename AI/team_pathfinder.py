@@ -1,4 +1,4 @@
-from libmaster.pathfinder_v2 import pathfinder
+from AI.libmaster.pathfinder_v2 import pathfinder
 import Const
 
 class TeamAI():
@@ -25,7 +25,7 @@ class TeamAI():
         if tar is not None:
             print("working...")
             speed = self.helper.get_self_speed()[1]
-            jmp = self.helper.get_remaining_jumps()
+            jmp = self.helper.get_self_remaining_jumps()
             # print("jmp = ", jmp)
             d, action = self.pathfinder.find(self.feet(), self.item_center(tar), speed, jmp)
             if action is not None:

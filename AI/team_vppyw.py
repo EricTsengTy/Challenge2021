@@ -10,9 +10,9 @@ class TeamAI():
         self.position = self.helper.get_self_position()
         self.all_position = self.helper.get_all_position()
         self.all_position.remove(self.all_position[self.player_id])
-        self.can_special_attack = self.helper.get_can_use_special_attack()
-        self.can_common_attack = self.helper.get_can_common_attack()
-        self.keep_item_type = self.helper.get_keep_item_type()
+        self.can_special_attack = self.helper.get_self_can_use_special_attack()
+        self.can_common_attack = self.helper.get_self_can_use_common_attack()
+        self.keep_item_type = self.helper.get_self_keep_item_type()
         self.face = self.helper.get_self_face()
         self.route_mode = 0
         self.cool_timer = 0
@@ -31,9 +31,9 @@ class TeamAI():
         self.position = self.helper.get_self_position()
         self.all_position = self.helper.get_all_position()
         self.all_position.remove(self.all_position[self.player_id])
-        self.can_special_attack = self.helper.get_can_use_special_attack()
-        self.can_common_attack = self.helper.get_can_common_attack()
-        self.keep_item_type = self.helper.get_keep_item_type()
+        self.can_special_attack = self.helper.get_self_can_use_special_attack()
+        self.can_common_attack = self.helper.get_self_can_use_common_attack()
+        self.keep_item_type = self.helper.get_self_keep_item_type()
         self.face = self.helper.get_self_face()
 
     def decide_des(self):
@@ -79,7 +79,7 @@ class TeamAI():
                         self.key_dic['left'] = False
                         self.key_dic['right'] = True
                     else:
-                        if self.helper.get_can_jump() and not self.helper.get_is_jumping():
+                        if self.helper.get_self_can_jump() and not self.helper.get_self_is_jumping():
                             self.key_dic['jump'] = True
                 else:
                     if self.position[0] < 555:
@@ -95,7 +95,7 @@ class TeamAI():
                 elif self.position[0] > self.des_pos[0]:
                     self.key_dic['left'] = True
                     self.key_dic['right'] = False
-                if self.helper.get_can_jump() and not self.helper.get_is_jumping():
+                if self.helper.get_self_can_jump() and not self.helper.get_self_is_jumping():
                     self.key_dic['jump'] = True
         else:
             if self.position[0] < self.des_pos[0]:

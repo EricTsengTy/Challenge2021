@@ -37,6 +37,7 @@ class Interface(object):
         for player in self.model.players:
             if player.is_AI:
                 AI_dir = None
+                AI_dir = self.player_AI[player.player_id].decide()
                 try:
                     AI_dir = self.player_AI[player.player_id].decide()
                 except:

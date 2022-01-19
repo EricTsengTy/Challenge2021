@@ -336,32 +336,32 @@ class Helper(object):
                     self.key_dic['left'] = True
         elif self.get_region(self.midbottom) > self.get_region(pos):
             if self.get_region(self.midbottom) == 3:
-                if self.position[0] < 555 and self.get_can_jump() and not self.get_is_jumping():
+                if self.position[0] < 555 and self.get_self_can_jump() and not self.get_self_is_jumping():
                     self.key_dic['right'] = True
-                elif self.position[0] > 555 and self.get_can_jump() and not self.get_is_jumping():
+                elif self.position[0] > 555 and self.get_self_can_jump() and not self.get_self_is_jumping():
                     self.key_dic['left'] = True
             elif self.get_region(self.midbottom) == 2:
-                if self.position[0] > 555 and self.get_can_jump() and not self.get_is_jumping():
+                if self.position[0] > 555 and self.get_self_can_jump() and not self.get_self_is_jumping():
                     self.key_dic['right'] = True
-                elif self.position[0] <= 555 and self.get_can_jump() and not self.get_is_jumping():
+                elif self.position[0] <= 555 and self.get_self_can_jump() and not self.get_self_is_jumping():
                     self.key_dic['left'] = True
             elif self.get_region(self.midbottom) == 1:
-                if self.position[0] < 555 and self.get_can_jump() and not self.get_is_jumping():
+                if self.position[0] < 555 and self.get_self_can_jump() and not self.get_self_is_jumping():
                     self.key_dic['right'] = True
-                elif self.position[0] > 555 and self.get_can_jump() and not self.get_is_jumping():
+                elif self.position[0] > 555 and self.get_self_can_jump() and not self.get_self_is_jumping():
                     self.key_dic['left'] = True
-            if self.get_can_jump() and self.get_is_falling():
+            if self.get_self_can_jump() and self.get_self_is_falling():
                 self.key_dic['jump'] = True
-            elif self.get_can_jump() and not self.get_is_jumping() and self.get_region(self.midbottom) == 3 and self.position[0] > 550 and self.position[0] < 560:
+            elif self.get_self_can_jump() and not self.get_self_is_jumping() and self.get_region(self.midbottom) == 3 and self.position[0] > 550 and self.position[0] < 560:
                 self.key_dic['jump'] = True
         else:
-            if self.position[0] < pos[0] and self.get_can_jump() and not self.get_is_jumping():
+            if self.position[0] < pos[0] and self.get_self_can_jump() and not self.get_self_is_jumping():
                 self.key_dic['right'] = True
-            elif self.position[0] > pos[0] and self.get_can_jump() and not self.get_is_jumping():
+            elif self.position[0] > pos[0] and self.get_self_can_jump() and not self.get_self_is_jumping():
                 self.key_dic['left'] = True
-            if self.position[1] > pos[1] and self.get_is_falling() and self.get_region(self.midbottom) < 3:
+            if self.position[1] > pos[1] and self.get_self_is_falling() and self.get_region(self.midbottom) < 3:
                 self.key_dic['jump'] = True
-            elif self.position[1] > pos[1] and not self.get_is_jumping() and abs(self.position[0] - pos[0]) <= 45 :
+            elif self.position[1] > pos[1] and not self.get_self_is_jumping() and abs(self.position[0] - pos[0]) <= 45 :
                 self.key_dic['jump'] = True
         return self.key_dic
 
