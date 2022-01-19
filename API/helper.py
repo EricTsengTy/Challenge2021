@@ -145,7 +145,7 @@ class Helper(object):
             return ((vec[0])**2 + (vec[1])**2) ** (1/2)
         return [dist_cal(vect) for vect in all_vec]
 
-    def get_if_player_in_attack_range(self):
+    def get_if_any_player_in_attack_range(self):
         attacker = self.model.players[self.player_id]
         attack_range = attacker.common_attack_range
         for player in self.model.players:

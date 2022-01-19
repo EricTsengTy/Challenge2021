@@ -46,7 +46,7 @@ class TeamAI ():
         return
 
     def attack(self):
-        if self.helper.get_can_common_attack() and self.helper.get_if_player_in_attack_range():
+        if self.helper.get_can_common_attack() and self.helper.get_if_any_player_in_attack_range():
             AI_DIR['attack'] = True
         return
 

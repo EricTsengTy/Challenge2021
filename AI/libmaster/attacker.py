@@ -27,7 +27,7 @@ class attacker():
         self.actionset = self.AI.actionset ## not sure if nessesary
 
     def check_melee(self):
-        if self.helper.get_if_player_in_attack_range():
+        if self.helper.get_if_any_player_in_attack_range():
             self.actionset['attack'] = True
 
     def redirect_sp_attack(self):

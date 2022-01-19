@@ -49,7 +49,7 @@ class TeamAI ():
                 return AI_DIR_SPECIAL_ATTACK
             if self.helper.get_region(self.helper.get_self_position()) == self.helper.get_region(self.helper.get_nearest_player_position()):
                 return AI_DIR_SPECIAL_ATTACK
-        elif self.helper.get_if_player_in_attack_range() and self.helper.get_can_common_attack():
+        elif self.helper.get_if_any_player_in_attack_range() and self.helper.get_can_common_attack():
             return AI_DIR_ATTACK
         return None
         ###return self.helper.walk_to_specific_position(self.helper.get_self_position(),self.helper.get_nearest_specific_item_position('EXE'))
