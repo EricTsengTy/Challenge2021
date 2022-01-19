@@ -76,6 +76,21 @@ ITEM_GENERATOR_COOLDOWN = 3 * FPS
 
 
 # special attack
+SPECIAL_ATTACK_LIST = ['Arrow',
+                        'Bug',
+                        'Coffee',
+                        'Fireball',
+                        'Tornado',
+                        'Lightning',
+                        'Dos',
+                        'Ddos',
+                        'Throw_Bug',
+                        'Throw_Coffee',
+                        'Cast_Fireball',
+                        'Cast_Tornado',
+                        'Cast_Lightning',
+                        ]
+
 ARROW_SPEED = 200
 ARROW_SIZE = 25
 

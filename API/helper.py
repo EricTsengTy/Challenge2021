@@ -269,13 +269,13 @@ class Helper(object):
             return AI_DIR_JUMP
         return None
 
-    def jump_or_right(self):
+    def jump_otherwise_right(self):
         me = self.model.players[self.player_id]
         if me.speed.y >= 0 and me.jump_count < me.max_jump:
             return AI_DIR_JUMP
         return AI_DIR_RIGHT
 
-    def jump_or_left(self):
+    def jump_otherwise_left(self):
         me = self.model.players[self.player_id]
         if me.speed.y >= 0 and me.jump_count < me.max_jump:
             return AI_DIR_JUMP
