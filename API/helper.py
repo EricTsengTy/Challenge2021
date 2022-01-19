@@ -70,6 +70,9 @@ class Helper(object):
 
     def get_is_jumping(self):
         return self.model.players[self.player_id].speed.y < 0
+    
+    def get_is_falling(self):
+        return self.model.players[self.player_id].speed.y > 0
 
     def get_infection(self):
         return self.model.players[self.player_id].infection()
@@ -276,15 +279,15 @@ class Helper(object):
     def get_region(self, pos):
         if pos is None:
             return None
-        if pos[1] + 15 < Const.GROUND_POSITION[0][1]:
-            return 0
-        if pos[1] + 15 < Const.GROUND_POSITION[1][1]:
+        if pos[1] <= Const.GROUND_POSITION[0][1]+2:
+            return 0 # 最上層
+        if pos[1] <= Const.GROUND_POSITION[1][1]+2:
             return 1
-        if pos[1] + 15  < Const.GROUND_POSITION[3][1]:
+        if pos[1] <= Const.GROUND_POSITION[3][1]+2:
             return 2
         return 3
 
-    def walk_to_specific_position(self,pos):
+    def walk_to_position(self,pos):
         me = self.model.players[self.player_id]
         me.walk_to['walking'] = True
         me.walk_to['end'] = pos
@@ -292,70 +295,75 @@ class Helper(object):
     def stop_to_walk(self):
         me = self.model.players[self.player_id]
         me.walk_to['walking'] = False
-        
-    def walk_to_position(self,pos1,pos2):###pos1: player, pos2: 指定位置
-        playerplatform = self.get_region(pos1)
-        specificPlatform = self.get_region(pos2)
-        me = self.model.players[self.player_id]
-        if playerplatform is None or specificPlatform is None:
-            return None
-        if playerplatform == specificPlatform:
-            if me.rect.collidepoint(pos2):
-                me.walk_to['walking'] = False
-                return None
-            if self.get_is_jumping():
-                return None
-            if pos1[0]>pos2[0]:
-                return AI_DIR_LEFT
-            elif pos1[0]<pos2[0]:
-                return AI_DIR_RIGHT
-            return AI_DIR_JUMP
-        elif playerplatform < specificPlatform:
-            if playerplatform == 1:
-                if pos1[0]<=400:
-                    return AI_DIR_RIGHT
-                elif pos1[0]>=800:
-                    return AI_DIR_LEFT
-            return AI_DIR_LEFT
-        else:
-            if pos1[0] <= 820:
-                return AI_DIR_RIGHT
-            elif pos1[0]>=900:
-                return AI_DIR_LEFT
-            else:
-                return self.jump()
-            '''
-            if playerplatform == 1:
-                if pos1[0] >= 980:
-                    return AI_DIR_LEFT
-                elif pos1[0] <= 980 and pos1[0]>=800:
-                    return self.left_double_jump()
-                elif pos1[0] <= 750:
-                    return self.right_double_jump()
-            elif playerplatform == 2:
-                if pos1[0] <= 750:
-                    return AI_DIR_RIGHT
-                elif pos1[0] >= 750 and pos1[0] <= 1000:
-                    return self.right_double_jump()
-                elif pos1[0] >= 1000:
-                    return self.left_double_jump()
-            elif playerplatform == 3:
-                if pos1[0] <= 700:
-                    return AI_DIR_RIGHT     
 
-                     
-                if pos1[0] <= 800:
-                    return self.right_double_jump()
-                if pos1[0] <= 980:
-                    return self.left_double_jump()
-                if pos1[1] >= 980:
-                    return AI_DIR_LEFT
-            '''
+    def get_is_walking(self):
+        return self.model.players[self.player_id].walk_to['walking']
+    
+    def how_to_walk(self,pos):# pos = 指定位置
+        self.position = self.get_self_position()
+        self.midbottom = (self.position[0]+45,self.position[1]+120)
+        #print(self.midbottom)
+        self.key_dic = {'left':False, 'right':False, 'jump':False, 'attack':False, 'special_attack':False}
+        if self.model.players[self.player_id].rect.collidepoint(pos):
+            self.stop_to_walk()
+            #print('touch')
+            return self.key_dic
+        if self.get_region(self.midbottom) < self.get_region(pos):
+            if self.get_region(self.midbottom) == 0: 
+                if self.position[0] < 555:
+                    self.key_dic['left'] = True
+                else:
+                    self.key_dic['right'] = True
+            elif self.get_region(self.midbottom) == 1:
+                if self.position[0] < 555:
+                    self.key_dic['right'] = True
+                else:
+                    self.key_dic['left'] = True
+            elif self.get_region(self.midbottom) == 2:
+                if self.position[0] < 555:
+                    self.key_dic['left'] = True
+                else:
+                    self.key_dic['right'] = True
+            else:
+                if self.position[0] < pos[0]:
+                    self.key_dic['right'] = True
+                elif self.position[0] > pos[0]:
+                    self.key_dic['left'] = True
+        elif self.get_region(self.midbottom) > self.get_region(pos):
+            if self.get_region(self.midbottom) == 3:
+                if self.position[0] < 555 and self.get_can_jump() and not self.get_is_jumping():
+                    self.key_dic['right'] = True
+                elif self.position[0] > 555 and self.get_can_jump() and not self.get_is_jumping():
+                    self.key_dic['left'] = True
+            elif self.get_region(self.midbottom) == 2:
+                if self.position[0] > 555 and self.get_can_jump() and not self.get_is_jumping():
+                    self.key_dic['right'] = True
+                elif self.position[0] <= 555 and self.get_can_jump() and not self.get_is_jumping():
+                    self.key_dic['left'] = True
+            elif self.get_region(self.midbottom) == 1:
+                if self.position[0] < 555 and self.get_can_jump() and not self.get_is_jumping():
+                    self.key_dic['right'] = True
+                elif self.position[0] > 555 and self.get_can_jump() and not self.get_is_jumping():
+                    self.key_dic['left'] = True
+            if self.get_can_jump() and self.get_is_falling():
+                self.key_dic['jump'] = True
+            elif self.get_can_jump() and not self.get_is_jumping() and self.get_region(self.midbottom) == 3 and self.position[0] > 550 and self.position[0] < 560:
+                self.key_dic['jump'] = True
+        else:
+            if self.position[0] < pos[0] and self.get_can_jump() and not self.get_is_jumping():
+                self.key_dic['right'] = True
+            elif self.position[0] > pos[0] and self.get_can_jump() and not self.get_is_jumping():
+                self.key_dic['left'] = True
+            if self.position[1] > pos[1] and self.get_is_falling() and self.get_region(self.midbottom) < 3:
+                self.key_dic['jump'] = True
+            elif self.position[1] > pos[1] and not self.get_is_jumping() and abs(self.position[0] - pos[0]) <= 45 :
+                self.key_dic['jump'] = True
+        return self.key_dic
 
     def walk_to_specific_item(self,item):
         if self.get_nearest_specific_item_position(item) is None:
             return False
-        self.walk_to_specific_position(self.get_nearest_specific_item_position(item))
+        self.walk_to_position(self.get_nearest_specific_item_position(item))
         return True
     
     def get_attack_items(self):

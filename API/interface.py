@@ -44,7 +44,7 @@ class Interface(object):
 
                 if AI_dir == None or AI_dir == AI_dir_none:
                     if player.walk_to['walking']:
-                        AI_dir = self.player_AI[player.player_id].helper.walk_to_position(self.player_AI[player.player_id].helper.get_self_position(),player.walk_to['end'])
+                        AI_dir = self.player_AI[player.player_id].helper.how_to_walk(player.walk_to['end'])
                 if not isinstance(AI_dir, dict):
                     temp = AI_dir
                     AI_dir = {'left':False, 'right':False, 'jump':False, 'attack':False, 'special_attack':False}
