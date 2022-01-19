@@ -163,7 +163,7 @@ class Helper(object):
         return tuple(self.model.players[index].speed)
     
     def get_other_face(self,index):
-        return tuple(self.model.players[index].face)
+        return tuple(self.model.players[index].face[0])
     
     def get_other_keep_item(self,index):
         return self.model.players[index].keep_item_type
