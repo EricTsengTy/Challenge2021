@@ -502,8 +502,9 @@ class View_players():
             # ring
             #pg.draw.ellipse(screen, tuple( [*player.color,10] ), pg.Rect(player.left+5, player.top+Const.PLAYER_HEIGHT-15, Const.PLAYER_WIDTH-10, 15))
             pg.draw.arc(screen, player.color, pg.Rect(player.left+5, player.top+Const.PLAYER_HEIGHT-20, Const.PLAYER_WIDTH-10, 20), 0, 6.3, width = 4)
-            tmp_s = pg.Surface((Const.PLAYER_WIDTH-10, 20))  # the size of your rect
+            tmp_s = pg.Surface((Const.PLAYER_WIDTH-10, 20), flags=pg.SRCALPHA)  # the size of your rect
             tmp_s.set_alpha(120)                # alpha level
+            tmp_s = tmp_s.convert_alpha()
             pg.draw.ellipse(tmp_s, player.color, pg.Rect(0, 0, Const.PLAYER_WIDTH-10, 20))           # this fills the entire surface
             
             screen.blit( tmp_s, ( player.left+5, player.top+Const.PLAYER_HEIGHT-20) )    # (0,0) are the top-left coordinates
