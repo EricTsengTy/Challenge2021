@@ -72,7 +72,7 @@ ITEM_TYPE_LIST=['FAN',
                 ]
 MAX_ITEM_NUMBER = 10
 
-ITEM_GENERATOR_COOLDOWN = 3 * FPS
+ITEM_GENERATOR_COOLDOWN = int(0.5 * FPS)
 
 
 # special attack

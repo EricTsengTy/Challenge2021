@@ -8,6 +8,8 @@ class Item_Generator:
     def __init__(self, model):
         self.model = model
         self.generate_cd = 0
+        while len(self.model.items) < Const.MAX_ITEM_NUMBER:
+            self.generate_a_item()
 
     def generate_a_item(self):
         while True:
@@ -29,7 +31,8 @@ class Item_Generator:
 
     def tick(self):
         self.generate_cd -= 1
-        if self.generate_cd<=0:
+        if self.generate_cd <= 0:
             while len(self.model.items) < Const.MAX_ITEM_NUMBER:
                 self.generate_a_item()
-            self.generate_cd = Const.ITEM_GENERATOR_COOLDOWN
+                self.generate_cd = Const.ITEM_GENERATOR_COOLDOWN
+                break
