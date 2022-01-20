@@ -239,8 +239,8 @@ class Helper(object):
     def get_all_special_attack(self):
         return [[atk.name,\
                 atk.attacker.player_id,\
-                tuple(atk.position[0], atk.position[1]),\
-                tuple(atk.speed[0], atk.speed[1])] for atk in self.model.attacks]
+                tuple(atk.position),\
+                tuple(atk.speed)] for atk in self.model.attacks]
 
     def get_specific_special_attack(self, name):
         return [[atk.name,\
