@@ -100,8 +100,14 @@ class Helper(object):
     #獲取所有玩家資訊專區
 
     #一般
+    def get_all_blood(self):
+        return [player.blood for player in self.model.players]
+
     def get_all_score(self):
         return [player.score for player in self.model.players]
+    
+    def get_all_death(self):
+        return [player.death for player in self.model.players]
 
     #移動
     def get_all_position(self):
@@ -112,6 +118,21 @@ class Helper(object):
 
     def get_all_speed(self):
         return [tuple(player.speed) for player in self.model.players]
+
+    def get_all_speed_adjust(self):
+        return [player.speed_adjust() for player in self.model.players]
+
+    def get_all_can_jump(self):
+        return [(player.jump_count < player.max_jump) for player in self.model.players]
+
+    def get_all_is_jumping(self):
+        return [player.speed.y < 0 for player in self.model.players]
+    
+    def get_self_is_falling(self):
+        return [player.speed.y > 0 for player in self.model.players]
+
+    def get_self_remaining_jumps(self): 
+        return [max(player.max_jump - player.jump_count, 0) for player in self.model.players]
 
     def get_all_player_vector(self):
         all_pos = self.get_all_position()
