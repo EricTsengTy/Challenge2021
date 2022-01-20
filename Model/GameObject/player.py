@@ -254,6 +254,8 @@ class Player(Basic_Game_Object):
         else: return True
 
     def can_special_attack(self):
+        if self.special_attack_timer > 0: return False
+        if self.special_attack_delay > 0: return False
         if self.state['special_attack'] == 0: return True
         else: return False
 

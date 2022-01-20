@@ -67,7 +67,7 @@ class Helper(object):
 
     #攻擊
     def get_self_can_use_common_attack(self):
-        return self.model.players[self.player_id].common_attack_timer == 0 and self.model.players[self.player_id].can_common_attack()
+        return self.model.players[self.player_id].can_common_attack()
 
     def get_self_common_attack_damage(self):
         return self.model.players[self.player_id].enhance_common_attack_damage * self.model.players[self.player_id].damage_adjust()
@@ -76,7 +76,7 @@ class Helper(object):
         return self.model.players[self.player_id].keep_item_type
 
     def get_self_can_use_special_attack(self):
-        return self.model.players[self.player_id].special_attack_timer == 0 and self.model.players[self.player_id].can_special_attack()
+        return self.model.players[self.player_id].can_special_attack()
     
     def get_self_special_attack_delay(self):
         return self.model.players[self.player_id].special_attack_delay
@@ -98,41 +98,20 @@ class Helper(object):
         return self.model.players[self.player_id].in_folder()
 
     #獲取所有玩家資訊專區
+
+    #一般
+    def get_all_score(self):
+        return [player.score for player in self.model.players]
+
+    #移動
     def get_all_position(self):
         return [tuple(player.position) for player in self.model.players]
-
-    def get_all_speed(self):
-        return [tuple(player.speed) for player in self.model.players]
 
     def get_all_face(self):
         return [player.face[0] for player in self.model.players]
 
-    def get_all_keep_item_type(self):
-        return [player.keep_item_type for player in self.model.players]
-
-    def get_all_can_be_common_attacked(self):
-        return [player.can_be_common_attacked() for player in self.model.players]
-
-    def get_all_can_be_special_attacked(self):
-        return [player.can_be_special_attacked() for player in self.model.players]
-
-    def get_all_is_invisible(self):
-        return [player.is_invisible() for player in self.model.players]
-
-    def get_all_can_special_attack(self):
-        return [player.can_special_attack() and player.special_attack_timer == 0 for player in self.model.players]
-
-    def get_all_infection(self):
-        return [player.infection() for player in self.model.players]
-
-    def get_all_in_folder(self):
-        return [player.in_folder() for player in self.model.players]
-
-    def get_all_damage_adjust(self):
-        return [player.damage_adjust() for player in self.model.players]
-
-    def get_all_score(self):
-        return [player.score for player in self.model.players]
+    def get_all_speed(self):
+        return [tuple(player.speed) for player in self.model.players]
 
     def get_all_player_vector(self):
         all_pos = self.get_all_position()
@@ -145,15 +124,34 @@ class Helper(object):
             return ((vec[0])**2 + (vec[1])**2) ** (1/2)
         return [dist_cal(vect) for vect in all_vec]
 
-    def get_if_any_player_in_attack_range(self):
-        attacker = self.model.players[self.player_id]
-        attack_range = attacker.common_attack_range
-        for player in self.model.players:
-            if attacker.player_id != player.player_id and\
-                player.can_be_common_attacked() and attack_range.colliderect(player.rect):
-                return True
-        return False
+    #攻擊
+    def get_all_can_use_common_attack(self):
+        return [player.can_common_attack() for player in self.model.players]
 
+    def get_all_common_attack_damage(self):
+        return [player.enhance_common_attack_damage * player.damage_adjust() for player in self.model.players]
+
+    def get_all_keep_item_type(self):
+        return [player.keep_item_type for player in self.model.players]
+
+    def get_all_can_use_special_attack(self):
+        return [player.can_special_attack() for player in self.model.players]
+
+    def get_all_can_be_common_attacked(self):
+        return [player.can_be_common_attacked() for player in self.model.players]
+
+    def get_all_can_be_special_attacked(self):
+        return [player.can_be_special_attacked() for player in self.model.players]
+    
+    #狀態
+    def get_all_is_invisible(self):
+        return [player.is_invisible() for player in self.model.players]
+
+    def get_all_can_infect(self):
+        return [player.infection() for player in self.model.players]
+
+    def get_all_is_in_folder(self):
+        return [player.in_folder() for player in self.model.players]
 
     #獲取特定玩家資訊專區
     def get_other_position(self,index):
@@ -261,6 +259,15 @@ class Helper(object):
 
     def get_vector(self, pos1, pos2):
         return (pos2[0] - pos1[0], pos2[1] - pos1[1])
+
+    def get_if_any_player_in_attack_range(self):
+        attacker = self.model.players[self.player_id]
+        attack_range = attacker.common_attack_range
+        for player in self.model.players:
+            if attacker.player_id != player.player_id and\
+                player.can_be_common_attacked() and attack_range.colliderect(player.rect):
+                return True
+        return False
 
     ###新手友善專區
     def jump(self):
