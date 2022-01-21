@@ -9,7 +9,7 @@ class attacker():
         self.radius = 300
         self.id = self.helper.get_self_id()
         self.sp_delay = Const.PLAYER_SPECIAL_ATTACK_DELAY / Const.FPS
-        self.thre = {''             : 0.25,
+        self.thre = {''             : 0.1,
                      'FAN'          : 0.1, 
                      'LIGHTNING'    : 0.1, 
                      'THROW_COFFEE' : 0.3,
@@ -88,7 +88,7 @@ class attacker():
 
         if ability == '':
             for p in pos:
-                land_prob += max(0, 1 - abs(p[1] - self.pos[1]) / 200)\
+                land_prob += max(0, 1 - abs(p[1] - self.pos[1]) / 300)\
                      * rangetest(p, 1600)
         elif ability == 'FAN':
             for p in pos:

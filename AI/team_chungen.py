@@ -22,6 +22,10 @@ class TeamAI ():
             self.action, self.timer = self.decide_dodge()
             if self.action is None and self.helper.get_self_can_use_common_attack():
                 self.action, self.timer = self.decide_common_attack()
+            if self.action is None and self.helper.get_self_can_use_special_attack():
+                self.action, self.timer = self.decide_special_attack()
+            if self.action is None:
+                self.action, self.timer = self.decide_pick_item()
         self.timer -= 1
         return self.action
 
@@ -50,4 +54,15 @@ class TeamAI ():
     def decide_common_attack(self):
         if self.helper.get_if_any_player_in_attack_range():
             return AI_DIR_ATTACK, 1
+        return None, 1
+
+    def decide_special_attack(self):
+        if self.helper.get_self_keep_item_type() != "":
+            return AI_DIR_SPECIAL_ATTACK, 1
+        return None, 1
+    
+    def decide_pick_item(self):
+        pos = self.helper.get_nearest_item_position()
+        if pos is not None:
+            self.helper.walk_to_position(pos)
         return None, 1
