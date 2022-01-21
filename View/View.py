@@ -39,7 +39,8 @@ class GraphicalView:
 
         if not self.is_initialized:
             try:
-                self.screen = pg.display.set_mode(Const.WINDOW_SIZE)
+                #self.screen = pg.display.set_mode(Const.WINDOW_SIZE)
+                self.screen = pg.display.set_mode(Const.WINDOW_SIZE, pg.FULLSCREEN | pg.SCALED)
                 self.low_resolution = True
             except pg.error:
                 self.low_resolution = False
