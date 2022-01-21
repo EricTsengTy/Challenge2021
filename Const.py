@@ -186,17 +186,17 @@ PROP_PICS = {
     'FAN':'prop_fan.png',
     'LIGHTNING':'prop_lightning.png',
     'THROW_COFFEE':'prop_coffee.png',
-    'THROW_BUG':'prop_bug.png', 
+    'THROW_BUG':'prop_bug.png',
     'DOS':'prop_dos.png',
     'DDOS':'prop_ddos.png',
     'EXE':'prop_hello_world.png',
     'USB':'prop_usb.png',
-    'FIREWALL':'prop_firewall.png', 
+    'FIREWALL':'prop_firewall.png',
     'GRAPHIC_CARD':'prop_graphic_card.png',
     'FORMAT':'prop_format.png',
     'FOLDER_UNUSED':'prop_directory.png',
     'CHARGE':'prop_charge_line.png',
-    'PROP':'prop.png'       
+    'PROP':'prop.png'
 }
 # view
 WINDOW_CAPTION = 'Challenge 2021'
@@ -222,7 +222,7 @@ PLAYER_MOVE_KEYS = {
     pg.K_d: (0, 'right'),
     pg.K_f: (1, 'left'),
     pg.K_h: (1, 'right'),
-    pg.K_j: (2, 'left'),  
+    pg.K_j: (2, 'left'),
     pg.K_l: (2, 'right'),
     pg.K_LEFT: (3, 'left'),
     pg.K_RIGHT: (3, 'right')
@@ -280,3 +280,7 @@ PLAYER_PICKER_COLOR = (
 
 SCORE_PLAYING_SIZE = (200,48)
 SCORE_PLAYING_STATE_SIZE = (40,40)
+
+
+## API
+API_TIMEOUT = 1/6/FPS

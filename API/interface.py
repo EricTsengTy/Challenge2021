@@ -21,7 +21,6 @@ class Interface(object):
         self.player_AI = {}
         self.is_init_AI = False
         self.debug_mode = debug_mode
-        self.delay_time = 1/6/Const.FPS
         signal.signal(signal.SIGALRM, handler)
 
     def notify(self, event: BaseEvent):
@@ -48,7 +47,7 @@ class Interface(object):
                     AI_dir = self.player_AI[player.player_id].decide()
                 else:
                     try:
-                        signal.setitimer(signal.ITIMER_REAL, self.delay_time)
+                        signal.setitimer(signal.ITIMER_REAL, Const.API_TIMEOUT)
                         AI_dir = self.player_AI[player.player_id].decide()
                         signal.setitimer(signal.ITIMER_REAL, 0)
                     except:
