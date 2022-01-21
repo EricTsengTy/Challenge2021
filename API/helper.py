@@ -397,8 +397,11 @@ class Helper(object):
                 self.key_dic['jump'] = True
         return self.key_dic
 
-    def how_to_walk(self,pos):
-        return self._how_to_walk(pos)
+    def how_to_walk(self):
+        me = self.model.players[self.player_id]
+        if me.walk_to['walking']:
+            return self._how_to_walk(me.walk_to['end'])
+        return None
     
     def walk_and_common_attack(self):
         me = self.model.players[self.player_id]

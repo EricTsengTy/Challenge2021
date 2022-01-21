@@ -55,7 +55,7 @@ class Interface(object):
 
                 if AI_dir == None or AI_dir == AI_dir_none:
                     if player.walk_to['walking']:
-                        AI_dir = self.player_AI[player.player_id].helper.how_to_walk(player.walk_to['end'])
+                        AI_dir = self.player_AI[player.player_id].helper.how_to_walk()
                         if player.walk_to['common_attack']:
                             AI_dir['attack'] = True
                             player.walk_to['common_attack'] = False
