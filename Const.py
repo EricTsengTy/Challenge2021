@@ -56,13 +56,14 @@ ITEM_KEEP_LIST = [
                 'DOS',
                 'DDOS'
 ]
-ITEM_TYPE_LIST=['FAN',
+
+ITEM_TYPE_LIST = ['FAN',
                 'LIGHTNING',
                 'THROW_COFFEE',
                 'THROW_BUG',
                 'DOS',
                 'DDOS',
-                'EXE' ,
+                'EXE',
                 'USB',
                 'FIREWALL',
                 'GRAPHIC_CARD',
@@ -70,6 +71,22 @@ ITEM_TYPE_LIST=['FAN',
                 'FOLDER_UNUSED',
                 'CHARGE'
                 ]
+
+ITEM_GENERATE_VAL = {'FAN':5,
+                'LIGHTNING':5,
+                'THROW_COFFEE':5,
+                'THROW_BUG':5,
+                'DOS':5,
+                'DDOS':5,
+                'EXE':2,
+                'USB':5,
+                'FIREWALL':5,
+                'GRAPHIC_CARD':5,
+                'FORMAT':5,
+                'FOLDER_UNUSED':1,
+                'CHARGE':5
+                }
+
 MAX_ITEM_NUMBER = 10
 
 ITEM_GENERATOR_COOLDOWN = int(0.5 * FPS)

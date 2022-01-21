@@ -15,7 +15,7 @@ class Item_Generator:
         while True:
             px = random.randint(0, Const.ARENA_SIZE[0] - Const.ITEM_WIDTH)
             py = random.randint(0, Const.ARENA_SIZE[1] - Const.ITEM_HEIGHT - 70 )
-            generate_item = Item(self.model, px, py, random.choice(Const.ITEM_TYPE_LIST))
+            generate_item = Item(self.model, px, py, random.choices(list(Const.ITEM_GENERATE_VAL.keys()), Const.ITEM_GENERATE_VAL.values(), k = 1)[0])
             collided = False
             for item in self.model.items:
                 if(generate_item.rect.colliderect(item.rect)):
