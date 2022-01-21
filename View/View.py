@@ -15,7 +15,7 @@ class GraphicalView:
     Draws the state of GameEngine onto the screen.
     '''
     background = pg.Surface(Const.ARENA_SIZE)
-    fullscreen = True
+    fullscreen = False
 
     def __init__(self, ev_manager: EventManager, model: GameEngine):
         '''
