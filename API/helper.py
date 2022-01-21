@@ -102,12 +102,12 @@ class Helper(object):
     #一般
     def get_all_blood(self):
         return [player.blood for player in self.model.players]
-
-    def get_all_score(self):
-        return [player.score for player in self.model.players]
     
     def get_all_death(self):
         return [player.death for player in self.model.players]
+
+    def get_all_score(self):
+        return [player.score for player in self.model.players]
 
     #移動
     def get_all_position(self):
@@ -175,41 +175,45 @@ class Helper(object):
         return [player.in_folder() for player in self.model.players]
 
     #獲取特定玩家資訊專區
+
+    #移動
     def get_other_position(self,index):
         return tuple(self.model.players[index].position)
+    
+    def get_other_face(self,index):
+        return tuple(self.model.players[index].face[0])
 
     def get_other_speed(self,index):
         return tuple(self.model.players[index].speed)
     
-    def get_other_face(self,index):
-        return tuple(self.model.players[index].face[0])
-    
+    #攻擊
+    def get_other_common_attack_damage_adjust(self,index):
+        return  self.model.players[index].enhance_common_attack_damage * self.model.players[index].damage_adjust()
+
     def get_other_keep_item(self,index):
         return self.model.players[index].keep_item_type
 
-    def get_other_can_be_common_attack(self,index):
-        return self.model.players[index].can_be_common_attacked()
-
-    def get_other_can_be_special_attack(self,index):
-        return self.model.players[index].can_be_special_attacked()
-
-    def get_other_can_special_attack(self,index):
-        return self.model.players[index].can_special_attack() and self.model.players[index].special_attack_timer == 0
-
-    def get_other_is_invisible(self,index):
-        return self.model.players[index].is_invisible()
-
-    def get_other_infection(self,index):
-        return self.model.players[index].infection()
-    
-    def get_other_in_folder(self,index):
-        return self.model.players[index].in_folder()
-
-    def get_other_damage_adjust(self,index):
-        return self.model.players[index].damage_adjust()
+    def get_other_can_use_special_attack(self,index):
+        return self.model.players[index].can_special_attack()
 
     def get_other_special_attack_delay(self, index):
         return self.model.players[index].special_attack_delay
+
+    def get_other_can_be_common_attacked(self,index):
+        return self.model.players[index].can_be_common_attacked()
+
+    def get_other_can_be_special_attacked(self,index):
+        return self.model.players[index].can_be_special_attacked()
+
+    #狀態
+    def get_other_is_invisible(self,index):
+        return self.model.players[index].is_invisible()
+
+    def get_other_can_infect(self,index):
+        return self.model.players[index].infection()
+    
+    def get_other_is_in_folder(self,index):
+        return self.model.players[index].in_folder()
 
     #獲取道具資訊專區
     def get_nearest_item_position(self):
