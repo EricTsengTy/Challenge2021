@@ -292,7 +292,7 @@ class pathfinder():
                 if tmp_ynj is not None:
                     tmp_ynj += self.tick
                 tmp_yj = self._diff_y(pos[1], tar[1], -self.jump_speed, jmp - 1, tar)
-                if tmp_y > self.tick * 2 and tmp_ynj is None or (tmp_yj is None or\
+                if tmp_y > self.tick and tmp_ynj is None or (tmp_yj is not None and\
                     (tmp_ynj > d + self.eps and tmp_ynj > tmp_yj - self.eps)): # lazy jumps
                     dir_y = 1
         if tar[1] < pos[1]: # if it is upwards, we don't need to care about speed
