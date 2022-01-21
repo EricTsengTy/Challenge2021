@@ -11,7 +11,7 @@ class __Object_base():
     @classmethod
     def init_convert(cls):
         cls.images = tuple(img.convert_alpha() for img in cls.images)
-    
+
     def __init__(self, model):
         self.model = model
 
@@ -22,7 +22,7 @@ class View_menu(__Object_base):
 	@classmethod
 	def init_convert(cls):
 		cls.stage = cls.stage.convert_alpha()
-	
+
 	def draw(self, screen):
 		screen.blit(self.menu, (0,0))
 
@@ -33,7 +33,7 @@ class View_tutorial(__Object_base):
 	@classmethod
 	def init_convert(cls):
 		cls.stage = cls.stage.convert_alpha()
-	
+
 	def draw(self, screen):
 		screen.blit(self.tutorial, (0,0))
 
@@ -58,7 +58,7 @@ class View_stage(__Object_base):
             time_text = Text( time_str , 40, pg.Color('white'))
         else:
             time_text = Text( time_str , 40, pg.Color('red'))
-        
+
         time_text.blit(
             screen,
             topleft=(Const.ARENA_SIZE[0]-95, Const.ARENA_SIZE[1]-37)
@@ -95,7 +95,7 @@ class View_Arrow(__Object_base):
     @classmethod
     def init_convert(cls):
         cls.images = tuple( img.convert_alpha() for img in cls.images)
-    
+
     def draw(self, screen, pos, speed):
         angle = round(Vector2().angle_to(speed))
         if angle in [90,162,-54,126,18]:
@@ -131,13 +131,13 @@ class View_Pause(__Object_base):
     @classmethod
     def init_convert(cls):
         cls.pause_window = cls.pause_window.convert_alpha()
-    
+
     def draw(self, screen):
         screen.blit(self.pause_window, self.pause_window.get_rect(center=(Const.ARENA_SIZE[0]/2, Const.ARENA_SIZE[1]/2)))
 
 class View_Scoreboard(__Object_base):
     board = resize_surface(
-        load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'result.png')), 
+        load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'result.png')),
         Const.ARENA_SIZE[0], Const.ARENA_SIZE[1]
     )
     winner_crown = load_image(os.path.join(Const.IMAGE_PATH, 'menu', 'crown.png'))
@@ -161,9 +161,9 @@ class View_Scoreboard(__Object_base):
 
         #draw main board
         screen.blit(self.board, (0, 0))
-        
+
         player_score = []
-        
+
         for player in self.model.players:
             player_score.append(player.score)
 
@@ -175,7 +175,7 @@ class View_Scoreboard(__Object_base):
                 #draw winner crown
                 screen.blit(self.winner_crown, (text_start + i*text_interval, Const.ARENA_SIZE[1]/2.8))
             #draw score
-            score_text = Text(str(player_score[i]), 36, pg.Color('white'))
+            score_text = Text(str(int(player_score[i])), 36, pg.Color('white'))
             score_text.blit(screen, topleft=(text_start + i*text_interval, text_top))
 
 
@@ -216,7 +216,7 @@ class View_Score_Playing(__Object_base):
 
             score_str = 'P{:d} {:8d}'.format(c,int(player.score))
             score_text = Text( score_str , 36, pg.Color('white'))
-            
+
             screen.blit(
                 self.score_bg[ player.color_index  ] ,
                 self.score_bg[ player.color_index  ].get_rect( topleft=( c*(Const.SCORE_PLAYING_SIZE[0]+5)-60 , Const.ARENA_SIZE[1]-Const.SCORE_PLAYING_SIZE[1] ) )
@@ -246,7 +246,7 @@ class View_Score_Playing(__Object_base):
 def init_staticobjects():
     View_stage.init_convert()
     View_platform.init_convert()
-    View_Arrow.init_convert() 
+    View_Arrow.init_convert()
     View_Item.init_convert()
     View_Pause.init_convert()
     View_Scoreboard.init_convert()
