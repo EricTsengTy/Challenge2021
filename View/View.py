@@ -29,6 +29,16 @@ class GraphicalView:
         self.model = model
         self.is_initialized = False
 
+    def _create_screen(self, fullscreen=False):
+        try:
+            self.screen = pg.display.set_mode(Const.WINDOW_SIZE, (pg.FULLSCREEN if fullscreen else 0) | pg.SCALED)
+            self.low_resolution = False
+        except pg.error:
+            self.low_resolution = True
+            self.real_window_size = (Const.WINDOW_SIZE[0] * 2 // 3, Const.WINDOW_SIZE[1] * 2 // 3)
+            self.real_screen = pg.display.set_mode(self.real_window_size, (pg.FULLSCREEN if fullscreen else 0) | pg.SCALED)
+            self.screen = pg.Surface(Const.WINDOW_SIZE)
+
     def initialize(self):
         '''
         This method is called when a new game is instantiated.
@@ -38,16 +48,8 @@ class GraphicalView:
         pg.display.set_caption(Const.WINDOW_CAPTION)
 
         if not self.is_initialized:
-            try:
-                #self.screen = pg.display.set_mode(Const.WINDOW_SIZE)
-                self.screen = pg.display.set_mode(Const.WINDOW_SIZE, pg.FULLSCREEN | pg.SCALED)
-                self.low_resolution = True
-            except pg.error:
-                self.low_resolution = False
-                self.real_window_size = (Const.WINDOW_SIZE[0] * 2 // 3, Const.WINDOW_SIZE[1] * 2 // 3)
-                self.real_screen = pg.display.set_mode(self.real_window_size, pg.FULLSCREEN)
-                self.screen = pg.Surface(Const.WINDOW_SIZE)
-        
+            self._create_screen(self.fullscreen)
+
         # animations
         self.animation_list = []
 
@@ -92,14 +94,18 @@ class GraphicalView:
             elif cur_state == Const.STATE_PLAY: self.render_play()
             elif cur_state == Const.STATE_STOP: self.render_stop()
             elif cur_state == Const.STATE_ENDGAME: self.render_endgame()
-        
+
+            if self.low_resolution:
+                self.real_screen.blit(pg.transform.smoothscale(self.screen, self.real_window_size), (0, 0))
+                pg.display.flip()
+
         elif isinstance(event, EventToggleFullScreen):
             self.toggle_fullscreen()
-        
+
         elif isinstance(event, EventNormalAttackMovement):
             self.players.status[event.player_id] = 'common_attack'
             self.players.timer[event.player_id] = 0
-        
+
         elif isinstance(event, EventHelloWorld):
             event.style = random.randint(1,3)
             if event.style == 1:
@@ -114,10 +120,10 @@ class GraphicalView:
             if self.model.players[event.player_id].state['immune'] == 0 and self.players.status[event.player_id] != 'be_attacked':
                 self.players.status[event.player_id] = 'be_attacked'
                 self.players.timer[event.player_id] = 0
-            
+
             if self.model.players[event.player_id].state['immune'] != 0:
                 self.players.atmosphere[event.player_id]['firewall'] = 1
-        
+
         elif isinstance(event, EventSpecialAttackMovement):
             # event.player_id
             # event.attack_type
@@ -147,7 +153,7 @@ class GraphicalView:
                 self.players = View.players.View_players(self.model, 7)
         elif isinstance(event, EventRestart):
             self.initialize()
-        
+
     def display_fps(self):
         '''
         Display the current fps on the window caption.
@@ -179,13 +185,13 @@ class GraphicalView:
             target = self.screen
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.color_select.draw(target)
-        
+
         pg.display.flip()
 
     def render_play(self, target=None, update=True):
         if target is None:
             target = self.screen
-        
+
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
         self.stage.draw(target)
@@ -194,7 +200,7 @@ class GraphicalView:
 
         # draw players
         self.players.draw(target)
-        
+
         for item in self.model.items:
             self.item.draw(self.screen, item.rect, item.item_type)
 
@@ -211,12 +217,12 @@ class GraphicalView:
                 self.tornado.draw(target, attack.rect.center, attack.timer, attack.speed)
             elif attack.name == 'Lightning':
                 self.lightning.draw(target, attack.destination, attack.timer, attack.position)
-        
+
         #animation
         for ani in self.animation_list:
             if ani.expired:
                 self.animation_list.remove(ani)
-            else: 
+            else:
                 ani.draw(target, update)
 
         pg.display.flip()
@@ -228,38 +234,30 @@ class GraphicalView:
     def render_endgame(self):
         self.scoreboard.draw(self.screen)
         pg.display.flip()
-        
-    
+
+
     def toggle_fullscreen(self):
         self.ev_manager.post(EventStop())
         # save screen content before toggling
-        _screen = pg.display.get_surface()
-        tmp = _screen.convert()
+        old_screen = pg.display.get_surface().copy()
         caption = pg.display.get_caption()
         cursor = pg.mouse.get_cursor()
-        w, h = _screen.get_width(), _screen.get_height()
-        flags = _screen.get_flags()
-        bits = _screen.get_bitsize()
+        w, h = old_screen.get_width(), old_screen.get_height()
+        flags = old_screen.get_flags()
+        bits = old_screen.get_bitsize()
 
         pg.display.quit()
         pg.display.init()
 
         # toggle fullscreen
         self.fullscreen = not self.fullscreen
-        if self.fullscreen:
-            _screen = pg.display.set_mode(Const.WINDOW_SIZE, pg.FULLSCREEN, bits)
-        else:
-            _screen = pg.display.set_mode(Const.WINDOW_SIZE)
+        self._create_screen(self.fullscreen)
 
         # restore _screen content
-        _screen.blit(tmp, (0, 0))
+        self.screen.blit(old_screen, (0, 0))
         pg.display.set_caption(*caption)
 
         pg.key.set_mods(0)
         pg.mouse.set_cursor(*cursor)
 
-        if self.low_resolution:
-            self.real_screen = _screen
-        else:
-            self.screen = _screen
         self.ev_manager.post(EventContinue())
