@@ -1,3 +1,4 @@
+from cgitb import handler
 import imp, traceback, signal
 from xmlrpc.client import Boolean
 import pygame as pg
@@ -20,6 +21,8 @@ class Interface(object):
         self.player_AI = {}
         self.is_init_AI = False
         self.debug_mode = debug_mode
+        self.delay_time = 1/6/Const.FPS
+        signal.signal(signal.SIGALRM, handler)
 
     def notify(self, event: BaseEvent):
         """
@@ -34,17 +37,20 @@ class Interface(object):
         elif isinstance(event, EventInitialize):
             self.initialize()
 
+    def handler(signum, frame):
+        raise TimeoutError
 
     def API_play(self):
         for player in self.model.players:
             if player.is_AI:
                 AI_dir = None
-
                 if self.debug_mode:
                     AI_dir = self.player_AI[player.player_id].decide()
                 else:
                     try:
+                        signal.setitimer(signal.ITIMER_REAL, self.delay_time)
                         AI_dir = self.player_AI[player.player_id].decide()
+                        signal.setitimer(signal.ITIMER_REAL, 0)
                     except:
                         pass
 
