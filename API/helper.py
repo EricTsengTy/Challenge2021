@@ -400,15 +400,19 @@ class Helper(object):
     def how_to_walk(self,pos):
         return self._how_to_walk(pos)
     
-    def walk_and_common_attack(self,pos):
-        self.key_dic = self._how_to_walk(pos)
-        self.key_dic['attack'] = True
-        return self.key_dic
+    def walk_and_common_attack(self):
+        me = self.model.players[self.player_id]
+        if me.walk_to['walking'] and self.get_self_can_use_common_attack():
+            me.walk_to['common_attack'] = True
+            return True
+        return False
     
     def walk_and_special_attack(self,pos):
-        self.key_dic = self._how_to_walk(pos)
-        self.key_dic['special_attack'] = True
-        return self.key_dic
+        me = self.model.players[self.player_id]
+        if me.walk_to['walking'] and self.get_self_can_use_special_attack():
+            me.walk_to['special_attack'] = True
+            return True
+        return False
 
     def walk_to_specific_item(self,item):
         if self.get_nearest_specific_item_position(item) is None:

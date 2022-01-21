@@ -43,7 +43,7 @@ class Player(Basic_Game_Object):
         self.color_index = player_id
         self.player_name = name
         self.is_AI = is_AI
-        self.walk_to = {'walking':False, 'end':None}
+        self.walk_to = {'walking':False, 'end':None, 'common_attack':False, 'special_attack':False}
 
     @property
     def common_attack_range(self):
