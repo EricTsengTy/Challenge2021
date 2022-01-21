@@ -16,9 +16,9 @@ PLAYER_GRAVITY = 300
 PLAYER_FULL_BLOOD = 1000
 PLAYER_COMMON_ATTACK_SIZE = 20 #additional size around player
 PLAYER_COMMON_ATTACK_DAMAGE = 40
-PLAYER_COMMON_ATTACK_DAMAGE_ADJUST = 1.5
-PLAYER_SPECIAL_ATTACK_TIMER = 5 * FPS
-PLAYER_COMMON_ATTACK_TIMER = 2.5 * FPS
+PLAYER_COMMON_ATTACK_DAMAGE_ADJUST = 2
+PLAYER_SPECIAL_ATTACK_TIMER = 2.5 * FPS
+PLAYER_COMMON_ATTACK_TIMER = 1 * FPS
 PLAYER_SPECIAL_ATTACK_DELAY = 0.1 * FPS
 
 SCORE_KILL_OTHER = 500
@@ -75,15 +75,15 @@ ITEM_TYPE_LIST = ['FAN',
 ITEM_GENERATE_VAL = {'FAN':5,
                 'LIGHTNING':5,
                 'THROW_COFFEE':5,
-                'THROW_BUG':5,
+                'THROW_BUG':4,
                 'DOS':5,
-                'DDOS':5,
+                'DDOS':3,
                 'EXE':2,
                 'USB':5,
                 'FIREWALL':5,
                 'GRAPHIC_CARD':5,
                 'FORMAT':5,
-                'FOLDER_UNUSED':1,
+                'FOLDER_UNUSED':2,
                 'CHARGE':5
                 }
 
@@ -149,15 +149,15 @@ LIGHTNING_HEIGHT = 100
 LIGHTNING_TIMER = FPS // 2
 
 # state time
-INFECTED_TIME = 3 * FPS
-INFECTED_COMMON_ATTACK_TIME = 10 * FPS
+INFECTED_TIME = 5 * FPS
+INFECTED_COMMON_ATTACK_TIME = 5 * FPS
 INVISIBLE_TIME = int(0.5 * FPS)
-IN_FOLDER_TIME = 3 * FPS
+IN_FOLDER_TIME = 2 * FPS
 SLOW_DOWN_TIME = 3 * FPS
-BROKEN_TIME_COFFEE = 3 * FPS
-BROKEN_TIME_BUG = 3 * FPS
-FIREWALL_TIME = 10 * FPS
-GRAPHIC_CARD_TIME = 3 * FPS
+BROKEN_TIME_COFFEE = 2 * FPS
+BROKEN_TIME_BUG = 2 * FPS
+FIREWALL_TIME = 8 * FPS
+GRAPHIC_CARD_TIME = 4 * FPS
 
 # State machine constants
 STATE_POP = 0 # for convenience, not really a state which we can be in

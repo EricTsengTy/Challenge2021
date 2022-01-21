@@ -396,7 +396,9 @@ class Helper(object):
     def walk_to_specific_item(self,item):
         if self.get_nearest_specific_item_position(item) is None:
             return False
-        self.walk_to_position(self.get_nearest_specific_item_position(item))
+        pos=self.get_nearest_specific_item_position(item)
+        center=(pos[0]+20,pos[1]+20)
+        self.walk_to_position(center)
         return True
     
     def get_attack_items(self):
