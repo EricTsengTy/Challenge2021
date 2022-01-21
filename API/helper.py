@@ -128,10 +128,10 @@ class Helper(object):
     def get_all_is_jumping(self):
         return [player.speed.y < 0 for player in self.model.players]
     
-    def get_self_is_falling(self):
+    def get_all_is_falling(self):
         return [player.speed.y > 0 for player in self.model.players]
 
-    def get_self_remaining_jumps(self): 
+    def get_all_remaining_jumps(self): 
         return [max(player.max_jump - player.jump_count, 0) for player in self.model.players]
 
     def get_all_player_vector(self):
