@@ -1,4 +1,5 @@
 import imp, traceback, signal
+from xmlrpc.client import Boolean
 import pygame as pg
 import Const
 from API.helper import Helper
@@ -8,7 +9,7 @@ import Model.Model
 AI_dir_none = {'left':False, 'right':False, 'jump':False, 'attack':False, 'special_attack':False}
 
 class Interface(object):
-    def __init__(self, ev_manager, model : Model.Model):
+    def __init__(self, ev_manager, model : Model.Model, debug_mode : Boolean):
         """
         evManager (EventManager): Allows posting messages to the event queue.
         model (GameEngine): a strong reference to the game Model.
@@ -18,6 +19,7 @@ class Interface(object):
         self.model = model
         self.player_AI = {}
         self.is_init_AI = False
+        self.debug_mode = debug_mode
 
     def notify(self, event: BaseEvent):
         """
@@ -37,11 +39,14 @@ class Interface(object):
         for player in self.model.players:
             if player.is_AI:
                 AI_dir = None
-                AI_dir = self.player_AI[player.player_id].decide()
-                try:
+
+                if self.debug_mode:
                     AI_dir = self.player_AI[player.player_id].decide()
-                except:
-                    pass
+                else:
+                    try:
+                        AI_dir = self.player_AI[player.player_id].decide()
+                    except:
+                        pass
 
                 if AI_dir == None or AI_dir == AI_dir_none:
                     if player.walk_to['walking']:
@@ -85,7 +90,7 @@ class Interface(object):
         for player in self.model.players:
             if player.player_name == "manual":
                 continue
-            
+
             # load TeamAI .py file
             # TODO: change the path
             try:
@@ -95,7 +100,7 @@ class Interface(object):
                 player.player_name, player.is_AI = "Error", False
                 continue
             self.load_msg(str(player.player_id), player.player_name, "Loading")
-            
+
             # init TeamAI class
             try:
                 self.player_AI[player.player_id] = loadtmp.TeamAI(Helper(self.model, player.player_id))
