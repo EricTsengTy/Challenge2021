@@ -336,7 +336,7 @@ class Helper(object):
     def get_is_walking(self):
         return self.model.players[self.player_id].walk_to['walking']
     
-    def how_to_walk(self,pos):# pos = 指定位置
+    def _how_to_walk(self,pos):# pos = 指定位置
         self.position = self.get_self_position()
         self.midbottom = (self.position[0]+45,self.position[1]+120)
         #print(self.midbottom)
@@ -395,6 +395,19 @@ class Helper(object):
                 self.key_dic['jump'] = True
             elif self.position[1] > pos[1] and not self.get_self_is_jumping() and abs(self.position[0] - pos[0]) <= 45 :
                 self.key_dic['jump'] = True
+        return self.key_dic
+
+    def how_to_walk(self,pos):
+        return self._how_to_walk(pos)
+    
+    def walk_and_common_attack(self,pos):
+        self.key_dic = self._how_to_walk(pos)
+        self.key_dic['attack'] = True
+        return self.key_dic
+    
+    def walk_and_special_attack(self,pos):
+        self.key_dic = self._how_to_walk(pos)
+        self.key_dic['special_attack'] = True
         return self.key_dic
 
     def walk_to_specific_item(self,item):
