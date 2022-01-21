@@ -34,6 +34,9 @@ class GraphicalView:
             self.screen = pg.display.set_mode(Const.WINDOW_SIZE, (pg.FULLSCREEN if fullscreen else 0) | pg.SCALED)
             self.low_resolution = False
         except pg.error:
+            # Perhaps the computer's resolution is less than our intended window size.
+            # In this case, we create a smaller screen for pygame screen, and still blit to a window-size surface.
+            # At every tick, we blit the window-size screen to pygame screen.
             self.low_resolution = True
             self.real_window_size = (Const.WINDOW_SIZE[0] * 2 // 3, Const.WINDOW_SIZE[1] * 2 // 3)
             self.real_screen = pg.display.set_mode(self.real_window_size, (pg.FULLSCREEN if fullscreen else 0) | pg.SCALED)
@@ -242,9 +245,6 @@ class GraphicalView:
         old_screen = pg.display.get_surface().copy()
         caption = pg.display.get_caption()
         cursor = pg.mouse.get_cursor()
-        w, h = old_screen.get_width(), old_screen.get_height()
-        flags = old_screen.get_flags()
-        bits = old_screen.get_bitsize()
 
         pg.display.quit()
         pg.display.init()
