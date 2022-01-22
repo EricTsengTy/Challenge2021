@@ -1,6 +1,4 @@
-from asyncio import FastChildWatcher
 import pygame as pg
-from copy import copy
 import sys
 
 from EventManager.EventManager import EventManager
