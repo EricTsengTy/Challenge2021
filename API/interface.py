@@ -58,10 +58,10 @@ class Interface(object):
                         AI_dir = self.player_AI[player.player_id].helper.how_to_walk()
                         if player.walk_to['common_attack']:
                             AI_dir['attack'] = True
-                            player.walk_to['common_attack'] = False
                         if player.walk_to['special_attack']:
                             AI_dir['special_attack'] = True
-                            player.walk_to['special_attack'] = False
+                player.walk_to['common_attack'] = False
+                player.walk_to['special_attack'] = False
                 if not isinstance(AI_dir, dict):
                     temp = AI_dir
                     AI_dir = {'left':False, 'right':False, 'jump':False, 'attack':False, 'special_attack':False}

@@ -407,7 +407,7 @@ class Helper(object):
             return True
         return False
     
-    def walk_and_special_attack(self,pos):
+    def walk_and_special_attack(self):
         me = self.model.players[self.player_id]
         if me.walk_to['walking'] and self.get_self_can_use_special_attack():
             me.walk_to['special_attack'] = True
