@@ -187,7 +187,7 @@ class Helper(object):
         return tuple(self.model.players[index].speed)
     
     #攻擊
-    def get_other_common_attack_damage_adjust(self,index):
+    def get_other_common_attack_damage(self,index):
         return  self.model.players[index].enhance_common_attack_damage * self.model.players[index].damage_adjust()
 
     def get_other_keep_item(self,index):
