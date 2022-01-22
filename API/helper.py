@@ -196,9 +196,6 @@ class Helper(object):
     def get_other_can_use_special_attack(self,index):
         return self.model.players[index].can_special_attack()
 
-    def get_other_special_attack_delay(self, index):
-        return self.model.players[index].special_attack_delay
-
     def get_other_can_be_common_attacked(self,index):
         return self.model.players[index].can_be_common_attacked()
 
