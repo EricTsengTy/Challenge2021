@@ -1,7 +1,8 @@
-from AI.team_controller import AI_DIR
 import pygame as pg
 import Const
 from Model.GameObject.basic_game_object import *
+
+AI_DIR = {'left': False, 'right': False, 'jump': False, 'attack': False, 'special_attack': False}
 
 AI_DIR_LEFT              = 0
 AI_DIR_RIGHT             = 1
