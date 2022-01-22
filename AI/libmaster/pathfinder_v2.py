@@ -58,11 +58,11 @@ class pathfinder():
             'DOS'          : (1.1, 200),
             'DDOS'         : (1.8, 500),
             'EXE'          : (1.5, 400),
-            'USB'          : (0.1,-250),
+            'USB'          : (0.1,-500),
             'FIREWALL'     : (1.1, 200),
             'GRAPHIC_CARD' : (0.5,-250),
             'FORMAT'       : (0.1,-250),
-            'FOLDER_UNUSED': (0.1,-250),
+            'FOLDER_UNUSED': (0.1,-350),
             'CHARGE'       : (0.2,-250)
         }
         self.item_value_v2 = {
