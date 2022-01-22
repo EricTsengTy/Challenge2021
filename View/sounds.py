@@ -23,6 +23,8 @@ if(SOUND_ENABLE):
             'hello_world2': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world2.wav')),
             'hello_world3': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'hello_world_chat.wav')),
             'damaged': pg.mixer.Sound(os.path.join(Const.SOUND_PATH, 'damaged.wav')),
+            'game': pg.mixer.Sound(os.path.join(Const.BACKGROUND_MUSIC_PATH, 'game.wav')),
+            'menu': pg.mixer.Sound(os.path.join(Const.BACKGROUND_MUSIC_PATH, 'menu.wav')),
         }
         
         def __init__(self, ev_manager: EventManager, model: GameEngine):
@@ -44,6 +46,8 @@ if(SOUND_ENABLE):
             self.sound_list['hello_world2'].set_volume(0.4)
             self.sound_list['hello_world3'].set_volume(0.3)
             self.sound_list['damaged'].set_volume(0.05)
+            self.sound_list['game'].set_volume(0.4)
+            self.sound_list['menu'].set_volume(0.4)
 
         def notify(self, event):
             if isinstance(event, EventPlayerAttack):
@@ -91,7 +95,35 @@ if(SOUND_ENABLE):
             elif isinstance(event, EventBeAttacked):
                 if self.model.players[event.player_id].state['immune'] == 0:
                     self.sound_list['damaged'].play()
+            
+            elif isinstance(event, EventInitialize):
+                for sound in self.sound_list.values():
+                    sound.stop()
+                self.sound_list['menu'].play(-1)
+            
+            elif isinstance(event, EventStop):
+                pg.mixer.pause()
+                
+            elif isinstance(event, EventContinue):
+                pg.mixer.unpause()
 
+            elif isinstance(event, EventStateChange):
+                if event.state in {Const.STATE_MENU, Const.STATE_TUTORIAL} and\
+                    self.sound_list['menu'].get_num_channels() == 0:
+                    for sound in self.sound_list.values():
+                        sound.stop()
+                    self.sound_list['menu'].play(-1)
+                elif event.state in {Const.STATE_PLAY} and\
+                    self.sound_list['game'].get_num_channels() == 0:
+                    for sound in self.sound_list.values():
+                        sound.stop()
+                    self.sound_list['game'].play(-1)
+
+            elif isinstance(event, EventTimesUp):
+                for sound in self.sound_list.values():
+                    sound.stop()
+                self.sound_list['menu'].play(-1)
+                
 else:
     class Audio():
         def __init__(self, ev_manager: EventManager, model: GameEngine):
