@@ -17,10 +17,12 @@ def main(argv):
     # EventManager listen to events and notice model, controller, view
     ev_manager = EventManager()
     AIs = []
-    debug_mode = False
+    special_modes = []
     for arg in argv[1:]:
-        if arg.lower() in ('--debug', '-d'):
-            debug_mode = True
+        if arg.lower() in ('--nodebug', '-nd'):
+            special_modes.append('NODEBUG')
+        elif arg.lower() in ('--timeout', '-t'):
+            special_modes.append('TIMEOUT')
         else:
             AIs.append(arg)
 
@@ -29,7 +31,7 @@ def main(argv):
     model      = GameEngine(ev_manager, AIs)
     controller = Controller(ev_manager, model)
     view       = GraphicalView(ev_manager, model)
-    interface = Interface(ev_manager, model, debug_mode)
+    interface = Interface(ev_manager, model, special_modes)
     sound      = Audio(ev_manager, model)
 
     # Main loop

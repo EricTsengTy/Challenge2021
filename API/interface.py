@@ -6,11 +6,12 @@ import Const
 from API.helper import Helper
 from EventManager.EventManager import *
 import Model.Model
+import os
 
 AI_dir_none = {'left':False, 'right':False, 'jump':False, 'attack':False, 'special_attack':False}
 
 class Interface(object):
-    def __init__(self, ev_manager, model : Model.Model, debug_mode : Boolean):
+    def __init__(self, ev_manager, model : Model.Model, modes : list):
         """
         evManager (EventManager): Allows posting messages to the event queue.
         model (GameEngine): a strong reference to the game Model.
@@ -20,8 +21,15 @@ class Interface(object):
         self.model = model
         self.player_AI = {}
         self.is_init_AI = False
-        self.debug_mode = debug_mode
-        signal.signal(signal.SIGALRM, handler)
+        self.debug_mode = 'NODEBUG' not in modes
+        self.timeout_mode = 'TIMEOUT' in modes
+        self.signal_support = False
+
+        if self.timeout_mode and os.name != 'nt':
+            signal.signal(signal.SIGALRM, handler)
+            self.signal_support = True
+        elif self.timeout_mode:
+            print('Windows not Support Timeout')
 
     def notify(self, event: BaseEvent):
         """
@@ -47,9 +55,9 @@ class Interface(object):
                     AI_dir = self.player_AI[player.player_id].decide()
                 else:
                     try:
-                        signal.setitimer(signal.ITIMER_REAL, Const.API_TIMEOUT)
+                        if self.signal_support: signal.setitimer(signal.ITIMER_REAL, Const.API_TIMEOUT)
                         AI_dir = self.player_AI[player.player_id].decide()
-                        signal.setitimer(signal.ITIMER_REAL, 0)
+                        if self.signal_support: signal.setitimer(signal.ITIMER_REAL, 0)
                     except:
                         pass
 
@@ -81,16 +89,15 @@ class Interface(object):
                         AI_dir['attack'] = True
                     elif temp == 6:
                         AI_dir['special_attack'] = True
-
-                if AI_dir['left']:
+                if 'left' in AI_dir.keys() and AI_dir['left']:
                     self.ev_manager.post(EventPlayerMove(player.player_id, 'left'))
-                if AI_dir['right']:
+                if 'right' in AI_dir.keys() and AI_dir['right']:
                     self.ev_manager.post(EventPlayerMove(player.player_id, 'right'))
-                if AI_dir['jump']:
-                     self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
-                if AI_dir['attack']:
+                if 'jump' in AI_dir.keys() and AI_dir['jump']:
+                    self.ev_manager.post(EventPlayerMove(player.player_id, 'jump'))
+                if 'attack' in AI_dir.keys() and AI_dir['attack']:
                     self.ev_manager.post(EventPlayerAttack(player.player_id))
-                if AI_dir['special_attack']:
+                if 'special_attack' in AI_dir.keys() and AI_dir['special_attack']:
                     self.ev_manager.post(EventPlayerSpecialAttack(player.player_id))
 
     def initialize(self):
