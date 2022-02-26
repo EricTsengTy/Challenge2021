@@ -10,11 +10,14 @@
 - on Windows: `python -m pip install pygame==2.1.2`
 - on Linux/MacOS: `python3 -m pip install pygame==2.1.2`
 
-投影片: TBA
+投影片: https://hackmd.io/@Lisa/BJTsa5w6t#/
 
-Document： https://hackmd.io/@tonpon/SJSuFnkR_
+Document: https://hackmd.io/@tonpon/SJSuFnkR_
 
+講解影片:
 
+- 基本介紹: https://drive.google.com/file/d/1M6PcpA5fdHKgohcMluMnWyQRcrAdQedR/view?usp=sharing
+- AI 詳解與 Demo: https://drive.google.com/file/d/1JnSvW43bj4P1j84DxFnH1ZklHoINALV0/view?usp=sharing
 
 - 本遊戲的背景音樂（`./View/background_music/`）皆為原創，如果想在其他地方使用，請聯繫熊宗恬（stitch.hsiung@gmail.com），謝謝！
 
